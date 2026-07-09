@@ -1,3 +1,5 @@
 .DS_Store
 .local-url
 **/.local-url
+start-local-site.cmd
+start-local-site.ps1
