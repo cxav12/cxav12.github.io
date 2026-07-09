@@ -32,7 +32,7 @@ body {
 }
 
 .hero-panel {
-  min-height: 54vh;
+  min-height: 0;
   border: 1px solid var(--line);
   border-radius: 8px;
   background:
@@ -76,7 +76,7 @@ body {
 }
 
 .hero-body {
-  padding: clamp(28px, 5vw, 64px);
+  padding: clamp(24px, 4vw, 44px) clamp(20px, 5vw, 64px) clamp(30px, 4vw, 50px);
 }
 
 .kicker,
@@ -103,14 +103,14 @@ body {
 }
 
 .hero-heading {
-  max-width: 920px;
+  max-width: none;
   font-size: clamp(2rem, 5vw, 4.9rem);
   font-weight: 850;
   line-height: 0.98;
 }
 
 .hero-copy {
-  max-width: 740px;
+  max-width: none;
   color: #dfe4f4;
   font-size: clamp(1rem, 1.8vw, 1.25rem);
   font-weight: 650;
@@ -129,34 +129,6 @@ body {
   font-size: 0.85rem;
   font-weight: 800;
   white-space: nowrap;
-}
-
-.quick-panel {
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: rgba(3, 6, 20, 0.72);
-  padding: 18px;
-  color: var(--muted);
-  font-weight: 800;
-}
-
-.quick-panel strong {
-  color: var(--ink);
-  text-transform: uppercase;
-}
-
-.meter {
-  height: 8px;
-  border-radius: 999px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.meter span {
-  display: block;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(90deg, var(--yankees-silver), var(--swatch-mid));
 }
 
 .section-grid {
