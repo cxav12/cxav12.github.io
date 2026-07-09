@@ -207,7 +207,7 @@ async function renderGameLog(id, group) {
       ? [niceDate(split.date), opponent, stat.inningsPitched, stat.earnedRuns, stat.strikeOuts, stat.baseOnBalls, stat.decision || "-"]
       : [niceDate(split.date), opponent, `${stat.hits || 0}-${stat.atBats || 0}`, stat.homeRuns, stat.rbi, stat.runs, stat.baseOnBalls];
     const row = document.createElement("tr");
-    row.innerHTML = values.map((value) => `<td>${value ?? "-"}</td>`).join("");
+    row.innerHTML = values.map((value, index) => `<td data-label="${headers[index]}">${value ?? "-"}</td>`).join("");
     els.gameBody.append(row);
   });
 }

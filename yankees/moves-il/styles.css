@@ -58,6 +58,85 @@ body {
   background: rgba(6, 21, 46, 0.76);
 }
 
+.site-nav {
+  border-bottom: 1px solid var(--line);
+  background: rgba(3, 6, 20, 0.42);
+}
+
+.site-nav summary {
+  min-height: 50px;
+  padding: 0 clamp(20px, 4vw, 54px);
+  color: var(--ink);
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.site-nav summary::-webkit-details-marker {
+  display: none;
+}
+
+.site-nav-icon,
+.site-nav-icon::before,
+.site-nav-icon::after {
+  width: 22px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--yankees-silver);
+  display: block;
+}
+
+.site-nav-icon {
+  position: relative;
+}
+
+.site-nav-icon::before,
+.site-nav-icon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+
+.site-nav-icon::before {
+  top: -7px;
+}
+
+.site-nav-icon::after {
+  top: 7px;
+}
+
+.site-nav-links {
+  padding: 10px clamp(20px, 4vw, 54px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.site-nav-link {
+  min-height: 38px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: #dfe4f4;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  font-size: 0.84rem;
+  font-weight: 850;
+  text-decoration: none;
+}
+
+.site-nav-link:hover,
+.site-nav-link:focus,
+.site-nav-link.active {
+  border-color: var(--line-bright);
+  color: #fff;
+  background: rgba(196, 206, 212, 0.12);
+}
+
 .brand-lockup {
   min-width: 0;
 }
@@ -267,6 +346,41 @@ body {
   .topbar,
   .moves-body {
     padding-inline: 16px;
+  }
+
+  .brand-lockup {
+    align-items: flex-start !important;
+  }
+
+  .brand-logo {
+    height: 4rem;
+  }
+
+  .display-title {
+    font-size: clamp(2rem, 12vw, 3rem);
+  }
+
+  .page-heading {
+    font-size: clamp(1.55rem, 9vw, 2.35rem);
+  }
+
+  .site-nav summary {
+    display: flex;
+    padding-inline: 16px;
+  }
+
+  .site-nav-links {
+    display: none;
+    padding: 0 16px 12px;
+  }
+
+  .site-nav[open] .site-nav-links {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .site-nav-link {
+    width: 100%;
   }
 
   .header-actions,

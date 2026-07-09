@@ -36,6 +36,10 @@ function monthLabel(date) {
   return new Intl.DateTimeFormat("en", { month: "long", year: "numeric" }).format(date);
 }
 
+function agendaDateLabel(date) {
+  return new Intl.DateTimeFormat("en", { weekday: "short", month: "short", day: "numeric" }).format(date);
+}
+
 function timeLabel(value) {
   return new Intl.DateTimeFormat("en", { hour: "numeric", minute: "2-digit" }).format(new Date(value));
 }
@@ -168,6 +172,7 @@ function renderCalendar(monthDate, gamesByDate) {
 
     const dayNumber = document.createElement("div");
     dayNumber.className = "day-number";
+    dayNumber.dataset.mobileLabel = agendaDateLabel(cellDate);
     dayNumber.textContent = String(cellDate.getDate());
     cell.append(dayNumber);
 
