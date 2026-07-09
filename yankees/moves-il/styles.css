@@ -1,0 +1,290 @@
+:root {
+  color-scheme: dark;
+  --yankees-navy: #0c2340;
+  --yankees-silver: #c4ced4;
+  --swatch-deep: #06152e;
+  --swatch-mid: #1b4f8f;
+  --swatch-shadow: #08213f;
+  --bs-body-color: #f7f8ff;
+  --bs-body-bg: var(--swatch-deep);
+  --ink: #f7f8ff;
+  --muted: var(--yankees-silver);
+  --quiet: #8f9aa2;
+  --line: rgba(196, 206, 211, 0.18);
+  --line-bright: rgba(196, 206, 211, 0.48);
+  --panel-strong: rgba(6, 21, 46, 0.94);
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+}
+
+body {
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 78% 10%, rgba(196, 206, 211, 0.16), transparent 30%),
+    radial-gradient(circle at 12% 20%, rgba(27, 79, 143, 0.38), transparent 28%),
+    linear-gradient(135deg, var(--swatch-deep) 0%, var(--yankees-navy) 48%, var(--swatch-shadow) 100%);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.site-shell {
+  max-width: 1440px;
+  padding: 18px;
+}
+
+.moves-panel {
+  min-height: calc(100vh - 36px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+    linear-gradient(145deg, rgba(12, 35, 64, 0.98), rgba(6, 21, 46, 0.96) 56%, rgba(8, 33, 63, 0.98));
+  background-size: 34px 34px, 34px 34px, auto;
+  box-shadow: var(--shadow);
+}
+
+.moves-panel::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 6px;
+  background: linear-gradient(90deg, var(--yankees-silver), var(--yankees-navy), var(--swatch-mid), var(--yankees-silver));
+}
+
+.topbar {
+  min-height: 86px;
+  padding: 22px clamp(20px, 4vw, 54px);
+  border-bottom: 1px solid var(--line);
+  background: rgba(6, 21, 46, 0.76);
+}
+
+.brand-lockup {
+  min-width: 0;
+}
+
+.brand-logo {
+  width: auto;
+  height: calc(clamp(2.024rem, 5.52vw, 5.152rem) + 1.2rem);
+  aspect-ratio: 1;
+  flex: 0 0 auto;
+  object-fit: contain;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.28));
+}
+
+.moves-body {
+  padding: clamp(20px, 4vw, 48px);
+}
+
+.kicker,
+.eyebrow,
+.panel-kicker {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.display-title,
+.page-heading,
+.panel-heading {
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.display-title {
+  font-size: clamp(2rem, 5vw, 4.9rem);
+  font-weight: 850;
+  line-height: 0.92;
+}
+
+.page-heading {
+  font-size: clamp(1.8rem, 4vw, 3.6rem);
+  font-weight: 850;
+  line-height: 0.98;
+}
+
+.page-copy {
+  max-width: 760px;
+  color: #dfe4f4;
+  font-weight: 650;
+}
+
+.status-pill,
+.nav-home-link {
+  min-height: 42px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 14px;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.status-pill {
+  border: 1px solid var(--line);
+  color: var(--yankees-silver);
+  background: rgba(255, 255, 255, 0.06);
+  white-space: nowrap;
+}
+
+.summary-strip {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(3, 6, 20, 0.72);
+  overflow: hidden;
+}
+
+.summary-strip div {
+  min-height: 96px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 5px;
+  padding: 12px;
+  border-right: 1px solid var(--line);
+}
+
+.summary-strip div:last-child {
+  border-right: 0;
+}
+
+.summary-strip span {
+  color: var(--quiet);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.summary-strip strong {
+  font-size: clamp(1.35rem, 3vw, 2.2rem);
+  line-height: 1;
+}
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: rgba(5, 10, 28, 0.82);
+  padding: 18px;
+}
+
+.panel-heading {
+  font-size: 1.2rem;
+  font-weight: 850;
+}
+
+#roster-count,
+#transaction-window {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-align: right;
+}
+
+.roster-list,
+.feed {
+  max-height: 62vh;
+  overflow: auto;
+}
+
+.roster-shell {
+  min-width: 0;
+}
+
+.roster-link {
+  min-height: 58px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.055);
+  text-align: left;
+  display: grid;
+  align-content: center;
+  gap: 3px;
+  width: 100%;
+  padding: 10px 14px;
+  text-decoration: none;
+}
+
+.roster-link:hover,
+.roster-link:focus {
+  border-color: var(--line-bright);
+  color: #fff;
+  background: rgba(196, 206, 211, 0.12);
+}
+
+.roster-link small,
+.feed small {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.feed article {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line-bright);
+  border-radius: 6px;
+  background: var(--panel-strong);
+  padding: 10px 12px;
+}
+
+.feed article.il {
+  border-left-color: var(--swatch-mid);
+  background:
+    linear-gradient(135deg, rgba(27, 79, 143, 0.18), rgba(6, 21, 46, 0.94) 62%),
+    var(--panel-strong);
+}
+
+.feed p {
+  margin: 4px 0 0;
+  color: #e2e7f4;
+  font-weight: 700;
+}
+
+.empty,
+.error {
+  color: var(--muted);
+  font-weight: 700;
+  padding: 14px;
+}
+
+.error {
+  color: #ffbec4;
+}
+
+@media (max-width: 575.98px) {
+  .site-shell {
+    padding: 10px;
+  }
+
+  .topbar,
+  .moves-body {
+    padding-inline: 16px;
+  }
+
+  .header-actions,
+  .status-pill,
+  .nav-home-link {
+    width: 100%;
+  }
+
+  .summary-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-strip div {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .summary-strip div:last-child {
+    border-bottom: 0;
+  }
+}

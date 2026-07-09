@@ -1,4 +1,3 @@
-const TEAM_ID = 147;
 const SEASON = new Date().getFullYear();
 const DEFAULT_PLAYER = 592450;
 const MLB_API = "https://statsapi.mlb.com/api/v1";
@@ -7,7 +6,6 @@ const HEADSHOT = (id) => `https://img.mlbstatic.com/mlb-photos/image/upload/w_42
 const state = {
   selectedPlayerId: DEFAULT_PLAYER,
   currentGroup: "hitting",
-  roster: [],
 };
 
 const els = {
@@ -26,9 +24,6 @@ const els = {
   searchInput: document.querySelector("#player-search"),
   searchButton: document.querySelector("#search-button"),
   searchResults: document.querySelector("#search-results"),
-  roster: document.querySelector("#roster-list"),
-  rosterCount: document.querySelector("#roster-count"),
-  transactionFeed: document.querySelector("#transaction-feed"),
 };
 
 const api = {
@@ -52,27 +47,10 @@ const api = {
   async gameLog(id, group) {
     return this.stats(id, group, "gameLog");
   },
-  async roster() {
-    return this.get(`/teams/${TEAM_ID}/roster`, { rosterType: "active", hydrate: "person" });
-  },
-  async transactions() {
-    const end = new Date();
-    const start = new Date();
-    start.setDate(end.getDate() - 45);
-    return this.get("/transactions", {
-      teamId: TEAM_ID,
-      startDate: formatDate(start),
-      endDate: formatDate(end),
-    });
-  },
   async searchPlayer(query) {
     return this.get("/people/search", { names: query, sportId: 1 });
   },
 };
-
-function formatDate(date) {
-  return date.toISOString().slice(0, 10);
-}
 
 function niceDate(value) {
   if (!value) return "Unknown";
@@ -234,53 +212,6 @@ async function renderGameLog(id, group) {
   });
 }
 
-async function renderRoster() {
-  try {
-    const data = await api.roster();
-    state.roster = data.roster || [];
-    els.rosterCount.textContent = `${state.roster.length} active`;
-    els.roster.replaceChildren();
-    state.roster
-      .slice()
-      .sort((a, b) => a.person.fullName.localeCompare(b.person.fullName))
-      .forEach((entry) => {
-        const shell = document.createElement("div");
-        shell.className = "col-12 col-sm-6 roster-shell";
-        const button = document.createElement("button");
-        button.className = "roster-button";
-        button.type = "button";
-        button.innerHTML = `<span>${entry.person.fullName}</span><small>${entry.jerseyNumber ? `#${entry.jerseyNumber} · ` : ""}${entry.position?.abbreviation || "NYY"}</small>`;
-        button.addEventListener("click", () => loadPlayer(entry.person.id));
-        shell.append(button);
-        els.roster.append(shell);
-      });
-  } catch (error) {
-    els.roster.innerHTML = `<p class="error">Roster data is unavailable right now.</p>`;
-  }
-}
-
-async function renderTransactions() {
-  try {
-    const data = await api.transactions();
-    const transactions = (data.transactions || []).slice().reverse();
-    els.transactionFeed.replaceChildren();
-    if (!transactions.length) {
-      els.transactionFeed.innerHTML = `<p class="empty">No Yankees transactions were returned for this window.</p>`;
-      return;
-    }
-    transactions.slice(0, 24).forEach((item) => {
-      const article = document.createElement("article");
-      const description = item.description || item.note || item.typeDesc || "Transaction";
-      const isIl = /injured|injury|10-day|15-day|60-day|IL/i.test(description);
-      article.className = isIl ? "il" : "";
-      article.innerHTML = `<small>${niceDate(item.date)} · ${item.typeDesc || "Move"}</small><p>${description}</p>`;
-      els.transactionFeed.append(article);
-    });
-  } catch (error) {
-    els.transactionFeed.innerHTML = `<p class="error">Transactions are unavailable right now.</p>`;
-  }
-}
-
 async function searchPlayers() {
   const query = els.searchInput.value.trim();
   if (!query) return;
@@ -323,7 +254,8 @@ function bindEvents() {
 
 async function init() {
   bindEvents();
-  await Promise.all([loadPlayer(DEFAULT_PLAYER), renderRoster(), renderTransactions()]);
+  const requestedPlayer = Number(new URLSearchParams(window.location.search).get("player"));
+  await loadPlayer(Number.isFinite(requestedPlayer) && requestedPlayer > 0 ? requestedPlayer : DEFAULT_PLAYER);
 }
 
 init();

@@ -201,13 +201,11 @@ body {
   background: linear-gradient(135deg, var(--swatch-mid), var(--swatch-shadow));
 }
 
-.search-results .result-shell,
-.roster-list .roster-shell {
+.search-results .result-shell {
   min-width: 0;
 }
 
-.result-button,
-.roster-button {
+.result-button {
   min-height: 56px;
   border: 1px solid var(--line);
   border-radius: 6px;
@@ -221,15 +219,12 @@ body {
   padding: 10px 14px;
 }
 
-.result-button:hover,
-.roster-button:hover {
+.result-button:hover {
   border-color: var(--line-bright);
   background: rgba(196, 206, 211, 0.12);
 }
 
-.result-button small,
-.roster-button small,
-.feed small {
+.result-button small {
   color: var(--muted);
   font-weight: 800;
 }
@@ -300,49 +295,15 @@ body {
   font-weight: 650;
 }
 
-.info-band {
-  padding-top: 18px;
-}
-
-.panel {
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  color: var(--ink);
-  background: rgba(5, 10, 28, 0.82);
-}
-
 .panel-heading {
   font-size: 1.1rem;
   font-weight: 850;
 }
 
-#roster-count,
-#transaction-window,
 #recent-summary {
   color: var(--muted);
   font-size: 0.88rem;
   font-weight: 800;
-}
-
-.roster-list,
-.feed {
-  max-height: 440px;
-  overflow: auto;
-}
-
-.feed article {
-  border-left: 3px solid var(--line-bright);
-  padding: 2px 0 2px 12px;
-}
-
-.feed article.il {
-  border-left-color: var(--yankees-navy);
-}
-
-.feed p {
-  margin: 4px 0 0;
-  color: #e2e7f4;
-  font-weight: 700;
 }
 
 .empty,
