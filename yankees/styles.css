@@ -274,6 +274,146 @@ body {
   font-weight: 650;
 }
 
+.card-preview {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(3, 6, 20, 0.36);
+  padding: 12px;
+}
+
+.preview-label {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.preview-loading {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 750;
+}
+
+.preview-list,
+.form-preview {
+  display: grid;
+  gap: 8px;
+}
+
+.preview-list {
+  max-height: 248px;
+  overflow: auto;
+}
+
+.preview-row,
+.spotlight-mini,
+.form-row {
+  border: 1px solid rgba(196, 206, 212, 0.12);
+  border-radius: 6px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.045);
+  text-decoration: none;
+}
+
+.preview-row:hover,
+.preview-row:focus,
+.spotlight-mini:hover,
+.spotlight-mini:focus,
+.form-row:hover,
+.form-row:focus {
+  border-color: var(--line-bright);
+  color: #fff;
+  background: rgba(196, 206, 212, 0.12);
+}
+
+.preview-row {
+  min-height: 54px;
+  display: grid;
+  grid-template-columns: minmax(88px, 0.4fr) minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 8px 10px;
+}
+
+.preview-row span,
+.spotlight-mini span,
+.form-row span {
+  min-width: 0;
+}
+
+.preview-row strong,
+.spotlight-mini strong,
+.form-row strong,
+.form-row b {
+  display: block;
+  overflow: hidden;
+  color: var(--ink);
+  font-weight: 900;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-row small,
+.spotlight-mini small,
+.form-row small {
+  display: block;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-row > span:last-child {
+  overflow: hidden;
+  color: #dfe4f4;
+  font-size: 0.86rem;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spotlight-mini {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px;
+  align-items: center;
+  padding: 10px;
+}
+
+.mini-stat {
+  min-width: 62px;
+  border-radius: 6px;
+  color: var(--yankees-silver);
+  background: rgba(196, 206, 212, 0.12);
+  display: inline-flex;
+  justify-content: center;
+  padding: 7px 8px;
+  font-size: 0.82rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+}
+
+.form-row.hot {
+  border-left: 3px solid #9af0c8;
+}
+
+.form-row.watch {
+  border-left: 3px solid #ffbec4;
+}
+
 .btn-section {
   width: fit-content;
   margin-top: auto;
@@ -353,5 +493,15 @@ body {
   .status-pill,
   .btn-section {
     width: 100%;
+  }
+
+  .spotlight-mini,
+  .form-row,
+  .preview-row {
+    grid-template-columns: 1fr;
+  }
+
+  .mini-stat {
+    justify-content: flex-start;
   }
 }
