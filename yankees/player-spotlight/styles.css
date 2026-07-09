@@ -1,16 +1,16 @@
 :root {
   color-scheme: dark;
-  --yankees-navy: #132448;
-  --yankees-silver: #c4ced3;
-  --swatch-deep: #0e0e33;
-  --swatch-mid: #1c1f61;
-  --swatch-shadow: #1d1d4c;
+  --yankees-navy: #0c2340;
+  --yankees-silver: #c4ced4;
+  --swatch-deep: #06152e;
+  --swatch-mid: #1b4f8f;
+  --swatch-shadow: #08213f;
   --bs-body-color: #f7f8ff;
   --bs-body-bg: var(--swatch-deep);
   --ink: #f7f8ff;
   --muted: var(--yankees-silver);
   --quiet: #8f9aa2;
-  --panel-strong: rgba(14, 14, 51, 0.94);
+  --panel-strong: rgba(6, 21, 46, 0.94);
   --line: rgba(196, 206, 211, 0.18);
   --line-bright: rgba(196, 206, 211, 0.48);
   --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
@@ -25,7 +25,7 @@ body {
   color: var(--ink);
   background:
     radial-gradient(circle at 78% 10%, rgba(196, 206, 211, 0.16), transparent 30%),
-    radial-gradient(circle at 12% 20%, rgba(28, 31, 97, 0.46), transparent 28%),
+    radial-gradient(circle at 12% 20%, rgba(27, 79, 143, 0.38), transparent 28%),
     linear-gradient(135deg, var(--swatch-deep) 0%, var(--yankees-navy) 48%, var(--swatch-shadow) 100%);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -42,7 +42,7 @@ body {
   background:
     linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px),
-    linear-gradient(145deg, rgba(19, 36, 72, 0.98), rgba(14, 14, 51, 0.96) 56%, rgba(29, 29, 76, 0.98));
+    linear-gradient(145deg, rgba(12, 35, 64, 0.98), rgba(6, 21, 46, 0.96) 56%, rgba(8, 33, 63, 0.98));
   background-size: 34px 34px, 34px 34px, auto;
   box-shadow: var(--shadow);
 }
@@ -59,7 +59,7 @@ body {
   min-height: 86px;
   padding: 22px clamp(20px, 4vw, 54px);
   border-bottom: 1px solid var(--line);
-  background: rgba(14, 14, 51, 0.72);
+  background: rgba(6, 21, 46, 0.76);
 }
 
 .brand-lockup {
