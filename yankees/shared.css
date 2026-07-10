@@ -55,6 +55,10 @@ b {
   min-width: 0;
 }
 
+.brand-lockup > div {
+  min-width: 0;
+}
+
 .brand-logo {
   width: auto;
   height: calc(clamp(2.024rem, 5.52vw, 5.152rem) + 1.2rem);
@@ -359,7 +363,9 @@ b {
   }
 
   .brand-title {
-    font-size: 4rem;
+    max-width: calc(100vw - 112px);
+    font-size: clamp(2.25rem, 12vw, 3rem);
+    line-height: 0.92;
   }
 
   .brand-kicker {
