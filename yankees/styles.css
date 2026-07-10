@@ -16,6 +16,67 @@
   --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
 }
 
+/* Typography standard */
+body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
+.display-title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.hero-heading,
+.section-card h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.hero-copy,
+.section-card p:not(.card-kicker),
+.preview-row > span:last-child {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.kicker,
+.eyebrow,
+.card-kicker,
+.preview-label,
+.preview-loading,
+.status-pill,
+.site-nav summary,
+.site-nav-link,
+.desktop-site-nav .nav-link,
+.preview-row small,
+.spotlight-mini small,
+.form-row small {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.preview-row strong,
+.spotlight-mini strong,
+.form-row strong,
+.form-row b,
+.mini-stat,
+.btn-section {
+  font-weight: 700;
+}
+
+.mini-stat {
+  font-size: 0.875rem;
+}
+
 body {
   min-height: 100vh;
   color: var(--ink);
@@ -504,4 +565,65 @@ body {
   .mini-stat {
     justify-content: flex-start;
   }
+}
+
+/* Final typography overrides */
+body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
+.display-title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.hero-heading,
+.section-card h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.hero-copy,
+.section-card p:not(.card-kicker),
+.preview-row > span:last-child {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.kicker,
+.eyebrow,
+.card-kicker,
+.preview-label,
+.preview-loading,
+.status-pill,
+.site-nav summary,
+.site-nav-link,
+.desktop-site-nav .nav-link,
+.preview-row small,
+.spotlight-mini small,
+.form-row small {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.preview-row strong,
+.spotlight-mini strong,
+.form-row strong,
+.form-row b,
+.mini-stat,
+.btn-section {
+  font-weight: 700;
+}
+
+.mini-stat {
+  font-size: 0.875rem;
 }

@@ -16,6 +16,79 @@
   --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
 }
 
+/* Typography standard */
+body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
+.display-title,
+.player-name {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.panel-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.stat-card strong {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.compact .stat-card strong {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.player-bio,
+.bio-row,
+.table td,
+.result-button span,
+.form-control,
+.btn-yankees {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.kicker,
+.section-label,
+.player-meta,
+.label-small,
+.status-pill,
+.nav-home-link,
+.site-nav summary,
+.site-nav-link,
+.desktop-site-nav .nav-link,
+.result-button small,
+.table th,
+.stat-card span,
+#recent-summary {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.btn-yankees,
+.result-button span {
+  font-weight: 700;
+}
+
+@media (max-width: 575.98px) {
+  .table td::before {
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+}
+
 [hidden] {
   display: none !important;
 }
@@ -564,5 +637,78 @@ body {
   .stat-card,
   .compact .stat-card {
     flex-basis: 50%;
+  }
+}
+
+/* Final typography overrides */
+body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
+.display-title,
+.player-name {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.panel-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.stat-card strong {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.compact .stat-card strong {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.player-bio,
+.bio-row,
+.table td,
+.result-button span,
+.form-control,
+.btn-yankees {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.kicker,
+.section-label,
+.player-meta,
+.label-small,
+.status-pill,
+.nav-home-link,
+.site-nav summary,
+.site-nav-link,
+.desktop-site-nav .nav-link,
+.result-button small,
+.table th,
+.stat-card span,
+#recent-summary {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.btn-yankees,
+.result-button span {
+  font-weight: 700;
+}
+
+@media (max-width: 575.98px) {
+  .table td::before {
+    font-size: 0.875rem;
+    font-weight: 600;
   }
 }

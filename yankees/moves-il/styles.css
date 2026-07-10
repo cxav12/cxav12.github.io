@@ -16,6 +16,66 @@
   --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
 }
 
+/* Typography standard */
+body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
+.display-title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.page-heading,
+.panel-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.page-copy,
+.feed p,
+.roster-link span {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.summary-strip strong {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.kicker,
+.eyebrow,
+.panel-kicker,
+.status-pill,
+.site-nav summary,
+.site-nav-link,
+.desktop-site-nav .nav-link,
+.summary-strip span,
+#roster-count,
+#transaction-window,
+.roster-link small,
+.feed small,
+.empty,
+.error {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.roster-link span,
+.feed p {
+  font-weight: 400;
+}
+
 body {
   min-height: 100vh;
   color: var(--ink);
@@ -443,4 +503,64 @@ body {
   .summary-strip div:last-child {
     border-bottom: 0;
   }
+}
+
+/* Final typography overrides */
+body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
+.display-title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.page-heading,
+.panel-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.page-copy,
+.feed p,
+.roster-link span {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.summary-strip strong {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.kicker,
+.eyebrow,
+.panel-kicker,
+.status-pill,
+.site-nav summary,
+.site-nav-link,
+.desktop-site-nav .nav-link,
+.summary-strip span,
+#roster-count,
+#transaction-window,
+.roster-link small,
+.feed small,
+.empty,
+.error {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.roster-link span,
+.feed p {
+  font-weight: 400;
 }

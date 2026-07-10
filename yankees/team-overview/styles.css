@@ -17,6 +17,72 @@
   --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
 }
 
+/* Typography standard */
+body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
+.display-title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.page-heading,
+.team-name,
+.insight-panel h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.standing-line {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.page-copy,
+.insight-panel p,
+.form-control,
+.btn-yankees,
+.btn-control {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.record-line,
+.metric-value span {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.kicker,
+.eyebrow,
+.label-small,
+.panel-kicker,
+.status-pill,
+.site-nav summary,
+.site-nav-link,
+.desktop-site-nav .nav-link,
+.metric-badge,
+.metric-row strong,
+.metric-value small {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.btn-control,
+.btn-yankees {
+  font-weight: 700;
+}
+
 body {
   min-height: 100vh;
   color: var(--ink);
@@ -480,4 +546,70 @@ body {
   .btn-control {
     width: 100%;
   }
+}
+
+/* Final typography overrides */
+body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
+.display-title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.page-heading,
+.team-name,
+.insight-panel h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.standing-line {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.page-copy,
+.insight-panel p,
+.form-control,
+.btn-yankees,
+.btn-control {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.record-line,
+.metric-value span {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.kicker,
+.eyebrow,
+.label-small,
+.panel-kicker,
+.status-pill,
+.site-nav summary,
+.site-nav-link,
+.desktop-site-nav .nav-link,
+.metric-badge,
+.metric-row strong,
+.metric-value small {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.btn-control,
+.btn-yankees {
+  font-weight: 700;
 }

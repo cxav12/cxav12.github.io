@@ -17,6 +17,71 @@
   --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
 }
 
+/* Typography standard */
+body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
+.display-title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.month-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.month-summary,
+.game-detail,
+.empty-day,
+.btn-control {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.matchup {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.kicker,
+.eyebrow,
+.status-pill,
+.site-nav summary,
+.site-nav-link,
+.desktop-site-nav .nav-link,
+.weekday-row span,
+.day-number,
+.game-status {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.btn-control {
+  font-weight: 700;
+}
+
+@media (max-width: 575.98px) {
+  .day-number {
+    font-size: 0;
+  }
+
+  .day-number::before {
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+}
+
 body {
   min-height: 100vh;
   color: var(--ink);
@@ -484,5 +549,70 @@ body {
   .nav-home-link,
   .btn-control {
     width: 100%;
+  }
+}
+
+/* Final typography overrides */
+body {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
+.display-title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.month-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.month-summary,
+.game-detail,
+.empty-day,
+.btn-control {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.matchup {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.kicker,
+.eyebrow,
+.status-pill,
+.site-nav summary,
+.site-nav-link,
+.desktop-site-nav .nav-link,
+.weekday-row span,
+.day-number,
+.game-status {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.btn-control {
+  font-weight: 700;
+}
+
+@media (max-width: 575.98px) {
+  .day-number {
+    font-size: 0;
+  }
+
+  .day-number::before {
+    font-size: 0.875rem;
+    font-weight: 600;
   }
 }
