@@ -312,8 +312,8 @@ function bestDirectMatch(query, people) {
   const normalized = normalizeText(query);
   const exact = people.find((person) => normalizeText(person.fullName) === normalized);
   if (exact) return exact;
-  const lastName = people.find((person) => normalizeText(person.lastName) === normalized);
-  if (lastName) return lastName;
+  const lastNameMatches = people.filter((person) => normalizeText(person.lastName) === normalized);
+  if (lastNameMatches.length === 1) return lastNameMatches[0];
   return null;
 }
 
@@ -324,16 +324,17 @@ async function searchPlayers(options = {}) {
   els.searchResults.innerHTML = `<p class="empty">Searching players...</p>`;
   try {
     const data = await api.searchPlayer(query);
-    const people = (data.people || []).slice(0, 8);
+    const people = (data.people || []).slice(0, 12);
     if (!people.length) {
       els.searchResults.innerHTML = `<p class="empty">No players found for "${query}".</p>`;
+      els.searchInput.value = "";
       return;
     }
 
     const directMatch = options.direct ? bestDirectMatch(query, people) : null;
     if (directMatch) {
       els.searchResults.hidden = true;
-      els.searchInput.value = directMatch.fullName;
+      els.searchInput.value = "";
       await loadPlayer(directMatch.id);
       return;
     }
@@ -348,12 +349,13 @@ async function searchPlayers(options = {}) {
       button.innerHTML = `<span>${person.fullName}</span><small>${person.primaryPosition?.abbreviation || "Player"} - ${person.currentTeam?.name || "MLB"}</small>`;
       button.addEventListener("click", () => {
         els.searchResults.hidden = true;
-        els.searchInput.value = person.fullName;
+        els.searchInput.value = "";
         loadPlayer(person.id);
       });
       shell.append(button);
       els.searchResults.append(shell);
     });
+    els.searchInput.value = "";
   } catch (error) {
     els.searchResults.innerHTML = `<p class="error">Search is unavailable right now.</p>`;
   }
