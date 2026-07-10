@@ -457,6 +457,22 @@ body {
 }
 
 @media (max-width: 575.98px) {
+  .schedule-panel .month-controls {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px !important;
+    width: 100%;
+  }
+
+  .schedule-panel .month-controls .btn-control {
+    width: 100%;
+    min-width: 0;
+    min-height: 38px;
+    padding-inline: 6px;
+    line-height: 1.1;
+    white-space: normal;
+  }
+
   .schedule-panel .day-number {
     font-size: 0;
   }

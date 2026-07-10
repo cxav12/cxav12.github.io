@@ -21,7 +21,7 @@
               <h1 class="display-title brand-title mb-0">Yankees</h1>
             </div>
           </div>
-          <span class="status-pill">Section hub</span>
+          <span class="status-pill" id="recap-status">Loading latest final</span>
         </header>
 
         <details class="site-nav">
@@ -44,92 +44,43 @@
           </div>
         </nav>
 
-        <section class="hero-body row g-4 align-items-end">
-          <div class="col-12">
-            <p class="eyebrow mb-2">Team dashboard</p>
-            <h2 class="hero-heading mb-3">A Yankees home base for stats, roster movement, and player tracking.</h2>
-            <p class="hero-copy mb-0">
-              Start with the live player spotlight, then expand into dedicated views for roster depth, transactions, injuries, Statcast notes, and season trends.
+        <section class="hero-body recap-hero row g-4 align-items-end">
+          <div class="col-12 col-lg-7">
+            <p class="eyebrow mb-2">Latest game recap</p>
+            <h2 class="hero-heading mb-3" id="recap-title">Loading Yankees recap</h2>
+            <p class="hero-copy mb-0" id="recap-subtitle">
+              Pulling the latest completed game, boxscore totals, and play-by-play metrics.
             </p>
+          </div>
+          <div class="col-12 col-lg-5">
+            <div class="recap-scoreboard" id="recap-scoreboard">
+              <span>Final</span>
+              <strong>Loading score...</strong>
+              <small>MLB data is connecting</small>
+            </div>
           </div>
         </section>
       </section>
 
-      <section class="section-grid row g-3">
-        <article class="col-12 col-md-6 col-xl-4">
-          <div class="section-card section-card-active h-100">
-            <p class="card-kicker mb-2">Live Dashboard</p>
-            <h2>Player Spotlight</h2>
-            <p>Search MLB players, view recent game logs, season stats, player details, and Baseball Savant links.</p>
-            <div class="card-preview" id="spotlight-preview">
-              <p class="preview-loading mb-0">Loading featured player...</p>
-            </div>
-            <a class="btn btn-section" href="./player-spotlight/">Open Spotlight</a>
-          </div>
-        </article>
-
-        <article class="col-12 col-md-6 col-xl-4">
-          <div class="section-card section-card-active h-100">
-            <p class="card-kicker mb-2">Calendar</p>
-            <h2>Schedule</h2>
-            <p>View each Yankees game by month, with final scores for completed games and time, opponent, and ballpark details for upcoming matchups.</p>
-            <div class="card-preview">
-              <p class="preview-label mb-2">Next 5 Games</p>
-              <div class="preview-list" id="schedule-preview">
-                <p class="preview-loading mb-0">Loading schedule...</p>
-              </div>
-            </div>
-            <a class="btn btn-section" href="./schedule/">Open Schedule</a>
-          </div>
-        </article>
-
-        <article class="col-12 col-md-6 col-xl-4">
-          <div class="section-card section-card-active h-100">
-            <p class="card-kicker mb-2">Transactions</p>
-            <h2>Moves & IL</h2>
-            <p>Track the active roster, club transactions, injured list updates, rehab assignments, and returning players.</p>
-            <div class="card-preview">
-              <p class="preview-label mb-2">Latest 10 Moves</p>
-              <div class="preview-list" id="moves-preview">
-                <p class="preview-loading mb-0">Loading moves...</p>
-              </div>
-            </div>
-            <a class="btn btn-section" href="./moves-il/">Open Moves & IL</a>
-          </div>
-        </article>
-
-        <article class="col-12 col-md-6 col-xl-4">
-          <div class="section-card h-100">
-            <p class="card-kicker mb-2">Performance</p>
-            <h2>Statcast Lab</h2>
-            <p>Future Baseball Savant-style breakdowns for exit velocity, hard-hit rate, pitch profiles, and trends.</p>
-            <span class="btn btn-section disabled" aria-disabled="true">Coming Soon</span>
-          </div>
-        </article>
-
-        <article class="col-12 col-md-6 col-xl-4">
-          <div class="section-card section-card-active h-100">
-            <p class="card-kicker mb-2">Team Stats</p>
-            <h2>Team Overview</h2>
-            <p>Review Yankees record, division standing, core batting and pitching stats, and compare the club against any MLB team.</p>
-            <div class="card-preview">
-              <p class="preview-label mb-2">Recent Form</p>
-              <div class="form-preview" id="form-preview">
-                <p class="preview-loading mb-0">Scanning recent games...</p>
-              </div>
-            </div>
-            <a class="btn btn-section" href="./team-overview/">Open Overview</a>
-          </div>
-        </article>
-
-        <article class="col-12 col-md-6 col-xl-4">
-          <div class="section-card h-100">
-            <p class="card-kicker mb-2">Season</p>
-            <h2>Team Trends</h2>
-            <p>Future dashboards for team-level batting, pitching, streaks, splits, and month-by-month performance.</p>
-            <span class="btn btn-section disabled" aria-disabled="true">Coming Soon</span>
-          </div>
-        </article>
+      <section class="recap-section" aria-label="Latest Yankees game recap">
+        <div class="recap-grid" id="recap-grid">
+          <article class="recap-column">
+            <h3>NYY Hitting</h3>
+            <p class="recap-loading mb-0">Loading hitting totals...</p>
+          </article>
+          <article class="recap-column">
+            <h3>NYY Batted Balls</h3>
+            <p class="recap-loading mb-0">Loading batted-ball mix...</p>
+          </article>
+          <article class="recap-column">
+            <h3>NYY Pitching</h3>
+            <p class="recap-loading mb-0">Loading pitching totals...</p>
+          </article>
+          <article class="recap-column">
+            <h3>NYY Metrics</h3>
+            <p class="recap-loading mb-0">Loading game metrics...</p>
+          </article>
+        </div>
       </section>
     </main>
     <script src="./app.js" defer></script>
