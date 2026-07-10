@@ -421,6 +421,47 @@ body {
 .insight-panel p,
 .btn-control,
 .btn-yankees,
-.spotlight .recent-form-bar {
+.spotlight .recent-form-bar,
+.preview-row strong,
+.spotlight-mini strong,
+.form-row strong,
+.form-row b,
+.preview-row > span:last-child,
+.mini-stat,
+.standing-line,
+.metric-value span {
   font-size: var(--text-normal);
+}
+
+.preview-row small,
+.spotlight-mini small,
+.form-row small,
+.metric-badge,
+.metric-row strong,
+.metric-value small {
+  font-size: var(--text-small);
+}
+
+.schedule-panel .month-summary,
+.schedule-panel .game-detail,
+.schedule-panel .empty-day,
+.schedule-panel .btn-control,
+.schedule-panel .matchup {
+  font-size: var(--text-normal);
+}
+
+.schedule-panel .weekday-row span,
+.schedule-panel .day-number,
+.schedule-panel .game-status {
+  font-size: var(--text-small);
+}
+
+@media (max-width: 575.98px) {
+  .schedule-panel .day-number {
+    font-size: 0;
+  }
+
+  .schedule-panel .day-number::before {
+    font-size: var(--text-small);
+  }
 }
