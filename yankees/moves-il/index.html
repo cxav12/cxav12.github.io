@@ -70,12 +70,22 @@
               <div class="panel h-100">
                 <div class="panel-head d-flex align-items-center justify-content-between gap-3">
                   <div>
-                    <p class="panel-kicker mb-1">Club</p>
-                    <h2 class="panel-heading mb-0">Yankees Roster</h2>
+                    <h2 class="panel-heading mb-0">Roster</h2>
                   </div>
                   <span id="roster-count">Loading</span>
                 </div>
-                <div class="row g-2 roster-list mt-3" id="roster-list"></div>
+                <div class="roster-tabs mt-3" role="tablist" aria-label="Roster groups">
+                  <button class="roster-tab active" id="batters-tab" type="button" role="tab" aria-selected="true" aria-controls="batters-panel" data-roster-tab="batters">Batters <span id="batters-count">--</span></button>
+                  <button class="roster-tab" id="pitchers-tab" type="button" role="tab" aria-selected="false" aria-controls="pitchers-panel" data-roster-tab="pitchers">Pitchers <span id="pitchers-count">--</span></button>
+                </div>
+                <div class="roster-groups mt-3" id="roster-list">
+                  <section class="roster-group active" id="batters-panel" role="tabpanel" aria-labelledby="batters-tab">
+                    <div class="roster-list" id="batters-list"></div>
+                  </section>
+                  <section class="roster-group" id="pitchers-panel" role="tabpanel" aria-labelledby="pitchers-tab" hidden>
+                    <div class="roster-list" id="pitchers-list"></div>
+                  </section>
+                </div>
               </div>
             </section>
 
@@ -83,12 +93,12 @@
               <div class="panel h-100">
                 <div class="panel-head d-flex align-items-center justify-content-between gap-3">
                   <div>
-                    <p class="panel-kicker mb-1">Movement</p>
                     <h2 class="panel-heading mb-0">Transactions & IL</h2>
                   </div>
                   <span id="transaction-window">Last 45 days</span>
                 </div>
                 <div class="feed d-grid gap-2 mt-3" id="transaction-feed"></div>
+                <nav class="transaction-pagination mt-3" id="transaction-pagination" aria-label="Transactions pages"></nav>
               </div>
             </section>
           </section>
