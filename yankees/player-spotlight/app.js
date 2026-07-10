@@ -21,8 +21,8 @@ const els = {
   secondaryStats: document.querySelector("#secondary-stats"),
   gameHead: document.querySelector("#game-log-head"),
   gameBody: document.querySelector("#game-log-body"),
-  recentSummary: document.querySelector("#recent-summary"),
   recentBar: document.querySelector("#recent-form-bar"),
+  recentStats: document.querySelector("#recent-line-stats"),
   recentButtons: document.querySelectorAll(".recent-window-button"),
   searchInput: document.querySelector("#player-search"),
   searchButton: document.querySelector("#search-button"),
@@ -246,7 +246,6 @@ async function renderGameLog(id, group) {
   const headers = group === "pitching" ? ["Date", "Opponent", "IP", "ER", "SO", "BB", "Result"] : ["Date", "Opponent", "H-AB", "HR", "RBI", "R", "BB"];
   els.gameHead.innerHTML = `<tr>${headers.map((item) => `<th>${item}</th>`).join("")}</tr>`;
   els.gameBody.replaceChildren();
-  els.recentSummary.textContent = splits.length ? `${splits.length} games shown` : "No recent games found";
   renderRecentBar();
 
   if (!splits.length) {
@@ -269,7 +268,7 @@ async function renderGameLog(id, group) {
 function renderRecentBar() {
   const games = state.gameLogSplits.slice(-state.recentWindow);
   if (!games.length) {
-    els.recentBar.textContent = "No recent games found";
+    els.recentStats.textContent = "No recent games found";
     return;
   }
 
@@ -283,7 +282,7 @@ function renderRecentBar() {
       return acc;
     }, { outs: 0, er: 0, so: 0, bb: 0 });
     const era = totals.outs ? ((totals.er * 27) / totals.outs).toFixed(2) : "-";
-    els.recentBar.innerHTML = `<strong>Last ${games.length} games:</strong> ${era} ERA <span>-</span> ${outsToInnings(totals.outs)} IP <span>-</span> ${totals.so} K <span>-</span> ${totals.bb} BB <span>-</span> ${totals.er} ER`;
+    els.recentStats.innerHTML = `${era} ERA <span>&middot;</span> ${outsToInnings(totals.outs)} IP <span>&middot;</span> ${totals.so} K <span>&middot;</span> ${totals.bb} BB <span>&middot;</span> ${totals.er} ER`;
     return;
   }
 
@@ -296,7 +295,7 @@ function renderRecentBar() {
     acc.runs += Number(stat.runs || 0);
     return acc;
   }, { ab: 0, hits: 0, hr: 0, rbi: 0, runs: 0 });
-  els.recentBar.innerHTML = `<strong>Last ${games.length} games:</strong> ${formatAverage(totals.hits, totals.ab)} AVG <span>-</span> ${totals.hr} HR <span>-</span> ${totals.rbi} RBI <span>-</span> ${totals.runs} R <span>-</span> ${totals.hits}-${totals.ab} H-AB`;
+  els.recentStats.innerHTML = `${formatAverage(totals.hits, totals.ab)} AVG <span>&middot;</span> ${totals.hr} HR <span>&middot;</span> ${totals.rbi} RBI <span>&middot;</span> ${totals.runs} R <span>&middot;</span> ${totals.hits}-${totals.ab} H-AB`;
 }
 
 function setRecentWindow(games) {
