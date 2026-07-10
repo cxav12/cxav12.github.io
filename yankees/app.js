@@ -8,7 +8,12 @@ const els = {
   title: document.querySelector("#recap-title"),
   subtitle: document.querySelector("#recap-subtitle"),
   scoreboard: document.querySelector("#recap-scoreboard"),
+  recent: document.querySelector("#recent-games-grid"),
   grid: document.querySelector("#recap-grid"),
+};
+
+const state = {
+  recentGames: [],
 };
 
 async function getJson(path, params = {}) {
@@ -52,8 +57,22 @@ function niceDate(value) {
   }).format(new Date(`${value}T12:00:00`));
 }
 
+function dateTileParts(value) {
+  const date = value ? new Date(`${value}T12:00:00`) : new Date();
+  return {
+    weekday: new Intl.DateTimeFormat("en", { weekday: "short" }).format(date).toUpperCase(),
+    month: new Intl.DateTimeFormat("en", { month: "short" }).format(date).toUpperCase(),
+    day: new Intl.DateTimeFormat("en", { day: "numeric" }).format(date),
+  };
+}
+
 function teamAbbreviation(team) {
   return team?.abbreviation || team?.teamName || team?.name || "TBD";
+}
+
+function teamLogoUrl(team) {
+  const id = typeof team === "number" ? team : team?.id;
+  return id ? `https://www.mlbstatic.com/team-logos/${id}.svg` : "";
 }
 
 function statValue(source, key, fallback = "-") {
@@ -88,6 +107,10 @@ function opponentSide(game) {
   return isYankeesHome(game) ? "away" : "home";
 }
 
+function teamEntry(game, side) {
+  return game.teams?.[side] || {};
+}
+
 function scoreLine(game) {
   const away = game.teams?.away;
   const home = game.teams?.home;
@@ -101,7 +124,33 @@ function resultLabel(game) {
   return Number(yankees) > Number(opponent) ? "Final - Win" : "Final - Loss";
 }
 
-async function getLatestFinalGame() {
+function resultWord(game) {
+  const yankees = game.teams?.[yankeesSide(game)]?.score;
+  const opponent = game.teams?.[opponentSide(game)]?.score;
+  if (!Number.isFinite(Number(yankees)) || !Number.isFinite(Number(opponent))) return "Final";
+  return Number(yankees) > Number(opponent) ? "Win" : "Loss";
+}
+
+function resultShort(game) {
+  const yankees = teamEntry(game, yankeesSide(game))?.score;
+  const opponent = teamEntry(game, opponentSide(game))?.score;
+  if (!Number.isFinite(Number(yankees)) || !Number.isFinite(Number(opponent))) return "Final";
+  return Number(yankees) > Number(opponent) ? "Win" : "Loss";
+}
+
+function formatDecisionPitcher(player, fallback = "None") {
+  if (!player) return fallback;
+  const name = player.initLastName || player.lastName || player.fullName || fallback;
+  const wins = player.stats?.pitching?.wins ?? player.stats?.statsSingleSeason?.pitching?.wins;
+  const losses = player.stats?.pitching?.losses ?? player.stats?.statsSingleSeason?.pitching?.losses;
+  const era = player.stats?.pitching?.era ?? player.stats?.statsSingleSeason?.pitching?.era;
+  const record = wins !== undefined && losses !== undefined && era !== undefined
+    ? ` (${wins}-${losses}, ${era})`
+    : "";
+  return `${name}${record}`;
+}
+
+async function getRecentFinalGames() {
   for (const daysBack of [21, 45, 90]) {
     const { start, end } = dateWindow(daysBack);
     const schedule = await getJson("/schedule", {
@@ -116,7 +165,7 @@ async function getLatestFinalGame() {
       .filter((game) => game.status?.abstractGameState === "Final")
       .sort((a, b) => new Date(b.gameDate) - new Date(a.gameDate));
 
-    if (games.length) return games[0];
+    if (games.length >= 5 || daysBack === 90) return games;
   }
 
   throw new Error("No completed Yankees games found.");
@@ -253,15 +302,51 @@ function renderRecapColumn(title, body) {
   `;
 }
 
+function renderRecentGames(games, selectedGamePk) {
+  const previousGames = games.slice(1, 5);
+
+  if (!previousGames.length) {
+    els.recent.innerHTML = `<button class="recent-game-button" type="button" disabled>No previous games found.</button>`;
+    return;
+  }
+
+  els.recent.innerHTML = previousGames.map((game) => {
+    const yankees = teamEntry(game, yankeesSide(game));
+    const opponentEntry = teamEntry(game, opponentSide(game));
+    const opponent = opponentEntry.team;
+    const isSelected = Number(game.gamePk) === Number(selectedGamePk);
+    return `
+      <button class="recent-game-button${isSelected ? " active" : ""}" type="button" data-game-pk="${escapeHtml(game.gamePk)}">
+        <span class="recent-game-date">${escapeHtml(niceDate(game.officialDate))}</span>
+        <span class="recent-game-matchup">
+          <img src="${escapeHtml(teamLogoUrl(yankees.team))}" alt="${escapeHtml(teamAbbreviation(yankees.team))} logo" />
+          <strong>NYY ${escapeHtml(yankees.score ?? "-")}</strong>
+          <i aria-hidden="true">-</i>
+          <strong>${escapeHtml(opponentEntry.score ?? "-")} ${escapeHtml(teamAbbreviation(opponent))}</strong>
+          <img src="${escapeHtml(teamLogoUrl(opponent))}" alt="${escapeHtml(teamAbbreviation(opponent))} logo" />
+        </span>
+        <span class="recent-game-result ${resultShort(game).toLowerCase()}">${escapeHtml(resultShort(game))}</span>
+      </button>
+    `;
+  }).join("");
+}
+
 function renderRecap(game, feed) {
   const side = yankeesSide(game);
+  const yankees = teamEntry(game, yankeesSide(game));
+  const opponentEntry = teamEntry(game, opponentSide(game));
   const opponent = game.teams?.[opponentSide(game)]?.team;
   const teamStats = feed.liveData?.boxscore?.teams?.[side]?.teamStats || {};
   const batting = teamStats.batting || {};
   const pitching = teamStats.pitching || {};
   const lineTeam = feed.liveData?.linescore?.teams?.[side] || {};
+  const decisions = feed.liveData?.decisions || {};
   const metrics = collectGameMetrics(feed, side);
   const batted = metrics.battedBalls;
+  const yankeesScore = yankees.score ?? "-";
+  const opponentScore = opponentEntry.score ?? "-";
+  const opponentAbbr = teamAbbreviation(opponent);
+  const gameResult = resultWord(game);
   const strikePercentage = numberValue(pitching, "numberOfPitches")
     ? Math.round((numberValue(pitching, "strikes") / numberValue(pitching, "numberOfPitches")) * 100)
     : 0;
@@ -275,9 +360,21 @@ function renderRecap(game, feed) {
   els.title.textContent = `${resultLabel(game)} vs ${teamAbbreviation(opponent)}`;
   els.subtitle.textContent = `${niceDate(game.officialDate)} - ${game.venue?.name || "Ballpark"} - ${scoreLine(game)}`;
   els.scoreboard.innerHTML = `
-    <span>${escapeHtml(resultLabel(game))}</span>
-    <strong>${escapeHtml(scoreLine(game))}</strong>
-    <small>${escapeHtml(niceDate(game.officialDate))}</small>
+    <div class="game-result-badge ${gameResult.toLowerCase()}">${escapeHtml(gameResult)}</div>
+    <div class="game-score-strip">
+      <img class="team-logo" src="${escapeHtml(teamLogoUrl(yankees.team))}" alt="New York Yankees logo" />
+      <span>NYY</span>
+      <strong>${escapeHtml(yankeesScore)}</strong>
+      <i aria-hidden="true">-</i>
+      <strong>${escapeHtml(opponentScore)}</strong>
+      <span>${escapeHtml(opponentAbbr)}</span>
+      <img class="team-logo" src="${escapeHtml(teamLogoUrl(opponent))}" alt="${escapeHtml(opponentAbbr)} logo" />
+    </div>
+    <div class="game-decisions">
+      <p><span class="win-label">W:</span> ${escapeHtml(formatDecisionPitcher(decisions.winner))}</p>
+      <p><span class="loss-label">L:</span> ${escapeHtml(formatDecisionPitcher(decisions.loser))}</p>
+      <p><span class="save-label">SV:</span> ${escapeHtml(formatDecisionPitcher(decisions.save))}</p>
+    </div>
   `;
 
   els.grid.innerHTML = [
@@ -334,7 +431,11 @@ function renderRecap(game, feed) {
 
 async function init() {
   try {
-    const latestGame = await getLatestFinalGame();
+    const games = await getRecentFinalGames();
+    const latestGame = games[0];
+    state.recentGames = games;
+    renderRecentGames(games, latestGame?.gamePk);
+    if (!latestGame) throw new Error("No completed Yankees games found.");
     const feed = await getLiveJson(`/game/${latestGame.gamePk}/feed/live`);
     renderRecap(latestGame, feed);
   } catch (error) {
@@ -343,9 +444,19 @@ async function init() {
     els.title.textContent = "Latest recap could not be loaded";
     els.subtitle.textContent = "The MLB data feed did not return the completed game recap right now.";
     els.scoreboard.innerHTML = `
-      <span>Unavailable</span>
-      <strong>Try again shortly</strong>
-      <small>${escapeHtml(error.message)}</small>
+      <div class="game-result-badge">Unavailable</div>
+      <div class="game-score-strip">
+        <span>NYY</span>
+        <strong>-</strong>
+        <i aria-hidden="true">-</i>
+        <strong>-</strong>
+        <span>OPP</span>
+      </div>
+      <div class="game-decisions">
+        <p><span class="win-label">W:</span> Try again shortly</p>
+        <p><span class="loss-label">L:</span> ${escapeHtml(error.message)}</p>
+        <p><span class="save-label">SV:</span> None</p>
+      </div>
     `;
     els.grid.innerHTML = `
       <article class="recap-column recap-error">
@@ -355,5 +466,29 @@ async function init() {
     `;
   }
 }
+
+els.recent.addEventListener("click", async (event) => {
+  const button = event.target.closest(".recent-game-button[data-game-pk]");
+  if (!button) return;
+
+  const gamePk = Number(button.dataset.gamePk);
+  const game = state.recentGames.find((item) => Number(item.gamePk) === gamePk);
+  if (!game) return;
+
+  els.status.textContent = "Loading selected recap";
+  els.status.style.color = "";
+  els.scoreboard.classList.add("loading");
+  renderRecentGames(state.recentGames, gamePk);
+
+  try {
+    const feed = await getLiveJson(`/game/${game.gamePk}/feed/live`);
+    renderRecap(game, feed);
+  } catch (error) {
+    els.status.textContent = "Selected recap unavailable";
+    els.status.style.color = "#ffbec4";
+  } finally {
+    els.scoreboard.classList.remove("loading");
+  }
+});
 
 init();

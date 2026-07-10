@@ -12,24 +12,17 @@ body {
   min-height: 0;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px),
-    linear-gradient(145deg, rgba(12, 35, 64, 0.98), rgba(6, 21, 46, 0.96) 56%, rgba(8, 33, 63, 0.98));
-  background-size: 34px 34px, 34px 34px, auto;
-  box-shadow: var(--shadow);
+  background: rgba(6, 21, 46, 0.9);
 }
 
 .hero-panel::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0;
-  height: 6px;
-  background: linear-gradient(90deg, var(--yankees-silver), var(--yankees-navy), var(--swatch-mid), var(--yankees-silver));
+  display: none;
 }
 
-.hero-body {
-  padding: clamp(24px, 4vw, 44px) clamp(20px, 5vw, 64px) clamp(30px, 4vw, 50px);
+.recent-games-section,
+.selected-recap-section,
+.recap-section {
+  padding-top: 14px;
 }
 
 .hero-panel .hero-heading {
@@ -51,36 +44,191 @@ body {
   text-transform: uppercase;
 }
 
-.recap-scoreboard {
-  min-height: 144px;
-  border: 1px solid var(--line-bright);
-  border-radius: 8px;
-  background: rgba(3, 6, 20, 0.34);
+.recent-games-grid {
   display: grid;
-  align-content: center;
-  gap: 8px;
-  padding: 18px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
 }
 
-.recap-scoreboard span,
-.recap-scoreboard small,
-.recap-loading {
+.recent-game-button {
+  min-width: 0;
+  border: 1px solid rgba(77, 127, 190, 0.42);
+  border-radius: 8px;
+  color: var(--ink);
+  background: linear-gradient(145deg, rgba(10, 31, 58, 0.94), rgba(5, 18, 41, 0.92));
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  text-align: left;
+}
+
+.recent-game-button:hover,
+.recent-game-button:focus,
+.recent-game-button.active {
+  border-color: rgba(196, 206, 212, 0.66);
+  background: linear-gradient(145deg, rgba(17, 52, 96, 0.98), rgba(8, 33, 63, 0.96));
+}
+
+.recent-game-date,
+.recent-game-result {
   color: var(--muted);
-}
-
-.recap-scoreboard span,
-.recap-scoreboard small {
   font-size: var(--text-small);
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.recap-scoreboard strong {
-  color: #fff;
-  font-size: clamp(1.4rem, 5vw, 2.5rem);
+.recent-game-matchup {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto minmax(0, 1fr) 32px;
+  gap: 8px;
+  align-items: center;
+}
+
+.recent-game-matchup img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.recent-game-matchup strong {
+  overflow: hidden;
+  font-size: 0.95rem;
   font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-game-matchup i {
+  color: var(--muted);
+  font-style: normal;
+  font-weight: 800;
+}
+
+.recent-game-result.win {
+  color: #67e8a2;
+}
+
+.recent-game-result.loss {
+  color: #ff8f8f;
+}
+
+.last-game-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 136px;
+  border: 1px solid rgba(77, 127, 190, 0.5);
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(3, 12, 24, 0.96), rgba(8, 33, 63, 0.96));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  display: grid;
+  grid-template-columns: 130px minmax(360px, 1fr) minmax(330px, 0.75fr);
+  align-items: center;
+}
+
+.last-game-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(196, 206, 212, 0.04), transparent 26%, rgba(59, 130, 246, 0.12));
+}
+
+.game-result-badge {
+  height: 100%;
+  border-right: 1px solid rgba(96, 126, 166, 0.36);
+  color: #67e8a2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  font-size: clamp(1.2rem, 2vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.game-result-badge.loss {
+  color: #ff8f8f;
+}
+
+.game-score-strip {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 58px auto auto auto auto auto 58px;
+  gap: clamp(10px, 2vw, 22px);
+  align-items: center;
+  justify-content: center;
+  padding: 18px clamp(18px, 4vw, 38px);
+}
+
+.team-logo {
+  width: clamp(44px, 5vw, 64px);
+  height: clamp(44px, 5vw, 64px);
+  object-fit: contain;
+}
+
+.game-score-strip span {
+  color: #4c76b0;
+  font-size: clamp(1.5rem, 3.2vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: 0.12em;
   line-height: 1;
+}
+
+.game-score-strip strong {
+  color: #fff;
+  font-size: clamp(2.5rem, 5.7vw, 4.25rem);
+  font-weight: 800;
+  line-height: 0.9;
+}
+
+.game-score-strip i {
+  color: rgba(196, 206, 212, 0.64);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-style: normal;
+  font-weight: 800;
+}
+
+.game-decisions {
+  min-width: 0;
+  height: 100%;
+  border-left: 1px solid rgba(96, 126, 166, 0.38);
+  display: grid;
+  align-content: center;
+  gap: 14px;
+  padding: 22px clamp(22px, 3vw, 36px);
+}
+
+.game-decisions p {
+  margin: 0;
+  overflow: hidden;
+  color: #f7f8ff;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.game-decisions span {
+  margin-right: 10px;
+  color: #57f091;
+}
+
+.game-decisions .loss-label {
+  color: #ff7777;
+}
+
+.game-decisions .save-label {
+  color: #4c76b0;
+}
+
+.recap-loading {
+  color: var(--muted);
 }
 
 .recap-section {
@@ -243,6 +391,28 @@ body {
 }
 
 @media (max-width: 1199.98px) {
+  .recent-games-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .last-game-card {
+    grid-template-columns: 120px minmax(0, 1fr);
+  }
+
+  .game-decisions {
+    grid-column: 1 / -1;
+    min-height: 84px;
+    border-top: 1px solid rgba(96, 126, 166, 0.38);
+    border-left: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-content: center;
+  }
+
+  .game-decisions p {
+    font-size: 0.95rem;
+  }
+
   .recap-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -253,6 +423,35 @@ body {
 }
 
 @media (max-width: 767.98px) {
+  .recent-games-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .last-game-card {
+    grid-template-columns: 1fr;
+  }
+
+  .game-result-badge {
+    min-height: 54px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(96, 126, 166, 0.36);
+  }
+
+  .game-score-strip {
+    grid-template-columns: 42px auto auto auto auto auto 42px;
+    padding: 22px 16px;
+  }
+
+  .game-decisions {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 18px;
+  }
+
+  .game-decisions p {
+    white-space: normal;
+  }
+
   .recap-grid {
     grid-template-columns: 1fr;
   }
@@ -263,12 +462,39 @@ body {
 }
 
 @media (max-width: 575.98px) {
-  .hero-body {
-    padding-inline: 16px;
+  .last-game-card {
+    min-height: 0;
   }
 
-  .recap-scoreboard {
-    min-height: 0;
+  .game-score-strip {
+    grid-template-columns: 34px auto auto auto auto auto 34px;
+    gap: 8px;
+  }
+
+  .team-logo {
+    width: 34px;
+    height: 34px;
+  }
+
+  .game-score-strip span {
+    font-size: 1rem;
+  }
+
+  .game-score-strip strong {
+    font-size: 2rem;
+  }
+
+  .game-score-strip i {
+    font-size: 1.4rem;
+  }
+
+  .recent-game-matchup {
+    grid-template-columns: 28px minmax(0, 1fr) auto minmax(0, 1fr) 28px;
+  }
+
+  .recent-game-matchup img {
+    width: 28px;
+    height: 28px;
   }
 
   .recap-column {
