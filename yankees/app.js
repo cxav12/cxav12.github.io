@@ -2,6 +2,7 @@ const TEAM_ID = 147;
 const MLB_API = "https://statsapi.mlb.com/api/v1";
 const MLB_LIVE_API = "https://statsapi.mlb.com/api/v1.1";
 const HARD_HIT_MPH = 95;
+const LIVE_REFRESH_MS = 30000;
 
 const els = {
   status: document.querySelector("#recap-status"),
@@ -14,6 +15,9 @@ const els = {
 
 const state = {
   recentGames: [],
+  liveGame: null,
+  selectedGame: null,
+  liveRefreshTimer: null,
 };
 
 async function getJson(path, params = {}) {
@@ -47,6 +51,11 @@ function dateWindow(daysBack) {
   return { start: formatDate(start), end: formatDate(end) };
 }
 
+function todayWindow() {
+  const today = formatDate(new Date());
+  return { start: today, end: today };
+}
+
 function niceDate(value) {
   if (!value) return "TBD";
   return new Intl.DateTimeFormat("en", {
@@ -55,15 +64,6 @@ function niceDate(value) {
     day: "numeric",
     year: "numeric",
   }).format(new Date(`${value}T12:00:00`));
-}
-
-function dateTileParts(value) {
-  const date = value ? new Date(`${value}T12:00:00`) : new Date();
-  return {
-    weekday: new Intl.DateTimeFormat("en", { weekday: "short" }).format(date).toUpperCase(),
-    month: new Intl.DateTimeFormat("en", { month: "short" }).format(date).toUpperCase(),
-    day: new Intl.DateTimeFormat("en", { day: "numeric" }).format(date),
-  };
 }
 
 function teamAbbreviation(team) {
@@ -118,6 +118,7 @@ function scoreLine(game) {
 }
 
 function resultLabel(game) {
+  if (isLiveGame(game)) return "In Progress";
   const yankees = game.teams?.[yankeesSide(game)]?.score;
   const opponent = game.teams?.[opponentSide(game)]?.score;
   if (!Number.isFinite(Number(yankees)) || !Number.isFinite(Number(opponent))) return "Final";
@@ -125,6 +126,7 @@ function resultLabel(game) {
 }
 
 function resultWord(game) {
+  if (isLiveGame(game)) return "In Progress";
   const yankees = game.teams?.[yankeesSide(game)]?.score;
   const opponent = game.teams?.[opponentSide(game)]?.score;
   if (!Number.isFinite(Number(yankees)) || !Number.isFinite(Number(opponent))) return "Final";
@@ -136,6 +138,58 @@ function resultShort(game) {
   const opponent = teamEntry(game, opponentSide(game))?.score;
   if (!Number.isFinite(Number(yankees)) || !Number.isFinite(Number(opponent))) return "Final";
   return Number(yankees) > Number(opponent) ? "Win" : "Loss";
+}
+
+function resultClass(game) {
+  if (isLiveGame(game)) return "in-progress";
+  return resultShort(game).toLowerCase();
+}
+
+function isLiveGame(game) {
+  return game?.status?.abstractGameState === "Live";
+}
+
+function ordinalInning(inning) {
+  const value = Number(inning);
+  if (!Number.isFinite(value) || value < 1) return "Pregame";
+  const suffix = value % 100 >= 11 && value % 100 <= 13
+    ? "th"
+    : ["th", "st", "nd", "rd"][value % 10] || "th";
+  return `${value}${suffix}`;
+}
+
+function inningLabel(feed, game) {
+  if (!isLiveGame(game)) return "";
+  const linescore = feed.liveData?.linescore || {};
+  const inningState = linescore.inningState || game.linescore?.inningState || "";
+  const inning = ordinalInning(linescore.currentInning || game.linescore?.currentInning);
+  const outs = Number(linescore.outs);
+  const parts = [`${inningState} ${inning}`.trim()];
+  if (Number.isFinite(outs)) parts.push(`${outs} out${outs === 1 ? "" : "s"}`);
+  return parts.filter(Boolean).join(" - ");
+}
+
+function lineScoreTeam(feed, side) {
+  return feed.liveData?.linescore?.teams?.[side] || {};
+}
+
+function scoreForSide(game, feed, side) {
+  return lineScoreTeam(feed, side)?.runs ?? teamEntry(game, side).score ?? "-";
+}
+
+async function getTodaysLiveGame() {
+  const { start, end } = todayWindow();
+  const schedule = await getJson("/schedule", {
+    sportId: 1,
+    teamId: TEAM_ID,
+    startDate: start,
+    endDate: end,
+    hydrate: "team,venue,linescore",
+  });
+
+  return (schedule.dates || [])
+    .flatMap((dateEntry) => dateEntry.games || [])
+    .find((game) => isLiveGame(game)) || null;
 }
 
 function formatDecisionPitcher(player, fallback = "None") {
@@ -302,8 +356,8 @@ function renderRecapColumn(title, body) {
   `;
 }
 
-function renderRecentGames(games, selectedGamePk) {
-  const previousGames = games.slice(1, 5);
+function renderRecentGames(games, selectedGamePk, { includeLatest = false } = {}) {
+  const previousGames = includeLatest ? games.slice(0, 4) : games.slice(1, 5);
 
   if (!previousGames.length) {
     els.recent.innerHTML = `<button class="recent-game-button" type="button" disabled>No previous games found.</button>`;
@@ -325,13 +379,14 @@ function renderRecentGames(games, selectedGamePk) {
           <strong>${escapeHtml(opponentEntry.score ?? "-")} ${escapeHtml(teamAbbreviation(opponent))}</strong>
           <img src="${escapeHtml(teamLogoUrl(opponent))}" alt="${escapeHtml(teamAbbreviation(opponent))} logo" />
         </span>
-        <span class="recent-game-result ${resultShort(game).toLowerCase()}">${escapeHtml(resultShort(game))}</span>
+        <span class="recent-game-result ${resultClass(game)}">${escapeHtml(resultShort(game))}</span>
       </button>
     `;
   }).join("");
 }
 
 function renderRecap(game, feed) {
+  if (feed.gameData?.status) game.status = feed.gameData.status;
   const side = yankeesSide(game);
   const yankees = teamEntry(game, yankeesSide(game));
   const opponentEntry = teamEntry(game, opponentSide(game));
@@ -343,10 +398,12 @@ function renderRecap(game, feed) {
   const decisions = feed.liveData?.decisions || {};
   const metrics = collectGameMetrics(feed, side);
   const batted = metrics.battedBalls;
-  const yankeesScore = yankees.score ?? "-";
-  const opponentScore = opponentEntry.score ?? "-";
+  const yankeesScore = scoreForSide(game, feed, yankeesSide(game));
+  const opponentScore = scoreForSide(game, feed, opponentSide(game));
   const opponentAbbr = teamAbbreviation(opponent);
   const gameResult = resultWord(game);
+  const gameResultClass = resultClass(game);
+  const liveLabel = inningLabel(feed, game);
   const strikePercentage = numberValue(pitching, "numberOfPitches")
     ? Math.round((numberValue(pitching, "strikes") / numberValue(pitching, "numberOfPitches")) * 100)
     : 0;
@@ -355,12 +412,12 @@ function renderRecap(game, feed) {
     ? ((metrics.hardHitCount / metrics.trackedBattedBalls) * 100).toFixed(1)
     : "-";
 
-  els.status.textContent = "Latest final loaded";
-  els.status.style.color = "#9af0c8";
+  els.status.textContent = isLiveGame(game) ? "Live game updating" : "Latest final loaded";
+  els.status.style.color = isLiveGame(game) ? "#f6d365" : "#9af0c8";
   els.title.textContent = `${resultLabel(game)} vs ${teamAbbreviation(opponent)}`;
   els.subtitle.textContent = `${niceDate(game.officialDate)} - ${game.venue?.name || "Ballpark"} - ${scoreLine(game)}`;
   els.scoreboard.innerHTML = `
-    <div class="game-result-badge ${gameResult.toLowerCase()}">${escapeHtml(gameResult)}</div>
+    <div class="game-result-badge ${gameResultClass}">${escapeHtml(gameResult)}</div>
     <div class="game-score-strip">
       <img class="team-logo" src="${escapeHtml(teamLogoUrl(yankees.team))}" alt="New York Yankees logo" />
       <span>NYY</span>
@@ -369,11 +426,18 @@ function renderRecap(game, feed) {
       <strong>${escapeHtml(opponentScore)}</strong>
       <span>${escapeHtml(opponentAbbr)}</span>
       <img class="team-logo" src="${escapeHtml(teamLogoUrl(opponent))}" alt="${escapeHtml(opponentAbbr)} logo" />
+      ${liveLabel ? `<small class="live-inning-detail">${escapeHtml(liveLabel)}</small>` : ""}
     </div>
     <div class="game-decisions">
-      <p><span class="win-label">W:</span> ${escapeHtml(formatDecisionPitcher(decisions.winner))}</p>
-      <p><span class="loss-label">L:</span> ${escapeHtml(formatDecisionPitcher(decisions.loser))}</p>
-      <p><span class="save-label">SV:</span> ${escapeHtml(formatDecisionPitcher(decisions.save))}</p>
+      ${isLiveGame(game) ? `
+        <p><span class="live-label">Live:</span> ${escapeHtml(game.status?.detailedState || "In Progress")}</p>
+        <p><span class="inning-label">Inning:</span> ${escapeHtml(liveLabel || "In Progress")}</p>
+        <p><span class="save-label">Updated:</span> ${escapeHtml(new Intl.DateTimeFormat("en", { hour: "numeric", minute: "2-digit" }).format(new Date()))}</p>
+      ` : `
+        <p><span class="win-label">W:</span> ${escapeHtml(formatDecisionPitcher(decisions.winner))}</p>
+        <p><span class="loss-label">L:</span> ${escapeHtml(formatDecisionPitcher(decisions.loser))}</p>
+        <p><span class="save-label">SV:</span> ${escapeHtml(formatDecisionPitcher(decisions.save))}</p>
+      `}
     </div>
   `;
 
@@ -429,15 +493,57 @@ function renderRecap(game, feed) {
   ].join("");
 }
 
+function stopLiveRefresh() {
+  if (!state.liveRefreshTimer) return;
+  clearInterval(state.liveRefreshTimer);
+  state.liveRefreshTimer = null;
+}
+
+function startLiveRefresh(game) {
+  stopLiveRefresh();
+  state.liveRefreshTimer = setInterval(async () => {
+    if (!state.selectedGame || Number(state.selectedGame.gamePk) !== Number(game.gamePk)) {
+      stopLiveRefresh();
+      return;
+    }
+
+    try {
+      const feed = await getLiveJson(`/game/${game.gamePk}/feed/live`);
+      renderRecap(game, feed);
+      if (!isLiveGame(game)) stopLiveRefresh();
+    } catch (error) {
+      els.status.textContent = "Live update paused";
+      els.status.style.color = "#ffbec4";
+    }
+  }, LIVE_REFRESH_MS);
+}
+
+async function loadGameRecap(game, { live = false } = {}) {
+  state.selectedGame = game;
+  els.scoreboard.classList.add("loading");
+
+  try {
+    const feed = await getLiveJson(`/game/${game.gamePk}/feed/live`);
+    renderRecap(game, feed);
+    if (live && isLiveGame(game)) startLiveRefresh(game);
+    else stopLiveRefresh();
+  } finally {
+    els.scoreboard.classList.remove("loading");
+  }
+}
+
 async function init() {
   try {
-    const games = await getRecentFinalGames();
-    const latestGame = games[0];
+    const [liveGame, games] = await Promise.all([
+      getTodaysLiveGame().catch(() => null),
+      getRecentFinalGames(),
+    ]);
+    const selectedGame = liveGame || games[0];
+    state.liveGame = liveGame;
     state.recentGames = games;
-    renderRecentGames(games, latestGame?.gamePk);
-    if (!latestGame) throw new Error("No completed Yankees games found.");
-    const feed = await getLiveJson(`/game/${latestGame.gamePk}/feed/live`);
-    renderRecap(latestGame, feed);
+    renderRecentGames(games, selectedGame?.gamePk, { includeLatest: Boolean(liveGame) });
+    if (!selectedGame) throw new Error("No Yankees games found.");
+    await loadGameRecap(selectedGame, { live: Boolean(liveGame) });
   } catch (error) {
     els.status.textContent = "Recap unavailable";
     els.status.style.color = "#ffbec4";
@@ -477,17 +583,14 @@ els.recent.addEventListener("click", async (event) => {
 
   els.status.textContent = "Loading selected recap";
   els.status.style.color = "";
-  els.scoreboard.classList.add("loading");
-  renderRecentGames(state.recentGames, gamePk);
+  stopLiveRefresh();
+  renderRecentGames(state.recentGames, gamePk, { includeLatest: Boolean(state.liveGame) });
 
   try {
-    const feed = await getLiveJson(`/game/${game.gamePk}/feed/live`);
-    renderRecap(game, feed);
+    await loadGameRecap(game);
   } catch (error) {
     els.status.textContent = "Selected recap unavailable";
     els.status.style.color = "#ffbec4";
-  } finally {
-    els.scoreboard.classList.remove("loading");
   }
 });
 

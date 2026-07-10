@@ -93,12 +93,14 @@ body {
 
 .recent-game-matchup {
   min-width: 0;
+  width: min(100%, 288px);
   display: grid;
-  grid-template-columns: minmax(52px, 0.7fr) minmax(0, auto) auto minmax(0, auto) minmax(52px, 0.7fr);
-  gap: 12px;
+  grid-template-columns: 62px minmax(54px, 1fr) 16px minmax(54px, 1fr) 62px;
+  gap: 10px;
   align-items: center;
   align-self: center;
   justify-content: center;
+  justify-self: center;
 }
 
 .recent-game-matchup img {
@@ -117,6 +119,7 @@ body {
   color: #fff;
   font-weight: 800;
   letter-spacing: 0.02em;
+  text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -125,6 +128,7 @@ body {
   color: rgba(196, 206, 212, 0.72);
   font-style: normal;
   font-weight: 800;
+  text-align: center;
 }
 
 .recent-game-result {
@@ -180,11 +184,15 @@ body {
   color: #ff8f8f;
 }
 
+.game-result-badge.in-progress {
+  color: #f6d365;
+}
+
 .game-score-strip {
   min-width: 0;
   display: grid;
-  grid-template-columns: 58px auto auto auto auto auto 58px;
-  gap: clamp(10px, 2vw, 22px);
+  grid-template-columns: 64px minmax(48px, auto) minmax(34px, auto) 18px minmax(34px, auto) minmax(48px, auto) 64px;
+  gap: clamp(8px, 1.4vw, 16px);
   align-items: center;
   justify-content: center;
   padding: 18px clamp(18px, 4vw, 38px);
@@ -193,7 +201,11 @@ body {
 .team-logo {
   width: clamp(44px, 5vw, 64px);
   height: clamp(44px, 5vw, 64px);
+  border-radius: 8px;
+  background: rgba(247, 248, 255, 0.78);
   object-fit: contain;
+  padding: 6px;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.22));
 }
 
 .game-score-strip span {
@@ -201,18 +213,31 @@ body {
   font-weight: 800;
   letter-spacing: 0.12em;
   line-height: 1;
+  text-align: center;
 }
 
 .game-score-strip strong {
   color: #fff;
   font-weight: 800;
   line-height: 0.9;
+  text-align: center;
 }
 
 .game-score-strip i {
   color: rgba(196, 206, 212, 0.64);
   font-style: normal;
   font-weight: 800;
+  text-align: center;
+}
+
+.live-inning-detail {
+  grid-column: 1 / -1;
+  justify-self: center;
+  color: #f6d365;
+  font-size: var(--text-small);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .game-decisions {
@@ -248,6 +273,11 @@ body {
 
 .game-decisions .save-label {
   color: #4c76b0;
+}
+
+.game-decisions .live-label,
+.game-decisions .inning-label {
+  color: #f6d365;
 }
 
 .recap-loading {
@@ -452,7 +482,7 @@ body {
   }
 
   .game-score-strip {
-    grid-template-columns: 42px auto auto auto auto auto 42px;
+    grid-template-columns: 42px minmax(34px, auto) minmax(24px, auto) 14px minmax(24px, auto) minmax(34px, auto) 42px;
     padding: 22px 16px;
   }
 
@@ -487,8 +517,8 @@ body {
   }
 
   .game-score-strip {
-    grid-template-columns: 34px auto auto auto auto auto 34px;
-    gap: 8px;
+    grid-template-columns: 34px minmax(30px, auto) minmax(22px, auto) 12px minmax(22px, auto) minmax(30px, auto) 34px;
+    gap: 6px;
   }
 
   .team-logo {
@@ -497,7 +527,8 @@ body {
   }
 
   .recent-game-matchup {
-    grid-template-columns: 38px minmax(0, auto) auto minmax(0, auto) 38px;
+    width: min(100%, 210px);
+    grid-template-columns: 38px minmax(44px, 1fr) 14px minmax(44px, 1fr) 38px;
     gap: 8px;
   }
 
