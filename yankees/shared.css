@@ -1,0 +1,339 @@
+:root {
+  color-scheme: dark;
+  --yankees-navy: #0c2340;
+  --yankees-silver: #c4ced4;
+  --swatch-deep: #06152e;
+  --swatch-mid: #1b4f8f;
+  --swatch-shadow: #08213f;
+  --bs-body-color: #f7f8ff;
+  --bs-body-bg: var(--swatch-deep);
+  --ink: #f7f8ff;
+  --muted: var(--yankees-silver);
+  --quiet: #8f9aa2;
+  --line: rgba(196, 206, 211, 0.18);
+  --line-bright: rgba(196, 206, 211, 0.48);
+  --panel: rgba(12, 35, 64, 0.84);
+  --panel-strong: rgba(6, 21, 46, 0.94);
+  --green: #4db38a;
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+}
+
+body {
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 78% 10%, rgba(196, 206, 211, 0.16), transparent 30%),
+    radial-gradient(circle at 12% 20%, rgba(27, 79, 143, 0.38), transparent 28%),
+    linear-gradient(135deg, var(--swatch-deep) 0%, var(--yankees-navy) 48%, var(--swatch-shadow) 100%);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
+.site-shell,
+.app-shell {
+  max-width: 1440px;
+  padding: 18px;
+}
+
+.topbar {
+  min-height: 86px;
+  padding: 22px clamp(20px, 4vw, 54px);
+  border-bottom: 1px solid var(--line);
+  background: rgba(6, 21, 46, 0.76);
+}
+
+.brand-lockup {
+  min-width: 0;
+}
+
+.brand-logo {
+  width: auto;
+  height: calc(clamp(2.024rem, 5.52vw, 5.152rem) + 1.2rem);
+  aspect-ratio: 1;
+  flex: 0 0 auto;
+  object-fit: contain;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.28));
+}
+
+.site-nav {
+  display: none;
+  border-bottom: 1px solid var(--line);
+  background: rgba(3, 6, 20, 0.42);
+}
+
+.site-nav summary {
+  min-height: 50px;
+  padding: 0 clamp(20px, 4vw, 54px);
+  color: var(--ink);
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.site-nav summary::-webkit-details-marker {
+  display: none;
+}
+
+.site-nav-icon,
+.site-nav-icon::before,
+.site-nav-icon::after {
+  width: 22px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--yankees-silver);
+  display: block;
+}
+
+.site-nav-icon {
+  position: relative;
+}
+
+.site-nav-icon::before,
+.site-nav-icon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+
+.site-nav-icon::before {
+  top: -7px;
+}
+
+.site-nav-icon::after {
+  top: 7px;
+}
+
+.site-nav-links {
+  padding: 10px clamp(20px, 4vw, 54px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.site-nav-link {
+  min-height: 38px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: #dfe4f4;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.site-nav-link:hover,
+.site-nav-link:focus,
+.site-nav-link.active {
+  border-color: var(--line-bright);
+  color: #fff;
+  background: rgba(196, 206, 212, 0.12);
+}
+
+.desktop-site-nav {
+  min-height: 58px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(3, 6, 20, 0.42);
+  padding: 10px clamp(20px, 4vw, 54px);
+}
+
+.desktop-site-nav .navbar-nav {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.desktop-site-nav .nav-link {
+  min-height: 38px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: #dfe4f4;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.desktop-site-nav .nav-link:hover,
+.desktop-site-nav .nav-link:focus,
+.desktop-site-nav .nav-link.active {
+  border-color: var(--line-bright);
+  color: #fff;
+  background: rgba(196, 206, 212, 0.12);
+}
+
+.display-title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.page-heading,
+.hero-heading,
+.section-card h2,
+.panel-heading,
+.month-title,
+.team-name,
+.insight-panel h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.standing-line,
+.matchup,
+.summary-strip strong,
+.compact .stat-card strong {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.kicker,
+.eyebrow,
+.card-kicker,
+.panel-kicker,
+.label-small,
+.section-label,
+.player-meta,
+.status-pill,
+.preview-label,
+.preview-loading,
+.result-button small,
+.roster-link small,
+.feed small,
+.table th,
+.stat-card span,
+.metric-badge,
+.metric-row strong,
+.metric-value small,
+.game-status,
+.weekday-row span,
+.day-number,
+#recent-summary,
+#roster-count,
+#transaction-window {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.status-pill {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--yankees-silver);
+  background: rgba(255, 255, 255, 0.06);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  white-space: nowrap;
+}
+
+.btn-control,
+.btn-yankees,
+.btn-section,
+.result-button span,
+.mini-stat {
+  font-weight: 700;
+}
+
+.hero-copy,
+.page-copy,
+.section-card p:not(.card-kicker),
+.month-summary,
+.game-detail,
+.empty-day,
+.player-bio,
+.bio-row,
+.table td,
+.result-button span,
+.form-control,
+.feed p,
+.roster-link span,
+.insight-panel p,
+.btn-control,
+.btn-yankees {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.record-line,
+.metric-value span,
+.player-name,
+.stat-card strong {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+@media (max-width: 575.98px) {
+  .site-shell,
+  .app-shell {
+    padding: 10px;
+  }
+
+  .topbar {
+    padding-inline: 16px;
+  }
+
+  .brand-lockup {
+    align-items: flex-start !important;
+  }
+
+  .brand-logo {
+    height: 4rem;
+  }
+
+  .site-nav {
+    display: block;
+  }
+
+  .site-nav summary {
+    display: flex;
+    padding-inline: 16px;
+  }
+
+  .site-nav-links {
+    display: none;
+    padding: 0 16px 12px;
+  }
+
+  .site-nav[open] .site-nav-links {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .site-nav-link {
+    width: 100%;
+  }
+
+  .desktop-site-nav {
+    display: none;
+  }
+
+  .header-actions,
+  .status-pill,
+  .nav-home-link {
+    width: 100%;
+  }
+}

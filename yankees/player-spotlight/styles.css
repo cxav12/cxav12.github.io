@@ -1,27 +1,4 @@
-:root {
-  color-scheme: dark;
-  --yankees-navy: #0c2340;
-  --yankees-silver: #c4ced4;
-  --swatch-deep: #06152e;
-  --swatch-mid: #1b4f8f;
-  --swatch-shadow: #08213f;
-  --bs-body-color: #f7f8ff;
-  --bs-body-bg: var(--swatch-deep);
-  --ink: #f7f8ff;
-  --muted: var(--yankees-silver);
-  --quiet: #8f9aa2;
-  --panel-strong: rgba(6, 21, 46, 0.94);
-  --line: rgba(196, 206, 211, 0.18);
-  --line-bright: rgba(196, 206, 211, 0.48);
-  --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
-}
 
-/* Typography standard */
-body {
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-}
 
 strong,
 b {
@@ -126,143 +103,6 @@ body {
   inset: auto 0 0;
   height: 6px;
   background: linear-gradient(90deg, var(--yankees-silver), var(--yankees-navy), var(--swatch-mid), var(--yankees-silver));
-}
-
-.topbar {
-  min-height: 86px;
-  padding: 22px clamp(20px, 4vw, 54px);
-  border-bottom: 1px solid var(--line);
-  background: rgba(6, 21, 46, 0.76);
-}
-
-.site-nav {
-  display: none;
-  border-bottom: 1px solid var(--line);
-  background: rgba(3, 6, 20, 0.42);
-}
-
-.site-nav summary {
-  min-height: 50px;
-  padding: 0 clamp(20px, 4vw, 54px);
-  color: var(--ink);
-  cursor: pointer;
-  display: none;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.88rem;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
-.site-nav summary::-webkit-details-marker {
-  display: none;
-}
-
-.site-nav-icon,
-.site-nav-icon::before,
-.site-nav-icon::after {
-  width: 22px;
-  height: 2px;
-  border-radius: 999px;
-  background: var(--yankees-silver);
-  display: block;
-}
-
-.site-nav-icon {
-  position: relative;
-}
-
-.site-nav-icon::before,
-.site-nav-icon::after {
-  content: "";
-  position: absolute;
-  left: 0;
-}
-
-.site-nav-icon::before {
-  top: -7px;
-}
-
-.site-nav-icon::after {
-  top: 7px;
-}
-
-.site-nav-links {
-  padding: 10px clamp(20px, 4vw, 54px);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.site-nav-link {
-  min-height: 38px;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  color: #dfe4f4;
-  display: inline-flex;
-  align-items: center;
-  padding: 0 12px;
-  font-size: 0.84rem;
-  font-weight: 850;
-  text-decoration: none;
-}
-
-.site-nav-link:hover,
-.site-nav-link:focus,
-.site-nav-link.active {
-  border-color: var(--line-bright);
-  color: #fff;
-  background: rgba(196, 206, 212, 0.12);
-}
-
-.desktop-site-nav {
-  min-height: 58px;
-  border-bottom: 1px solid var(--line);
-  background: rgba(3, 6, 20, 0.42);
-  padding: 10px clamp(20px, 4vw, 54px);
-}
-
-.desktop-site-nav .navbar-nav {
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.desktop-site-nav .nav-link {
-  min-height: 38px;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  color: #dfe4f4;
-  display: inline-flex;
-  align-items: center;
-  padding: 0 12px;
-  font-size: 0.84rem;
-  font-weight: 850;
-}
-
-.desktop-site-nav .nav-link:hover,
-.desktop-site-nav .nav-link:focus,
-.desktop-site-nav .nav-link.active {
-  border-color: var(--line-bright);
-  color: #fff;
-  background: rgba(196, 206, 212, 0.12);
-}
-
-.brand-lockup {
-  min-width: 0;
-}
-
-.brand-logo {
-  width: auto;
-  height: calc(clamp(2.1rem, 4.4vw, 3.75rem) + 1.2rem);
-  aspect-ratio: 1;
-  flex: 0 0 auto;
-  object-fit: contain;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  padding: 0;
-  filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.28));
 }
 
 .spotlight-body {
@@ -638,13 +478,6 @@ body {
   .compact .stat-card {
     flex-basis: 50%;
   }
-}
-
-/* Final typography overrides */
-body {
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
 }
 
 strong,
