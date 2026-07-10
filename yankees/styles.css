@@ -55,55 +55,79 @@ body {
   border: 1px solid rgba(77, 127, 190, 0.42);
   border-radius: 8px;
   color: var(--ink);
-  background: linear-gradient(145deg, rgba(10, 31, 58, 0.94), rgba(5, 18, 41, 0.92));
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+    linear-gradient(145deg, rgba(26, 16, 76, 0.9), rgba(7, 18, 48, 0.94));
+  background-size: 8px 8px, auto;
   display: grid;
-  gap: 10px;
-  padding: 14px;
-  text-align: left;
+  grid-template-rows: auto 1fr auto;
+  gap: 16px;
+  min-height: 208px;
+  padding: 20px 16px 18px;
+  text-align: center;
 }
 
 .recent-game-button:hover,
 .recent-game-button:focus,
 .recent-game-button.active {
   border-color: rgba(196, 206, 212, 0.66);
-  background: linear-gradient(145deg, rgba(17, 52, 96, 0.98), rgba(8, 33, 63, 0.96));
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.014) 1px, transparent 1px),
+    linear-gradient(145deg, rgba(45, 29, 112, 0.94), rgba(8, 33, 63, 0.98));
+  background-size: 8px 8px, auto;
 }
 
 .recent-game-date,
 .recent-game-result {
-  color: var(--muted);
-  font-size: var(--text-small);
+  justify-self: center;
+  color: #f7f8ff;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
+.recent-game-date {
+  padding-bottom: 8px;
+  border-bottom: 2px solid rgba(196, 206, 212, 0.62);
+}
+
 .recent-game-matchup {
   min-width: 0;
   display: grid;
-  grid-template-columns: 32px minmax(0, 1fr) auto minmax(0, 1fr) 32px;
-  gap: 8px;
+  grid-template-columns: minmax(52px, 0.7fr) minmax(0, auto) auto minmax(0, auto) minmax(52px, 0.7fr);
+  gap: 12px;
   align-items: center;
+  align-self: center;
+  justify-content: center;
 }
 
 .recent-game-matchup img {
-  width: 32px;
-  height: 32px;
+  width: clamp(44px, 5vw, 62px);
+  height: clamp(44px, 5vw, 62px);
   object-fit: contain;
+  opacity: 0.54;
 }
 
 .recent-game-matchup strong {
   overflow: hidden;
-  font-size: 0.95rem;
+  color: #fff;
   font-weight: 800;
+  letter-spacing: 0.02em;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .recent-game-matchup i {
-  color: var(--muted);
+  color: rgba(196, 206, 212, 0.72);
   font-style: normal;
   font-weight: 800;
+}
+
+.recent-game-result {
+  min-width: 96px;
+  border-radius: 4px;
+  background: rgba(196, 206, 212, 0.08);
+  padding: 7px 16px;
 }
 
 .recent-game-result.win {
@@ -143,7 +167,6 @@ body {
   align-items: center;
   justify-content: center;
   padding: 0 18px;
-  font-size: clamp(1.2rem, 2vw, 1.75rem);
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -171,7 +194,6 @@ body {
 
 .game-score-strip span {
   color: #4c76b0;
-  font-size: clamp(1.5rem, 3.2vw, 2.5rem);
   font-weight: 800;
   letter-spacing: 0.12em;
   line-height: 1;
@@ -179,14 +201,12 @@ body {
 
 .game-score-strip strong {
   color: #fff;
-  font-size: clamp(2.5rem, 5.7vw, 4.25rem);
   font-weight: 800;
   line-height: 0.9;
 }
 
 .game-score-strip i {
   color: rgba(196, 206, 212, 0.64);
-  font-size: clamp(1.8rem, 3vw, 2.5rem);
   font-style: normal;
   font-weight: 800;
 }
@@ -205,7 +225,6 @@ body {
   margin: 0;
   overflow: hidden;
   color: #f7f8ff;
-  font-size: clamp(1rem, 2vw, 1.35rem);
   font-weight: 800;
   letter-spacing: 0.04em;
   line-height: 1.1;
@@ -257,7 +276,6 @@ body {
 .recap-column h3 {
   margin: 0;
   color: #f4f7ff;
-  font-size: 1.05rem;
   font-weight: 800;
   letter-spacing: 0.18em;
   line-height: 1.2;
@@ -290,7 +308,6 @@ body {
   min-width: 0;
   overflow-wrap: anywhere;
   color: rgba(196, 206, 212, 0.78);
-  font-size: var(--text-normal);
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -299,7 +316,6 @@ body {
 .recap-row strong,
 .bar-stat-heading strong {
   color: #f7f8ff;
-  font-size: 1.35rem;
   font-weight: 800;
   line-height: 1;
   text-align: right;
@@ -365,14 +381,12 @@ body {
 
 .metric-feature strong {
   color: #fff;
-  font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 800;
   line-height: 1;
 }
 
 .metric-feature strong small {
   color: rgba(196, 206, 212, 0.78);
-  font-size: 0.95rem;
   font-weight: 800;
 }
 
@@ -407,10 +421,6 @@ body {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     align-content: center;
-  }
-
-  .game-decisions p {
-    font-size: 0.95rem;
   }
 
   .recap-grid {
@@ -462,6 +472,12 @@ body {
 }
 
 @media (max-width: 575.98px) {
+  .recent-game-button {
+    min-height: 178px;
+    gap: 12px;
+    padding: 16px 12px;
+  }
+
   .last-game-card {
     min-height: 0;
   }
@@ -476,25 +492,14 @@ body {
     height: 34px;
   }
 
-  .game-score-strip span {
-    font-size: 1rem;
-  }
-
-  .game-score-strip strong {
-    font-size: 2rem;
-  }
-
-  .game-score-strip i {
-    font-size: 1.4rem;
-  }
-
   .recent-game-matchup {
-    grid-template-columns: 28px minmax(0, 1fr) auto minmax(0, 1fr) 28px;
+    grid-template-columns: 38px minmax(0, auto) auto minmax(0, auto) 38px;
+    gap: 8px;
   }
 
   .recent-game-matchup img {
-    width: 28px;
-    height: 28px;
+    width: 38px;
+    height: 38px;
   }
 
   .recap-column {
@@ -506,12 +511,4 @@ body {
     min-height: 44px;
   }
 
-  .recap-row strong,
-  .bar-stat-heading strong {
-    font-size: 1.12rem;
-  }
-
-  .metric-feature strong {
-    font-size: 2rem;
-  }
 }

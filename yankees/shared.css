@@ -206,7 +206,10 @@ b {
 .standing-line,
 .matchup,
 .summary-strip strong,
-.compact .stat-card strong {
+.compact .stat-card strong,
+.game-result-badge,
+.game-score-strip span,
+.game-score-strip i {
   font-size: 1.25rem;
   font-weight: 600;
 }
@@ -238,7 +241,14 @@ b {
 .roster-tab,
 .position-heading,
 .pagination-summary,
-.pagination-button {
+.pagination-button,
+.recent-game-date,
+.recent-game-result,
+.recap-column h3,
+.recap-row span,
+.bar-stat-heading span,
+.metric-feature span,
+.metric-feature em {
   font-size: var(--text-small);
   font-weight: 600;
 }
@@ -260,7 +270,18 @@ b {
 .btn-yankees,
 .btn-section,
 .result-button span,
-.mini-stat {
+.mini-stat,
+.game-result-badge,
+.recent-game-matchup strong,
+.recent-game-matchup i,
+.game-score-strip span,
+.game-score-strip i,
+.game-decisions p,
+.recap-column h3,
+.recap-row strong,
+.bar-stat-heading strong,
+.metric-feature strong,
+.metric-feature strong small {
   font-weight: 700;
 }
 
@@ -279,17 +300,32 @@ b {
 .roster-link span,
 .insight-panel p,
 .btn-control,
-.btn-yankees {
+.btn-yankees,
+.game-decisions p {
   font-size: var(--text-normal);
   font-weight: 400;
+}
+
+.recent-game-matchup strong,
+.recent-game-matchup i,
+.recap-row strong,
+.bar-stat-heading strong {
+  font-size: var(--text-normal);
+  font-weight: 700;
 }
 
 .record-line,
 .metric-value span,
 .player-name,
-.stat-card strong {
+.stat-card strong,
+.metric-feature strong {
   font-size: 2rem;
   font-weight: 800;
+}
+
+.game-score-strip strong {
+  font-size: 1.25rem;
+  font-weight: 700;
 }
 
 .brand-title {
