@@ -66,6 +66,171 @@ b {
   }
 }
 
+.spotlight .player-name {
+  font-size: clamp(2rem, 5vw, 4.8rem);
+  font-weight: 800;
+  line-height: 0.96;
+}
+
+.spotlight .player-name a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.spotlight .player-name a:hover,
+.spotlight .player-name a:focus {
+  color: #ffffff;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.12em;
+}
+
+.spotlight .portrait-wrap {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 16%, rgba(255, 255, 255, 0.62), transparent 26%),
+    linear-gradient(180deg, #d6dce6, #6f7788);
+}
+
+.spotlight .portrait-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+}
+
+.spotlight .player-bio {
+  gap: 0.5rem !important;
+  margin-top: 0.75rem !important;
+}
+
+.spotlight .bio-row {
+  grid-template-columns: 54px 1fr;
+  gap: 8px;
+  line-height: 1.25;
+}
+
+.spotlight .bio-row span:first-child {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.spotlight .stat-card {
+  justify-items: center;
+  align-items: center;
+  align-content: center;
+  gap: 8px;
+}
+
+.spotlight .compact .stat-card {
+  min-height: 72px;
+  padding-block: 10px;
+}
+
+.spotlight .stat-card strong,
+.spotlight .compact .stat-card strong {
+  line-height: 1;
+}
+
+.spotlight .compact .stat-card strong {
+  font-size: 1.25rem;
+}
+
+.spotlight .stat-card span {
+  line-height: 1;
+}
+
+.recent-toolbar {
+  min-width: 0;
+}
+
+.recent-window-controls {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.recent-window-button {
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.055);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0 12px;
+}
+
+.recent-window-button:hover,
+.recent-window-button:focus {
+  border-color: var(--line-bright);
+  color: #ffffff;
+  background: rgba(196, 206, 211, 0.12);
+}
+
+.recent-window-button.active {
+  border-color: rgba(241, 180, 52, 0.72);
+  color: #06152e;
+  background: #f1b434;
+}
+
+.recent-form-bar {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: #f5f7ff;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012)),
+    rgba(3, 6, 20, 0.62);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  padding: 8px 12px;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.recent-form-bar strong {
+  color: #f1b434;
+  font-weight: 800;
+}
+
+.recent-form-bar span {
+  color: var(--muted);
+}
+
+@media (max-width: 575.98px) {
+  .spotlight .player-name {
+    font-size: clamp(2rem, 12vw, 3.3rem);
+  }
+
+  .spotlight .bio-row {
+    grid-template-columns: 50px 1fr;
+  }
+
+  .recent-window-controls,
+  .recent-window-button {
+    width: 100%;
+  }
+
+  .recent-window-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .recent-form-bar {
+    justify-content: flex-start;
+    text-align: left;
+  }
+}
+
 [hidden] {
   display: none !important;
 }

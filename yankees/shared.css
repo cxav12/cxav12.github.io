@@ -286,6 +286,18 @@ b {
   font-weight: 800;
 }
 
+.brand-title {
+  font-size: calc(clamp(2.024rem, 5.52vw, 4.152rem) + 1.2rem);
+  font-weight: 800;
+  line-height: 0.88;
+}
+
+.brand-kicker {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
 @media (max-width: 575.98px) {
   .site-shell,
   .app-shell {
@@ -302,6 +314,14 @@ b {
 
   .brand-logo {
     height: 4rem;
+  }
+
+  .brand-title {
+    font-size: 4rem;
+  }
+
+  .brand-kicker {
+    font-size: 0.875rem;
   }
 
   .site-nav {

@@ -68,10 +68,8 @@
 
             <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
               <div class="min-w-0">
-                <p id="player-meta" class="player-meta mb-2">Loading player</p>
-                <h2 id="player-name" class="player-name mb-0">Yankees</h2>
+                <h2 class="player-name mb-0"><a id="player-name" href="https://baseballsavant.mlb.com/" target="_blank" rel="noreferrer">Yankees</a></h2>
               </div>
-              <a id="savant-link" class="btn btn-outline-light btn-lg flex-shrink-0" href="https://baseballsavant.mlb.com/" target="_blank" rel="noreferrer">Baseball Savant</a>
             </div>
 
             <section aria-label="Season stats">
@@ -81,10 +79,17 @@
             </section>
 
             <section aria-label="Recent games">
-              <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-2">
+              <div class="recent-toolbar d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between gap-2">
                 <p class="section-label mb-0">Recent Games</p>
+                <div class="recent-window-controls" role="group" aria-label="Recent game window">
+                  <button class="btn recent-window-button active" type="button" data-games="5">Last 5</button>
+                  <button class="btn recent-window-button" type="button" data-games="10">Last 10</button>
+                  <button class="btn recent-window-button" type="button" data-games="15">Last 15</button>
+                  <button class="btn recent-window-button" type="button" data-games="30">Last 30</button>
+                </div>
                 <span id="recent-summary"></span>
               </div>
+              <div class="recent-form-bar mt-2" id="recent-form-bar">Loading recent form...</div>
               <div class="table-responsive table-shell mt-2">
                 <table class="table table-dark table-hover align-middle mb-0">
                   <thead id="game-log-head"></thead>

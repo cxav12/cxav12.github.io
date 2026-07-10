@@ -1,26 +1,29 @@
 const SEASON = new Date().getFullYear();
 const DEFAULT_PLAYER = 592450;
+const RECENT_TABLE_GAMES = 10;
 const MLB_API = "https://statsapi.mlb.com/api/v1";
 const HEADSHOT = (id) => `https://img.mlbstatic.com/mlb-photos/image/upload/w_426,q_auto:best/v1/people/${id}/headshot/67/current`;
 
 const state = {
   selectedPlayerId: DEFAULT_PLAYER,
   currentGroup: "hitting",
+  recentWindow: 5,
+  gameLogSplits: [],
 };
 
 const els = {
   status: document.querySelector("#data-status"),
   headshot: document.querySelector("#player-headshot"),
   bio: document.querySelector("#player-bio"),
-  meta: document.querySelector("#player-meta"),
   name: document.querySelector("#player-name"),
-  savant: document.querySelector("#savant-link"),
   seasonLabel: document.querySelector("#season-label"),
   primaryStats: document.querySelector("#primary-stats"),
   secondaryStats: document.querySelector("#secondary-stats"),
   gameHead: document.querySelector("#game-log-head"),
   gameBody: document.querySelector("#game-log-body"),
   recentSummary: document.querySelector("#recent-summary"),
+  recentBar: document.querySelector("#recent-form-bar"),
+  recentButtons: document.querySelectorAll(".recent-window-button"),
   searchInput: document.querySelector("#player-search"),
   searchButton: document.querySelector("#search-button"),
   searchResults: document.querySelector("#search-results"),
@@ -57,6 +60,25 @@ function niceDate(value) {
   return new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" }).format(new Date(`${value}T12:00:00`));
 }
 
+function normalizeText(value) {
+  return String(value || "").trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+function formatAverage(hits, atBats) {
+  if (!atBats) return ".000";
+  return (hits / atBats).toFixed(3).replace(/^0/, "");
+}
+
+function inningsToOuts(value) {
+  if (!value) return 0;
+  const [whole, partial = "0"] = String(value).split(".");
+  return Number(whole) * 3 + Number(partial);
+}
+
+function outsToInnings(outs) {
+  return `${Math.floor(outs / 3)}.${outs % 3}`;
+}
+
 function setStatus(message, tone = "neutral") {
   els.status.textContent = message;
   els.status.style.color = tone === "error" ? "#ffbec4" : tone === "good" ? "#9af0c8" : "";
@@ -82,23 +104,54 @@ function playerPosition(person) {
   return person.primaryPosition?.abbreviation || person.primaryPosition?.name || "Player";
 }
 
+function ageWithDays(person) {
+  if (!person.birthDate) return `${person.currentAge || "-"} years old`;
+  const today = new Date();
+  const birth = new Date(`${person.birthDate}T12:00:00`);
+  let years = today.getFullYear() - birth.getFullYear();
+  let lastBirthday = new Date(today.getFullYear(), birth.getMonth(), birth.getDate());
+  if (today < lastBirthday) {
+    years -= 1;
+    lastBirthday = new Date(today.getFullYear() - 1, birth.getMonth(), birth.getDate());
+  }
+  const days = Math.max(0, Math.floor((today - lastBirthday) / 86400000));
+  return `${years} years, ${days} days old`;
+}
+
+function draftLabel(person) {
+  const year = person.draftYear || person.draft?.year;
+  const round = person.draftRound || person.draftRoundNumber || person.draft?.round;
+  const pick = person.draftPick || person.pickNumber || person.draftNumber || person.draft?.pickNumber;
+  const team = person.draftTeam?.name || person.draftedBy?.name || person.draft?.team?.name;
+  if (!year && !round && !pick && !team) return "Details unavailable";
+
+  const parts = [];
+  if (round) parts.push(`Round ${round}`);
+  if (pick) parts.push(`Pick ${pick}`);
+  const base = parts.length ? parts.join(", ") : "Drafted";
+  const teamText = team ? ` by ${team}` : "";
+  const yearText = year ? ` (${year})` : "";
+  return `${base}${teamText}${yearText}`;
+}
+
 function bioRows(person) {
   return [
-    ["#", `${person.primaryNumber ? `#${person.primaryNumber}` : "No number"} ${playerPosition(person)}`],
-    ["⌁", `${person.currentAge || "-"} years old`],
-    ["↕", `${person.height || "-"} / ${person.weight ? `${person.weight} lbs` : "-"}`],
-    ["◐", `B/T: ${person.batSide?.code || "-"} / ${person.pitchHand?.code || "-"}`],
-    ["⌂", person.birthCity && person.birthStateProvince ? `${person.birthCity}, ${person.birthStateProvince}` : person.birthCountry || "Birthplace unavailable"],
-    ["★", person.mlbDebutDate ? `Debut: ${niceDate(person.mlbDebutDate)}` : "Debut unavailable"],
+    ["No.", `${person.primaryNumber ? `#${person.primaryNumber}` : "No number"} ${playerPosition(person)}`],
+    ["Age", ageWithDays(person)],
+    ["Size", `${person.height || "-"} / ${person.weight ? `${person.weight} lbs` : "-"}`],
+    ["B/T", `${person.batSide?.code || "-"} / ${person.pitchHand?.code || "-"}`],
+    ["Born", person.birthCity && person.birthStateProvince ? `${person.birthCity}, ${person.birthStateProvince}` : person.birthCountry || "Birthplace unavailable"],
+    ["Debut", person.mlbDebutDate ? niceDate(person.mlbDebutDate) : "Unavailable"],
+    ["Draft", draftLabel(person)],
   ];
 }
 
 function renderBio(person) {
   els.bio.replaceChildren();
-  bioRows(person).forEach(([icon, label]) => {
+  bioRows(person).forEach(([label, value]) => {
     const row = document.createElement("div");
     row.className = "bio-row";
-    row.innerHTML = `<span>${icon}</span><span>${label}</span>`;
+    row.innerHTML = `<span>${label}</span><span>${value}</span>`;
     els.bio.append(row);
   });
 }
@@ -144,10 +197,9 @@ function renderPlayerHeader(person) {
     els.headshot.removeAttribute("src");
     els.headshot.alt = "";
   };
-  els.meta.textContent = `${person.primaryNumber ? `#${person.primaryNumber}` : "Yankees"} ${playerPosition(person)}${person.currentTeam?.name ? ` · ${person.currentTeam.name}` : ""}`;
   els.name.textContent = person.fullName;
-  els.seasonLabel.textContent = `${SEASON} Season · ${state.currentGroup}`;
-  els.savant.href = `https://baseballsavant.mlb.com/savant-player/${person.id}`;
+  els.name.href = `https://baseballsavant.mlb.com/savant-player/${person.id}`;
+  els.seasonLabel.textContent = `${SEASON} Season - ${state.currentGroup}`;
   renderBio(person);
 }
 
@@ -189,11 +241,13 @@ function renderStatBlocks(stats, group) {
 
 async function renderGameLog(id, group) {
   const data = await api.gameLog(id, group).catch(() => ({ stats: [] }));
-  const splits = data.stats?.[0]?.splits?.slice(-8).reverse() || [];
+  state.gameLogSplits = data.stats?.[0]?.splits?.slice(-30) || [];
+  const splits = state.gameLogSplits.slice(-RECENT_TABLE_GAMES).reverse();
   const headers = group === "pitching" ? ["Date", "Opponent", "IP", "ER", "SO", "BB", "Result"] : ["Date", "Opponent", "H-AB", "HR", "RBI", "R", "BB"];
   els.gameHead.innerHTML = `<tr>${headers.map((item) => `<th>${item}</th>`).join("")}</tr>`;
   els.gameBody.replaceChildren();
   els.recentSummary.textContent = splits.length ? `${splits.length} games shown` : "No recent games found";
+  renderRecentBar();
 
   if (!splits.length) {
     els.gameBody.innerHTML = `<tr><td colspan="${headers.length}" class="empty">No game log rows are available for this player yet.</td></tr>`;
@@ -212,7 +266,59 @@ async function renderGameLog(id, group) {
   });
 }
 
-async function searchPlayers() {
+function renderRecentBar() {
+  const games = state.gameLogSplits.slice(-state.recentWindow);
+  if (!games.length) {
+    els.recentBar.textContent = "No recent games found";
+    return;
+  }
+
+  if (state.currentGroup === "pitching") {
+    const totals = games.reduce((acc, split) => {
+      const stat = split.stat || {};
+      acc.outs += inningsToOuts(stat.inningsPitched);
+      acc.er += Number(stat.earnedRuns || 0);
+      acc.so += Number(stat.strikeOuts || 0);
+      acc.bb += Number(stat.baseOnBalls || 0);
+      return acc;
+    }, { outs: 0, er: 0, so: 0, bb: 0 });
+    const era = totals.outs ? ((totals.er * 27) / totals.outs).toFixed(2) : "-";
+    els.recentBar.innerHTML = `<strong>Last ${games.length} games:</strong> ${era} ERA <span>-</span> ${outsToInnings(totals.outs)} IP <span>-</span> ${totals.so} K <span>-</span> ${totals.bb} BB <span>-</span> ${totals.er} ER`;
+    return;
+  }
+
+  const totals = games.reduce((acc, split) => {
+    const stat = split.stat || {};
+    acc.ab += Number(stat.atBats || 0);
+    acc.hits += Number(stat.hits || 0);
+    acc.hr += Number(stat.homeRuns || 0);
+    acc.rbi += Number(stat.rbi || 0);
+    acc.runs += Number(stat.runs || 0);
+    return acc;
+  }, { ab: 0, hits: 0, hr: 0, rbi: 0, runs: 0 });
+  els.recentBar.innerHTML = `<strong>Last ${games.length} games:</strong> ${formatAverage(totals.hits, totals.ab)} AVG <span>-</span> ${totals.hr} HR <span>-</span> ${totals.rbi} RBI <span>-</span> ${totals.runs} R <span>-</span> ${totals.hits}-${totals.ab} H-AB`;
+}
+
+function setRecentWindow(games) {
+  state.recentWindow = games;
+  els.recentButtons.forEach((button) => {
+    const active = Number(button.dataset.games) === games;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  renderRecentBar();
+}
+
+function bestDirectMatch(query, people) {
+  const normalized = normalizeText(query);
+  const exact = people.find((person) => normalizeText(person.fullName) === normalized);
+  if (exact) return exact;
+  const lastName = people.find((person) => normalizeText(person.lastName) === normalized);
+  if (lastName) return lastName;
+  return null;
+}
+
+async function searchPlayers(options = {}) {
   const query = els.searchInput.value.trim();
   if (!query) return;
   els.searchResults.hidden = false;
@@ -224,6 +330,15 @@ async function searchPlayers() {
       els.searchResults.innerHTML = `<p class="empty">No players found for "${query}".</p>`;
       return;
     }
+
+    const directMatch = options.direct ? bestDirectMatch(query, people) : null;
+    if (directMatch) {
+      els.searchResults.hidden = true;
+      els.searchInput.value = directMatch.fullName;
+      await loadPlayer(directMatch.id);
+      return;
+    }
+
     els.searchResults.replaceChildren();
     people.forEach((person) => {
       const shell = document.createElement("div");
@@ -231,7 +346,7 @@ async function searchPlayers() {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "result-button";
-      button.innerHTML = `<span>${person.fullName}</span><small>${person.primaryPosition?.abbreviation || "Player"} · ${person.currentTeam?.name || "MLB"}</small>`;
+      button.innerHTML = `<span>${person.fullName}</span><small>${person.primaryPosition?.abbreviation || "Player"} - ${person.currentTeam?.name || "MLB"}</small>`;
       button.addEventListener("click", () => {
         els.searchResults.hidden = true;
         els.searchInput.value = person.fullName;
@@ -246,9 +361,16 @@ async function searchPlayers() {
 }
 
 function bindEvents() {
-  els.searchButton.addEventListener("click", searchPlayers);
+  els.searchButton.addEventListener("click", () => searchPlayers());
   els.searchInput.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") searchPlayers();
+    if (event.key === "Enter") {
+      event.preventDefault();
+      searchPlayers({ direct: true });
+    }
+  });
+  els.recentButtons.forEach((button) => {
+    button.setAttribute("aria-pressed", String(button.classList.contains("active")));
+    button.addEventListener("click", () => setRecentWindow(Number(button.dataset.games)));
   });
 }
 
