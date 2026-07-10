@@ -88,20 +88,20 @@ b {
 .spotlight .portrait-wrap {
   display: grid;
   place-items: center;
-  padding: 4px 4px 8px;
+  padding: 3px;
   background:
     radial-gradient(circle at 50% 16%, rgba(255, 255, 255, 0.62), transparent 26%),
     linear-gradient(180deg, #d6dce6, #6f7788);
 }
 
 .spotlight .portrait-wrap img {
-  width: 116%;
-  height: 116%;
+  width: 156%;
+  height: 156%;
   min-height: 0;
   max-width: none;
   object-fit: contain;
   object-position: center center;
-  transform: translateY(-1%);
+  transform: translateY(4%);
 }
 
 .spotlight .player-bio {
