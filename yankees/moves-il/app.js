@@ -1,6 +1,21 @@
 const TEAM_ID = 147;
 const MLB_API = "https://statsapi.mlb.com/api/v1";
-const TRANSACTIONS_PER_PAGE = 5;
+const TRANSACTIONS_PER_PAGE = 6;
+const POSITION_ORDER = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH", "OF", "IF", "UTIL"];
+const POSITION_LABELS = {
+  C: "C (2)",
+  "1B": "1B (3)",
+  "2B": "2B (4)",
+  "3B": "3B (5)",
+  SS: "SS (6)",
+  LF: "LF (7)",
+  CF: "CF (8)",
+  RF: "RF (9)",
+  DH: "DH",
+  OF: "OF",
+  IF: "IF",
+  UTIL: "UTIL",
+};
 
 const state = {
   transactions: [],
@@ -18,11 +33,9 @@ const els = {
   rosterCount: document.querySelector("#roster-count"),
   battersCount: document.querySelector("#batters-count"),
   pitchersCount: document.querySelector("#pitchers-count"),
-  activeCount: document.querySelector("#active-count"),
   transactionFeed: document.querySelector("#transaction-feed"),
   transactionPagination: document.querySelector("#transaction-pagination"),
   transactionWindow: document.querySelector("#transaction-window"),
-  ilCount: document.querySelector("#il-count"),
 };
 
 const api = {
@@ -70,8 +83,35 @@ function isIlMove(item) {
   return /injured|injury|10-day|15-day|60-day|\bIL\b|rehab|reinstated/i.test(description);
 }
 
+function transactionType(item) {
+  const description = `${item.description || ""} ${item.note || ""} ${item.typeDesc || ""}`;
+  if (/recall|recalled/i.test(description)) return { key: "recalled", label: "Recall" };
+  if (/option|optioned/i.test(description)) return { key: "optioned", label: "Option" };
+  if (/activate|activated|reinstate|reinstated/i.test(description)) return { key: "activated", label: "Active" };
+  if (/injured|injury|10-day|15-day|60-day|\bIL\b|rehab/i.test(description)) return { key: "il", label: "IL" };
+  if (/select|selected|contract/i.test(description)) return { key: "selected", label: "Select" };
+  if (/assign|assigned|designated/i.test(description)) return { key: "assigned", label: "Assign" };
+  if (/claim|claimed|acquire|acquired|trade|traded/i.test(description)) return { key: "acquired", label: "Acquire" };
+  if (/sign|signed/i.test(description)) return { key: "signed", label: "Sign" };
+  if (/release|released/i.test(description)) return { key: "released", label: "Release" };
+  return { key: "other", label: item.typeDesc || "Move" };
+}
+
 function isPitcher(entry) {
   return entry.position?.abbreviation === "P" || entry.position?.code === "1";
+}
+
+function positionKey(entry) {
+  const abbr = entry.position?.abbreviation || "";
+  if (POSITION_LABELS[abbr]) return abbr;
+  if (abbr.includes("OF")) return "OF";
+  if (abbr.includes("IF")) return "IF";
+  return "UTIL";
+}
+
+function positionRank(entry) {
+  const index = POSITION_ORDER.indexOf(positionKey(entry));
+  return index === -1 ? POSITION_ORDER.length : index;
 }
 
 function rosterCard(entry) {
@@ -96,10 +136,11 @@ async function renderRoster() {
     const data = await api.roster();
     const roster = (data.roster || []).slice().sort((a, b) => a.person.fullName.localeCompare(b.person.fullName));
     const pitchers = roster.filter(isPitcher);
-    const batters = roster.filter((entry) => !isPitcher(entry));
+    const batters = roster
+      .filter((entry) => !isPitcher(entry))
+      .sort((a, b) => positionRank(a) - positionRank(b) || a.person.fullName.localeCompare(b.person.fullName));
 
     els.rosterCount.textContent = `${roster.length} active`;
-    els.activeCount.textContent = roster.length;
     els.battersCount.textContent = `${batters.length}`;
     els.pitchersCount.textContent = `${pitchers.length}`;
 
@@ -117,7 +158,6 @@ async function renderRoster() {
     els.rosterCount.textContent = "Unavailable";
     els.battersCount.textContent = "--";
     els.pitchersCount.textContent = "--";
-    els.activeCount.textContent = "--";
   }
 }
 
@@ -131,16 +171,35 @@ function renderTransactionPage() {
   if (!pageItems.length) {
     els.transactionFeed.innerHTML = `<p class="empty">No Yankees transactions were returned for this window.</p>`;
   } else {
-    pageItems.forEach((item) => {
-      const article = document.createElement("article");
-      const description = item.description || item.note || item.typeDesc || "Transaction";
-      article.className = isIlMove(item) ? "il" : "";
-      article.innerHTML = `<small>${niceDate(item.date)} - ${item.typeDesc || "Move"}</small><p>${description}</p>`;
-      els.transactionFeed.append(article);
-    });
+    pageItems.forEach((item) => els.transactionFeed.append(transactionCard(item)));
   }
 
   renderTransactionPagination(totalPages);
+}
+
+function transactionCard(item) {
+  const type = transactionType(item);
+  const description = item.description || item.note || item.typeDesc || "Transaction";
+  const article = document.createElement("article");
+  article.className = `transaction-card ${type.key}`;
+  if (isIlMove(item)) article.classList.add("il");
+
+  const meta = document.createElement("div");
+  meta.className = "transaction-meta";
+
+  const badge = document.createElement("span");
+  badge.className = "transaction-badge";
+  badge.textContent = type.label;
+
+  const detail = document.createElement("small");
+  detail.textContent = `${niceDate(item.date)} - ${item.typeDesc || "Move"}`;
+
+  const copy = document.createElement("p");
+  copy.textContent = description;
+
+  meta.append(badge, detail);
+  article.append(meta, copy);
+  return article;
 }
 
 function renderTransactionPagination(totalPages) {
@@ -177,16 +236,13 @@ async function renderTransactions() {
   try {
     const data = await api.transactions();
     const transactions = (data.transactions || []).slice().reverse();
-    const ilMoves = transactions.filter(isIlMove);
     state.transactions = transactions;
     state.transactionPage = 1;
-    els.ilCount.textContent = ilMoves.length;
     renderTransactionPage();
 
   } catch (error) {
     els.transactionFeed.innerHTML = `<p class="error">Transactions are unavailable right now.</p>`;
     els.transactionPagination.replaceChildren();
-    els.ilCount.textContent = "--";
   }
 }
 

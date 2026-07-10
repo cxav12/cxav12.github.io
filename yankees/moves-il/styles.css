@@ -45,6 +45,7 @@ b {
 .pagination-summary,
 .pagination-button,
 .roster-tab,
+.position-heading,
 .empty,
 .error {
   font-size: 0.875rem;
@@ -253,6 +254,31 @@ body {
   min-width: 0;
 }
 
+.position-roster-list {
+  display: grid;
+  gap: 16px;
+}
+
+.position-group {
+  min-width: 0;
+}
+
+.position-heading {
+  width: fit-content;
+  min-height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--yankees-silver);
+  background: rgba(255, 255, 255, 0.055);
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 8px;
+  padding: 0 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .roster-list,
 .feed {
   overflow: visible;
@@ -306,11 +332,76 @@ body {
   padding: 10px 12px;
 }
 
+.feed article.recalled {
+  --transaction-accent: #4db38a;
+}
+
+.feed article.optioned {
+  --transaction-accent: #f1b434;
+}
+
 .feed article.il {
-  border-left-color: var(--swatch-mid);
+  --transaction-accent: #d85c6a;
+}
+
+.feed article.activated {
+  --transaction-accent: #58a6ff;
+}
+
+.feed article.selected {
+  --transaction-accent: #9cc7ff;
+}
+
+.feed article.assigned {
+  --transaction-accent: #c4ced4;
+}
+
+.feed article.acquired {
+  --transaction-accent: #b08cff;
+}
+
+.feed article.signed {
+  --transaction-accent: #7fd1b9;
+}
+
+.feed article.released {
+  --transaction-accent: #ff9b7c;
+}
+
+.feed article.other {
+  --transaction-accent: var(--line-bright);
+}
+
+.feed article.transaction-card {
+  border-left-color: var(--transaction-accent, var(--line-bright));
+}
+
+.feed article.transaction-card {
   background:
-    linear-gradient(135deg, rgba(27, 79, 143, 0.18), rgba(6, 21, 46, 0.94) 62%),
+    linear-gradient(135deg, color-mix(in srgb, var(--transaction-accent, var(--line-bright)) 18%, transparent), rgba(6, 21, 46, 0.94) 62%),
     var(--panel-strong);
+}
+
+.transaction-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.transaction-badge {
+  min-height: 22px;
+  border: 1px solid color-mix(in srgb, var(--transaction-accent, var(--line-bright)) 68%, transparent);
+  border-radius: 999px;
+  color: #06152e;
+  background: var(--transaction-accent, var(--yankees-silver));
+  display: inline-flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .feed p {
@@ -532,6 +623,7 @@ b {
 .pagination-summary,
 .pagination-button,
 .roster-tab,
+.position-heading,
 .empty,
 .error {
   font-size: 0.875rem;
