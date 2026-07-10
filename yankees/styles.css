@@ -52,12 +52,12 @@ body {
 
 .recent-game-button {
   min-width: 0;
-  border: 1px solid rgba(77, 127, 190, 0.42);
+  border: 1px solid rgba(196, 206, 212, 0.28);
   border-radius: 8px;
   color: var(--ink);
   background:
-    linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
-    linear-gradient(145deg, rgba(26, 16, 76, 0.9), rgba(7, 18, 48, 0.94));
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(145deg, rgba(34, 64, 104, 0.96), rgba(18, 45, 82, 0.94));
   background-size: 8px 8px, auto;
   display: grid;
   grid-template-rows: auto 1fr auto;
@@ -70,10 +70,10 @@ body {
 .recent-game-button:hover,
 .recent-game-button:focus,
 .recent-game-button.active {
-  border-color: rgba(196, 206, 212, 0.66);
+  border-color: rgba(247, 248, 255, 0.72);
   background:
-    linear-gradient(rgba(255, 255, 255, 0.014) 1px, transparent 1px),
-    linear-gradient(145deg, rgba(45, 29, 112, 0.94), rgba(8, 33, 63, 0.98));
+    linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+    linear-gradient(145deg, rgba(50, 83, 126, 0.98), rgba(22, 58, 104, 0.96));
   background-size: 8px 8px, auto;
 }
 
@@ -104,8 +104,12 @@ body {
 .recent-game-matchup img {
   width: clamp(44px, 5vw, 62px);
   height: clamp(44px, 5vw, 62px);
+  border-radius: 8px;
+  background: rgba(247, 248, 255, 0.78);
   object-fit: contain;
-  opacity: 0.54;
+  opacity: 1;
+  padding: 6px;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.22));
 }
 
 .recent-game-matchup strong {
