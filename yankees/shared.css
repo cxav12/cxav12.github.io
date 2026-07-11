@@ -198,6 +198,10 @@ b {
   text-transform: none;
 }
 
+.site-page-title {
+  margin: 0 0 14px;
+}
+
 .page-heading,
 .hero-heading,
 .section-card h2,
