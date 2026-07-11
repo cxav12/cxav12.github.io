@@ -31,7 +31,7 @@
   border: 1px solid var(--line);
   border-radius: 8px;
   overflow: hidden;
-  background: rgba(3, 6, 20, 0.72);
+  background: var(--card-bg);
 }
 
 .weekday-row,
@@ -84,7 +84,7 @@
 .game-card {
   border: 1px solid var(--line);
   border-radius: 6px;
-  background: var(--panel-strong);
+  background: var(--card-bg-strong);
   padding: 9px;
 }
 
@@ -100,14 +100,14 @@
   border-color: rgba(77, 179, 138, 0.72);
   background:
     linear-gradient(135deg, rgba(77, 179, 138, 0.2), rgba(4, 8, 24, 0.94) 62%),
-    var(--panel-strong);
+    var(--card-bg-strong);
 }
 
 .game-card.loss {
   border-color: rgba(196, 206, 211, 0.44);
   background:
     linear-gradient(135deg, rgba(12, 35, 64, 0.32), rgba(6, 21, 46, 0.94) 62%),
-    var(--panel-strong);
+    var(--card-bg-strong);
 }
 
 .game-card.win .game-status {
@@ -181,7 +181,7 @@
     min-height: 0;
     border: 1px solid var(--line);
     border-radius: 8px;
-    background: rgba(3, 6, 20, 0.72);
+    background: var(--card-bg);
     padding: 12px;
   }
 

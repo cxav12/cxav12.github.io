@@ -49,13 +49,7 @@
         <section class="overview-body">
           <div class="d-flex flex-column flex-xl-row align-items-start align-items-xl-end justify-content-between gap-3 mb-3">
             <div>
-              <p class="eyebrow mb-2">Club performance</p>
               <h2 class="page-heading mb-2" id="view-title">Yankees Stats</h2>
-              <p class="page-copy mb-0" id="view-copy">Record, division standing, and core team ranks across MLB.</p>
-            </div>
-            <div class="view-controls d-flex flex-column flex-sm-row gap-2" role="group" aria-label="Overview views">
-              <button class="btn btn-control active" id="overview-view" type="button">Yankees View</button>
-              <button class="btn btn-control" id="compare-view" type="button">Compare Teams</button>
             </div>
           </div>
 
@@ -65,34 +59,37 @@
                 <article class="team-card h-100" id="yankees-card"></article>
               </div>
               <div class="col-12 col-xl-7">
-                <div class="insight-panel h-100">
-                  <p class="panel-kicker mb-2">How to read it</p>
-                  <h3>Quick team pulse</h3>
-                  <p>
-                    Rankings are calculated across all MLB teams for the selected season. Higher is better for batting stats and runs scored; lower is better for runs allowed and ERA.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section id="compare-panel" aria-label="Compare Yankees to another team" hidden>
-            <div class="compare-search row g-2 align-items-end mb-3">
-              <label class="col-12 col-lg" for="team-search">
-                <span class="form-label label-small">Search team to compare</span>
-                <input class="form-control form-control-lg" id="team-search" list="team-options" type="search" placeholder="Boston Red Sox, Dodgers, NYM..." autocomplete="off" />
-                <datalist id="team-options"></datalist>
-              </label>
-              <div class="col-12 col-lg-auto">
-                <button class="btn btn-yankees btn-lg w-100" id="compare-button" type="button">Compare</button>
-              </div>
-            </div>
-            <div class="row g-3">
-              <div class="col-12 col-xl-6">
-                <article class="team-card h-100" id="compare-yankees-card"></article>
-              </div>
-              <div class="col-12 col-xl-6">
-                <article class="team-card h-100" id="comparison-card"></article>
+                <section class="insight-panel standings-panel h-100" aria-labelledby="standings-title">
+                  <div class="standings-head d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between gap-2 mb-3">
+                    <h3 id="standings-title" class="mb-0">Standings</h3>
+                    <span class="standings-context" id="standings-context">AL East</span>
+                  </div>
+                  <div class="standings-controls mb-2" id="standings-mode-controls" role="group" aria-label="Standings view">
+                    <button class="standings-option active" type="button" data-standings-mode="division">Division</button>
+                    <button class="standings-option" type="button" data-standings-mode="league">League</button>
+                    <button class="standings-option" type="button" data-standings-mode="mlb">MLB</button>
+                  </div>
+                  <div class="standings-controls standings-filter-controls mb-3" id="standings-filter-controls" role="group" aria-label="Standings filter"></div>
+                  <div class="standings-table-shell">
+                    <table class="standings-table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Rank</th>
+                          <th scope="col">Team</th>
+                          <th scope="col">W</th>
+                          <th scope="col">L</th>
+                          <th scope="col">PCT</th>
+                          <th scope="col">GB</th>
+                        </tr>
+                      </thead>
+                      <tbody id="standings-body">
+                        <tr>
+                          <td colspan="6">Loading standings</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
               </div>
             </div>
           </section>

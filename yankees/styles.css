@@ -2,7 +2,7 @@
   min-height: 0;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(6, 21, 46, 0.9);
+  background: var(--card-bg-strong);
 }
 
 .hero-panel::after {
@@ -44,7 +44,7 @@
   border: 1px solid rgba(196, 206, 212, 0.22);
   border-radius: 6px;
   color: var(--ink);
-  background: rgba(255, 255, 255, 0.055);
+  background: var(--card-bg);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -58,12 +58,16 @@
 
 .recap-selector-button.win {
   border-color: rgba(103, 232, 162, 0.38);
-  background: rgba(31, 122, 75, 0.2);
+  background:
+    linear-gradient(135deg, rgba(31, 122, 75, 0.22), transparent 62%),
+    var(--card-bg);
 }
 
 .recap-selector-button.loss {
   border-color: rgba(255, 143, 143, 0.42);
-  background: rgba(149, 45, 53, 0.22);
+  background:
+    linear-gradient(135deg, rgba(149, 45, 53, 0.24), transparent 62%),
+    var(--card-bg);
 }
 
 .recap-selector-button:hover,
@@ -77,14 +81,18 @@
 .recap-selector-button.win:focus,
 .recap-selector-button.win.active {
   border-color: rgba(103, 232, 162, 0.76);
-  background: rgba(31, 122, 75, 0.28);
+  background:
+    linear-gradient(135deg, rgba(31, 122, 75, 0.3), transparent 62%),
+    var(--card-bg);
 }
 
 .recap-selector-button.loss:hover,
 .recap-selector-button.loss:focus,
 .recap-selector-button.loss.active {
   border-color: rgba(255, 143, 143, 0.78);
-  background: rgba(149, 45, 53, 0.3);
+  background:
+    linear-gradient(135deg, rgba(149, 45, 53, 0.32), transparent 62%),
+    var(--card-bg);
 }
 
 .recap-selector-button .selector-date,
@@ -119,7 +127,7 @@
   color: var(--ink);
   background:
     linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-    linear-gradient(145deg, rgba(34, 64, 104, 0.96), rgba(18, 45, 82, 0.94));
+    var(--card-bg);
   background-size: 8px 8px, auto;
   display: grid;
   grid-template-rows: auto 1fr auto;
@@ -135,7 +143,7 @@
   border-color: rgba(247, 248, 255, 0.72);
   background:
     linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
-    linear-gradient(145deg, rgba(50, 83, 126, 0.98), rgba(22, 58, 104, 0.96));
+    rgba(3, 6, 20, 0.86);
   background-size: 8px 8px, auto;
 }
 
@@ -214,7 +222,7 @@
   min-height: 136px;
   border: 1px solid rgba(77, 127, 190, 0.5);
   border-radius: 8px;
-  background: linear-gradient(90deg, rgba(3, 12, 24, 0.96), rgba(8, 33, 63, 0.96));
+  background: var(--card-bg);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   display: grid;
   grid-template-columns: minmax(180px, 1fr) minmax(460px, 1.35fr) minmax(180px, 1fr);
@@ -226,7 +234,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(90deg, rgba(196, 206, 212, 0.04), transparent 26%, rgba(59, 130, 246, 0.12));
+  background: linear-gradient(90deg, rgba(196, 206, 212, 0.04), transparent 32%, rgba(196, 206, 212, 0.06));
 }
 
 .game-result-badge {
@@ -372,7 +380,7 @@
   border-radius: 8px;
   background:
     linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(16, 50, 92, 0.95), rgba(8, 33, 63, 0.98));
+    var(--card-bg);
   background-size: 100% 66px, auto;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   padding: 18px 18px 22px;

@@ -14,6 +14,8 @@
   --line-bright: rgba(196, 206, 211, 0.48);
   --panel: rgba(12, 35, 64, 0.84);
   --panel-strong: rgba(6, 21, 46, 0.94);
+  --card-bg: rgba(3, 6, 20, 0.72);
+  --card-bg-strong: rgba(5, 10, 28, 0.82);
   --green: #4db38a;
   --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
   --text-normal: 0.8125rem;

@@ -31,7 +31,7 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(3, 6, 20, 0.72);
+  background: var(--card-bg);
   overflow: hidden;
 }
 
@@ -66,7 +66,7 @@
   border: 1px solid var(--line);
   border-radius: 8px;
   color: var(--ink);
-  background: rgba(5, 10, 28, 0.82);
+  background: var(--card-bg-strong);
   padding: 18px;
 }
 
@@ -168,7 +168,7 @@
   border: 1px solid var(--line);
   border-radius: 6px;
   color: var(--ink);
-  background: rgba(255, 255, 255, 0.055);
+  background: var(--card-bg);
   text-align: left;
   display: grid;
   align-content: center;
@@ -200,7 +200,7 @@
   border: 1px solid var(--line);
   border-left: 3px solid var(--line-bright);
   border-radius: 6px;
-  background: var(--panel-strong);
+  background: var(--card-bg-strong);
   padding: 10px 12px;
 }
 
@@ -251,7 +251,7 @@
 .feed article.transaction-card {
   background:
     linear-gradient(135deg, color-mix(in srgb, var(--transaction-accent, var(--line-bright)) 18%, transparent), rgba(6, 21, 46, 0.94) 62%),
-    var(--panel-strong);
+    var(--card-bg-strong);
 }
 
 .transaction-meta {

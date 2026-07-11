@@ -15,26 +15,25 @@ const metricConfig = [
 const els = {
   status: document.querySelector("#data-status"),
   viewTitle: document.querySelector("#view-title"),
-  viewCopy: document.querySelector("#view-copy"),
-  overviewPanel: document.querySelector("#overview-panel"),
-  comparePanel: document.querySelector("#compare-panel"),
-  overviewButton: document.querySelector("#overview-view"),
-  compareButton: document.querySelector("#compare-view"),
   yankeesCard: document.querySelector("#yankees-card"),
-  compareYankeesCard: document.querySelector("#compare-yankees-card"),
-  comparisonCard: document.querySelector("#comparison-card"),
-  teamSearch: document.querySelector("#team-search"),
-  teamOptions: document.querySelector("#team-options"),
-  compareSubmit: document.querySelector("#compare-button"),
+  standingsContext: document.querySelector("#standings-context"),
+  standingsModeControls: document.querySelector("#standings-mode-controls"),
+  standingsFilterControls: document.querySelector("#standings-filter-controls"),
+  standingsBody: document.querySelector("#standings-body"),
 };
 
 const state = {
   teams: [],
   teamMap: new Map(),
   standings: new Map(),
+  standingsRecords: [],
   hitting: new Map(),
   pitching: new Map(),
   ranks: new Map(),
+  standingsView: {
+    mode: "division",
+    filter: "American League East",
+  },
 };
 
 const api = {
@@ -79,10 +78,6 @@ function formatStat(key, value) {
   return String(value);
 }
 
-function normalizeTeam(team) {
-  return `${team.name} ${team.teamName} ${team.locationName} ${team.clubName} ${team.abbreviation}`.toLowerCase();
-}
-
 function storeStats(group, data) {
   const target = group === "hitting" ? state.hitting : state.pitching;
   const splits = data.stats?.[0]?.splits || [];
@@ -92,16 +87,44 @@ function storeStats(group, data) {
 }
 
 function storeStandings(data) {
+  const records = [];
   (data.records || []).forEach((division) => {
     (division.teamRecords || []).forEach((record) => {
-      state.standings.set(record.team.id, {
-        wins: record.leagueRecord?.wins ?? "-",
-        losses: record.leagueRecord?.losses ?? "-",
-        divisionRank: record.divisionRank,
-        divisionName: division.division?.name || "",
+      const teamId = record.team?.id;
+      if (!teamId) return;
+      const team = state.teamMap.get(teamId);
+      const leagueName = division.league?.name || team?.league?.name || "";
+      const divisionName = division.division?.name || team?.division?.name || "";
+      const wins = record.leagueRecord?.wins ?? record.wins ?? "-";
+      const losses = record.leagueRecord?.losses ?? record.losses ?? "-";
+      const item = {
+        teamId,
+        teamName: record.team?.name || team?.name || "Team",
+        abbreviation: team?.abbreviation || "",
+        wins,
+        losses,
+        pct: record.leagueRecord?.pct || record.winningPercentage || "-",
+        divisionGamesBack: record.divisionGamesBack ?? record.gamesBack ?? "-",
+        leagueGamesBack: record.leagueGamesBack ?? record.gamesBack ?? "-",
+        sportGamesBack: record.sportGamesBack ?? record.leagueGamesBack ?? record.gamesBack ?? "-",
+        divisionRank: Number(record.divisionRank),
+        leagueRank: Number(record.leagueRank),
+        sportRank: Number(record.sportRank),
+        divisionId: division.division?.id || team?.division?.id || "",
+        divisionName,
+        leagueId: division.league?.id || team?.league?.id || "",
+        leagueName,
+      };
+      records.push(item);
+      state.standings.set(teamId, {
+        wins,
+        losses,
+        divisionRank: item.divisionRank,
+        divisionName,
       });
     });
   });
+  state.standingsRecords = records;
 }
 
 function metricValue(teamId, metric) {
@@ -129,6 +152,172 @@ function divisionShortName(name) {
   return name
     .replace("American League", "AL")
     .replace("National League", "NL");
+}
+
+function leagueShortName(name) {
+  if (name.includes("American")) return "American League";
+  if (name.includes("National")) return "National League";
+  return name || "League";
+}
+
+function leagueOrder(name) {
+  return name.includes("American") ? 0 : name.includes("National") ? 1 : 2;
+}
+
+function divisionOrder(name) {
+  const normalized = divisionShortName(name);
+  const order = ["AL East", "AL Central", "AL West", "NL East", "NL Central", "NL West"];
+  const index = order.indexOf(normalized);
+  return index === -1 ? order.length : index;
+}
+
+function rankValue(record, mode) {
+  if (mode === "division") return record.divisionRank;
+  if (mode === "league") return record.leagueRank;
+  return record.sportRank;
+}
+
+function gamesBackValue(record, mode) {
+  if (mode === "division") return record.divisionGamesBack;
+  if (mode === "league") return record.leagueGamesBack;
+  return record.sportGamesBack;
+}
+
+function standingsFallbackSort(a, b) {
+  const pct = Number(b.pct) - Number(a.pct);
+  if (Number.isFinite(pct) && pct !== 0) return pct;
+  const wins = Number(b.wins) - Number(a.wins);
+  if (Number.isFinite(wins) && wins !== 0) return wins;
+  return Number(a.losses) - Number(b.losses);
+}
+
+function sortStandings(records, mode) {
+  return [...records].sort((a, b) => {
+    const aRank = rankValue(a, mode);
+    const bRank = rankValue(b, mode);
+    if (Number.isFinite(aRank) && Number.isFinite(bRank)) return aRank - bRank;
+    return standingsFallbackSort(a, b);
+  });
+}
+
+function uniqueOptions(key, labeler, sorter) {
+  const options = new Map();
+  state.standingsRecords.forEach((record) => {
+    if (!record[key]) return;
+    options.set(record[key], labeler(record[key]));
+  });
+  return [...options.entries()]
+    .map(([value, label]) => ({ value, label }))
+    .sort(sorter);
+}
+
+function divisionOptions() {
+  return uniqueOptions(
+    "divisionName",
+    divisionShortName,
+    (a, b) => divisionOrder(a.value) - divisionOrder(b.value),
+  );
+}
+
+function leagueOptions() {
+  return uniqueOptions(
+    "leagueName",
+    leagueShortName,
+    (a, b) => leagueOrder(a.value) - leagueOrder(b.value),
+  );
+}
+
+function currentStandingsLabel() {
+  const { mode, filter } = state.standingsView;
+  if (mode === "division") return divisionShortName(filter);
+  if (mode === "league") return leagueShortName(filter);
+  return "MLB";
+}
+
+function filteredStandings() {
+  const { mode, filter } = state.standingsView;
+  if (mode === "division") {
+    return sortStandings(state.standingsRecords.filter((record) => record.divisionName === filter), mode);
+  }
+  if (mode === "league") {
+    return sortStandings(state.standingsRecords.filter((record) => record.leagueName === filter), mode);
+  }
+  return sortStandings(state.standingsRecords, mode);
+}
+
+function standingsButton(label, value, active) {
+  const button = document.createElement("button");
+  button.className = `standings-option${active ? " active" : ""}`;
+  button.type = "button";
+  button.dataset.standingsFilter = value;
+  button.textContent = label;
+  return button;
+}
+
+function setStandingsMode(mode) {
+  state.standingsView.mode = mode;
+  if (mode === "division") {
+    const yankeesStanding = state.standings.get(TEAM_ID);
+    state.standingsView.filter = yankeesStanding?.divisionName || divisionOptions()[0]?.value || "";
+  } else if (mode === "league") {
+    state.standingsView.filter = leagueOptions()[0]?.value || "";
+  } else {
+    state.standingsView.filter = "MLB";
+  }
+  renderStandings();
+}
+
+function setStandingsFilter(filter) {
+  state.standingsView.filter = filter;
+  renderStandings();
+}
+
+function renderStandingsFilters() {
+  els.standingsFilterControls.replaceChildren();
+  if (state.standingsView.mode === "mlb") {
+    els.standingsFilterControls.hidden = true;
+    return;
+  }
+
+  els.standingsFilterControls.hidden = false;
+  const options = state.standingsView.mode === "division" ? divisionOptions() : leagueOptions();
+  options.forEach((option) => {
+    els.standingsFilterControls.append(standingsButton(option.label, option.value, option.value === state.standingsView.filter));
+  });
+}
+
+function renderStandingsRows() {
+  const records = filteredStandings();
+  els.standingsBody.replaceChildren();
+
+  if (!records.length) {
+    els.standingsBody.innerHTML = `<tr><td colspan="6">Standings unavailable</td></tr>`;
+    return;
+  }
+
+  records.forEach((record, index) => {
+    const row = document.createElement("tr");
+    if (record.teamId === TEAM_ID) row.classList.add("is-yankees");
+    const rank = Number.isFinite(rankValue(record, state.standingsView.mode)) ? rankValue(record, state.standingsView.mode) : index + 1;
+    row.innerHTML = `
+      <td data-label="Rank">${rank}</td>
+      <td data-label="Team"><span>${record.teamName}</span></td>
+      <td data-label="W">${record.wins}</td>
+      <td data-label="L">${record.losses}</td>
+      <td data-label="PCT">${record.pct}</td>
+      <td data-label="GB">${gamesBackValue(record, state.standingsView.mode) ?? "-"}</td>
+    `;
+    els.standingsBody.append(row);
+  });
+}
+
+function renderStandings() {
+  els.standingsContext.textContent = currentStandingsLabel();
+  els.standingsModeControls.querySelectorAll("[data-standings-mode]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.standingsMode === state.standingsView.mode);
+  });
+  renderStandingsFilters();
+  renderStandingsRows();
 }
 
 function teamOverview(teamId) {
@@ -179,54 +368,15 @@ function renderCard(target, teamId) {
   target.append(header, list);
 }
 
-function showView(view) {
-  const compare = view === "compare";
-  els.overviewPanel.hidden = compare;
-  els.comparePanel.hidden = !compare;
-  els.overviewButton.classList.toggle("active", !compare);
-  els.compareButton.classList.toggle("active", compare);
-  els.viewTitle.textContent = compare ? "Compare Teams" : "Yankees Stats";
-  els.viewCopy.textContent = compare
-    ? "Search another MLB team and compare the same overview metrics against the Yankees."
-    : "Record, division standing, and core team ranks across MLB.";
-}
-
-function findTeam(query) {
-  const normalized = query.trim().toLowerCase();
-  if (!normalized) return null;
-  return state.teams.find((team) => normalizeTeam(team) === normalized)
-    || state.teams.find((team) => normalizeTeam(team).includes(normalized));
-}
-
-function populateTeams() {
-  els.teamOptions.replaceChildren();
-  state.teams
-    .filter((team) => team.id !== TEAM_ID)
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .forEach((team) => {
-      const option = document.createElement("option");
-      option.value = team.name;
-      option.label = team.abbreviation;
-      els.teamOptions.append(option);
-    });
-}
-
-function compareTeam() {
-  const team = findTeam(els.teamSearch.value);
-  if (!team || team.id === TEAM_ID) {
-    els.comparisonCard.innerHTML = `<p class="error mb-0">Choose another MLB team to compare against the Yankees.</p>`;
-    return;
-  }
-  renderCard(els.compareYankeesCard, TEAM_ID);
-  renderCard(els.comparisonCard, team.id);
-}
-
 function bindEvents() {
-  els.overviewButton.addEventListener("click", () => showView("overview"));
-  els.compareButton.addEventListener("click", () => showView("compare"));
-  els.compareSubmit.addEventListener("click", compareTeam);
-  els.teamSearch.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") compareTeam();
+  els.standingsModeControls.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-standings-mode]");
+    if (button) setStandingsMode(button.dataset.standingsMode);
+  });
+
+  els.standingsFilterControls.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-standings-filter]");
+    if (button) setStandingsFilter(button.dataset.standingsFilter);
   });
 }
 
@@ -247,17 +397,15 @@ async function init() {
     storeStats("pitching", pitching);
     storeStandings(standings);
     calculateRanks();
-    populateTeams();
+    state.standingsView.filter = state.standings.get(TEAM_ID)?.divisionName || divisionOptions()[0]?.value || state.standingsView.filter;
 
     renderCard(els.yankeesCard, TEAM_ID);
-    renderCard(els.compareYankeesCard, TEAM_ID);
-    els.teamSearch.value = "Boston Red Sox";
-    compareTeam();
-    showView("overview");
+    renderStandings();
     setStatus("Live MLB data", "good");
   } catch (error) {
     setStatus("Data connection issue", "error");
     els.yankeesCard.innerHTML = `<p class="error mb-0">Could not load team overview data. ${error.message}</p>`;
+    els.standingsBody.innerHTML = `<tr><td colspan="6">Could not load standings.</td></tr>`;
   }
 }
 

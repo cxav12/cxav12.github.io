@@ -91,7 +91,7 @@
   border: 1px solid transparent;
   border-radius: 4px;
   color: var(--ink);
-  background: rgba(255, 255, 255, 0.075);
+  background: var(--card-bg);
   display: inline-grid;
   place-items: center;
   font-weight: 800;
@@ -119,7 +119,7 @@
   color: #f5f7ff;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012)),
-    rgba(3, 6, 20, 0.62);
+    var(--card-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -230,7 +230,7 @@
   border: 1px solid var(--line);
   border-radius: 6px;
   color: var(--ink);
-  background: rgba(255, 255, 255, 0.055);
+  background: var(--card-bg);
   text-align: left;
   display: grid;
   align-content: center;
@@ -253,7 +253,7 @@
   border: 1px solid var(--line);
   border-radius: 8px;
   overflow: hidden;
-  background: var(--panel-strong);
+  background: var(--card-bg-strong);
 }
 
 .stat-card {
@@ -294,7 +294,7 @@
 .table-shell {
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(3, 6, 20, 0.72);
+  background: var(--card-bg);
 }
 
 .table {
