@@ -1,23 +1,23 @@
-.spotlight .player-name {
+.player-spotlight-page .player-name {
   font-size: clamp(2rem, 5vw, 4.8rem);
   font-weight: 800;
   line-height: 0.96;
 }
 
-.spotlight .player-name a {
+.player-spotlight-page .player-name a {
   color: inherit;
   text-decoration: none;
 }
 
-.spotlight .player-name a:hover,
-.spotlight .player-name a:focus {
+.player-spotlight-page .player-name a:hover,
+.player-spotlight-page .player-name a:focus {
   color: #ffffff;
   text-decoration: underline;
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.12em;
 }
 
-.spotlight .portrait-wrap {
+.player-spotlight-page .portrait-wrap {
   display: grid;
   place-items: center;
   padding: 3px;
@@ -26,7 +26,7 @@
     linear-gradient(180deg, #d6dce6, #6f7788);
 }
 
-.spotlight .portrait-wrap img {
+.player-spotlight-page .portrait-wrap img {
   width: 156%;
   height: 156%;
   min-height: 0;
@@ -36,44 +36,44 @@
   transform: translateY(4%);
 }
 
-.spotlight .player-bio {
+.player-spotlight-page .player-bio {
   gap: 0.5rem !important;
   margin-top: 0.75rem !important;
 }
 
-.spotlight .bio-row {
+.player-spotlight-page .bio-row {
   grid-template-columns: 54px 1fr;
   gap: 8px;
   line-height: 1.25;
 }
 
-.spotlight .bio-row span:first-child {
+.player-spotlight-page .bio-row span:first-child {
   font-size: var(--text-small);
   font-weight: 700;
 }
 
-.spotlight .stat-card {
+.player-spotlight-page .stat-card {
   justify-items: center;
   align-items: center;
   align-content: center;
   gap: 8px;
 }
 
-.spotlight .compact .stat-card {
+.player-spotlight-page .compact .stat-card {
   min-height: 72px;
   padding-block: 10px;
 }
 
-.spotlight .stat-card strong,
-.spotlight .compact .stat-card strong {
+.player-spotlight-page .stat-card strong,
+.player-spotlight-page .compact .stat-card strong {
   line-height: 1;
 }
 
-.spotlight .compact .stat-card strong {
+.player-spotlight-page .compact .stat-card strong {
   font-size: 1.25rem;
 }
 
-.spotlight .stat-card span {
+.player-spotlight-page .stat-card span {
   line-height: 1;
 }
 
@@ -383,11 +383,11 @@
 }
 
 @media (max-width: 575.98px) {
-  .spotlight .player-name {
+  .player-spotlight-page .player-name {
     font-size: clamp(2rem, 12vw, 3.3rem);
   }
 
-  .spotlight .bio-row {
+  .player-spotlight-page .bio-row {
     grid-template-columns: 50px 1fr;
   }
 
@@ -479,32 +479,29 @@
   }
 }
 
-.spotlight {
-  min-height: 72vh;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px),
-    linear-gradient(145deg, rgba(12, 35, 64, 0.98), rgba(6, 21, 46, 0.96) 56%, rgba(8, 33, 63, 0.98));
-  background-size: 34px 34px, 34px 34px, auto;
-  box-shadow: var(--shadow);
+.player-spotlight-header {
+  min-height: 0;
+  overflow: visible !important;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
-.spotlight::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0;
-  height: 6px;
-  background: linear-gradient(90deg, var(--yankees-silver), var(--yankees-navy), var(--swatch-mid), var(--yankees-silver));
+.player-spotlight-header::after {
+  display: none;
 }
 
 .spotlight-body {
   display: grid !important;
   grid-template-columns: 1fr;
   gap: clamp(16px, 3vw, 32px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--card-bg-strong);
+  box-shadow: none;
   margin-inline: 0;
-  padding: 0;
+  padding: 18px;
 }
 
 .spotlight-body > * {
@@ -513,8 +510,17 @@
   padding-inline: 0;
 }
 
-.spotlight > .site-page-title {
-  padding-top: 14px;
+.player-title-band {
+  display: block;
+  padding: 14px 0 0;
+  margin: 0 0 14px;
+  background: transparent;
+}
+
+.player-title-band .site-page-title {
+  margin: 0;
+  padding: 0;
+  background: transparent;
 }
 
 .portrait-wrap {
@@ -681,7 +687,7 @@
 
 @media (max-width: 575.98px) {
   .spotlight-body {
-    padding-inline: 0;
+    padding: 14px;
   }
 
   .player-name {

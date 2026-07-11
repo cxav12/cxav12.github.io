@@ -267,7 +267,7 @@ b {
 .preview-row small,
 .spotlight-mini small,
 .form-row small,
-.spotlight .bio-row span:first-child {
+.player-spotlight-page .bio-row span:first-child {
   font-size: var(--text-small);
   font-weight: 600;
 }
@@ -384,7 +384,7 @@ b {
 .feed p,
 .roster-link span,
 .insight-panel p,
-.spotlight .recent-form-bar,
+.player-spotlight-page .recent-form-bar,
 .preview-row strong,
 .spotlight-mini strong,
 .form-row strong,

@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="../shared.css" />
   </head>
   <body>
-    <main class="container-fluid app-shell">
-      <section class="spotlight overflow-hidden position-relative" aria-labelledby="page-title">
+    <main class="container-fluid app-shell player-spotlight-page">
+      <section class="player-spotlight-header overflow-hidden position-relative" aria-labelledby="page-title">
         <header class="topbar d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
           <div class="brand-lockup d-flex align-items-center gap-3 min-w-0">
             <img class="brand-logo" src="../assets/new-york-yankees.svg" alt="New York Yankees logo" />
@@ -45,102 +45,104 @@
             <a class="nav-link" href="../team-overview/">Team Overview</a>
           </div>
         </nav>
+      </section>
 
+      <section class="player-title-band" aria-labelledby="page-title">
         <h2 class="page-heading site-page-title" id="page-title">Player Spotlight</h2>
-        <section class="row g-4 g-xl-5 spotlight-body">
-          <aside class="col-12 col-lg-4 col-xl-3" aria-label="Selected player">
-            <div class="portrait-wrap">
-              <img id="player-headshot" class="img-fluid" alt="" />
+      </section>
+      <section class="row g-4 g-xl-5 spotlight-body">
+        <aside class="col-12 col-lg-4 col-xl-3" aria-label="Selected player">
+          <div class="portrait-wrap">
+            <img id="player-headshot" class="img-fluid" alt="" />
+          </div>
+          <div class="player-bio d-grid gap-3 mt-3" id="player-bio"></div>
+        </aside>
+
+        <section class="col-12 col-lg-8 col-xl-9 d-grid gap-3 player-main">
+          <div class="row g-2 align-items-end">
+            <label class="col-12 col-md" for="player-search">
+              <span class="form-label label-small">Search any player</span>
+              <input id="player-search" class="form-control form-control-lg" type="search" placeholder="Aaron Judge, Gerrit Cole..." autocomplete="off" />
+            </label>
+            <div class="col-12 col-md-auto">
+              <button id="search-button" class="btn btn-yankees btn-lg w-100" type="button">Search</button>
             </div>
-            <div class="player-bio d-grid gap-3 mt-3" id="player-bio"></div>
-          </aside>
+          </div>
+          <div class="row g-2 search-results" id="search-results" hidden></div>
 
-          <section class="col-12 col-lg-8 col-xl-9 d-grid gap-3 player-main">
-            <div class="row g-2 align-items-end">
-              <label class="col-12 col-md" for="player-search">
-                <span class="form-label label-small">Search any player</span>
-                <input id="player-search" class="form-control form-control-lg" type="search" placeholder="Aaron Judge, Gerrit Cole..." autocomplete="off" />
-              </label>
-              <div class="col-12 col-md-auto">
-                <button id="search-button" class="btn btn-yankees btn-lg w-100" type="button">Search</button>
-              </div>
+          <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
+            <div class="min-w-0">
+              <h2 class="player-name mb-0"><a id="player-name" href="https://baseballsavant.mlb.com/" target="_blank" rel="noreferrer">Yankees</a></h2>
             </div>
-            <div class="row g-2 search-results" id="search-results" hidden></div>
+          </div>
 
-            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
-              <div class="min-w-0">
-                <h2 class="player-name mb-0"><a id="player-name" href="https://baseballsavant.mlb.com/" target="_blank" rel="noreferrer">Yankees</a></h2>
+          <section aria-label="Season stats">
+            <p class="section-label mb-2" id="season-label">Season</p>
+            <div class="row g-0 stat-grid primary" id="primary-stats"></div>
+            <div class="row g-0 stat-grid compact mt-2" id="secondary-stats"></div>
+          </section>
+
+          <section aria-label="Recent games">
+            <div class="recent-form-bar mt-2" id="recent-form-bar">
+              <strong>Last</strong>
+              <div class="recent-window-controls" role="group" aria-label="Recent game window">
+                <button class="recent-window-button active" type="button" data-games="5">5</button>
+                <button class="recent-window-button" type="button" data-games="10">10</button>
+                <button class="recent-window-button" type="button" data-games="15">15</button>
+                <button class="recent-window-button" type="button" data-games="30">30</button>
               </div>
+              <strong>Games:</strong>
+              <span id="recent-line-stats">Loading recent form...</span>
             </div>
-
-            <section aria-label="Season stats">
-              <p class="section-label mb-2" id="season-label">Season</p>
-              <div class="row g-0 stat-grid primary" id="primary-stats"></div>
-              <div class="row g-0 stat-grid compact mt-2" id="secondary-stats"></div>
-            </section>
-
-            <section aria-label="Recent games">
-              <div class="recent-form-bar mt-2" id="recent-form-bar">
-                <strong>Last</strong>
-                <div class="recent-window-controls" role="group" aria-label="Recent game window">
-                  <button class="recent-window-button active" type="button" data-games="5">5</button>
-                  <button class="recent-window-button" type="button" data-games="10">10</button>
-                  <button class="recent-window-button" type="button" data-games="15">15</button>
-                  <button class="recent-window-button" type="button" data-games="30">30</button>
-                </div>
-                <strong>Games:</strong>
-                <span id="recent-line-stats">Loading recent form...</span>
-              </div>
-              <div class="table-responsive table-shell mt-2">
-                <table class="table table-dark table-hover align-middle mb-0">
-                  <thead id="game-log-head"></thead>
-                  <tbody id="game-log-body"></tbody>
-                </table>
-              </div>
-            </section>
+            <div class="table-responsive table-shell mt-2">
+              <table class="table table-dark table-hover align-middle mb-0">
+                <thead id="game-log-head"></thead>
+                <tbody id="game-log-body"></tbody>
+              </table>
+            </div>
           </section>
         </section>
+      </section>
 
-        <section class="player-detail-preview" aria-labelledby="player-detail-title">
-          <div class="detail-card">
-            <header class="detail-header">
-              <div class="detail-player-lockup">
-                <img id="detail-headshot" class="detail-headshot" alt="" />
-                <div class="min-w-0">
-                  <p class="detail-first-name mb-1" id="detail-first-name">Player</p>
-                  <h2 id="player-detail-title" class="detail-last-name mb-1">Detail</h2>
-                  <p class="detail-meta mb-0" id="detail-meta">Loading player profile</p>
-                </div>
+      <section class="player-detail-preview" aria-labelledby="player-detail-title">
+        <div class="detail-card">
+          <header class="detail-header">
+            <div class="detail-player-lockup">
+              <img id="detail-headshot" class="detail-headshot" alt="" />
+              <div class="min-w-0">
+                <p class="detail-first-name mb-1" id="detail-first-name">Player</p>
+                <h2 id="player-detail-title" class="detail-last-name mb-1">Detail</h2>
+                <p class="detail-meta mb-0" id="detail-meta">Loading player profile</p>
               </div>
-              <div class="detail-number" id="detail-number" aria-label="Player number">--</div>
-            </header>
+            </div>
+            <div class="detail-number" id="detail-number" aria-label="Player number">--</div>
+          </header>
 
-            <div class="detail-divider" aria-hidden="true"></div>
+          <div class="detail-divider" aria-hidden="true"></div>
 
-            <nav class="detail-split-controls" id="detail-split-controls" aria-label="Stat split">
-              <button class="detail-toggle active" type="button" data-detail-split="season">Season</button>
-              <button class="detail-toggle" type="button" data-detail-split="risp">RISP</button>
-              <button class="detail-toggle" type="button" data-detail-split="vs-lhp">VS LHP</button>
-              <button class="detail-toggle" type="button" data-detail-split="vs-rhp">VS RHP</button>
-              <button class="detail-toggle" type="button" data-detail-split="home">Home</button>
-              <button class="detail-toggle" type="button" data-detail-split="away">Away</button>
-            </nav>
+          <nav class="detail-split-controls" id="detail-split-controls" aria-label="Stat split">
+            <button class="detail-toggle active" type="button" data-detail-split="season">Season</button>
+            <button class="detail-toggle" type="button" data-detail-split="risp">RISP</button>
+            <button class="detail-toggle" type="button" data-detail-split="vs-lhp">VS LHP</button>
+            <button class="detail-toggle" type="button" data-detail-split="vs-rhp">VS RHP</button>
+            <button class="detail-toggle" type="button" data-detail-split="home">Home</button>
+            <button class="detail-toggle" type="button" data-detail-split="away">Away</button>
+          </nav>
 
-            <section class="detail-stat-grid detail-primary-stats" id="detail-primary-stats" aria-label="Selected split primary stats"></section>
-            <section class="detail-stat-grid detail-secondary-stats" id="detail-secondary-stats" aria-label="Selected split secondary stats"></section>
+          <section class="detail-stat-grid detail-primary-stats" id="detail-primary-stats" aria-label="Selected split primary stats"></section>
+          <section class="detail-stat-grid detail-secondary-stats" id="detail-secondary-stats" aria-label="Selected split secondary stats"></section>
 
-            <div class="detail-divider detail-divider-bottom" aria-hidden="true"></div>
+          <div class="detail-divider detail-divider-bottom" aria-hidden="true"></div>
 
-            <nav class="detail-tab-controls" id="detail-tab-controls" aria-label="Player detail tabs">
-              <button class="detail-tab active" type="button" data-detail-tab="pace">152-Game Pace</button>
-              <button class="detail-tab" type="button" data-detail-tab="recent">Recent Action</button>
-              <button class="detail-tab" type="button" data-detail-tab="season-log">Season Log</button>
-              <button class="detail-tab" type="button" data-detail-tab="career">Career Totals</button>
-            </nav>
+          <nav class="detail-tab-controls" id="detail-tab-controls" aria-label="Player detail tabs">
+            <button class="detail-tab active" type="button" data-detail-tab="pace">152-Game Pace</button>
+            <button class="detail-tab" type="button" data-detail-tab="recent">Recent Action</button>
+            <button class="detail-tab" type="button" data-detail-tab="season-log">Season Log</button>
+            <button class="detail-tab" type="button" data-detail-tab="career">Career Totals</button>
+          </nav>
 
-            <section class="detail-tab-panel" id="detail-tab-panel" aria-live="polite"></section>
-          </div>
-        </section>
+          <section class="detail-tab-panel" id="detail-tab-panel" aria-live="polite"></section>
+        </div>
       </section>
     </main>
 
