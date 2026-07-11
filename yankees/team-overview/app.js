@@ -355,10 +355,11 @@ function renderCard(target, teamId) {
   const header = document.createElement("header");
   header.className = "team-header";
   header.innerHTML = `
-    <p class="panel-kicker mb-2">${overview.team.league?.abbreviation || "MLB"} · ${overview.team.division?.name || "Division"}</p>
     <h3 class="team-name">${overview.team.name}</h3>
-    <div class="record-line mt-3">${overview.record}</div>
-    <div class="standing-line">${overview.standingLine}</div>
+    <div class="team-record-row mt-3">
+      <div class="record-line">${overview.record}</div>
+      <div class="standing-line">${overview.standingLine}</div>
+    </div>
   `;
 
   const list = document.createElement("section");
