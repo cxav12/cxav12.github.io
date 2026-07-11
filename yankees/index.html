@@ -47,13 +47,14 @@
 
       </section>
 
-      <section class="recent-games-section" aria-label="Previous Yankees game recaps">
+      <section class="recent-games-section" aria-label="Previous Yankees game recaps" hidden>
         <div class="recent-games-grid" id="recent-games-grid">
           <button class="recent-game-button" type="button" disabled>Loading recent games...</button>
         </div>
       </section>
 
       <section class="selected-recap-section" aria-label="Selected Yankees game recap">
+        <h2 class="page-heading recap-visible-title mb-3">Game Recap</h2>
         <h2 class="visually-hidden" id="recap-title">Loading Yankees recap</h2>
         <p class="visually-hidden" id="recap-subtitle">
           Pulling the latest completed game, boxscore totals, and play-by-play metrics.
@@ -72,6 +73,13 @@
             <p><span>L:</span> Loading loser</p>
             <p><span>SV:</span> Loading save</p>
           </div>
+        </div>
+      </section>
+
+      <section class="recap-selector-section" aria-label="Previous game recap selector">
+        <div class="recap-selector-header">View Previous Game Recaps:</div>
+        <div class="recap-button-row" id="recap-button-row">
+          <button class="recap-selector-button" type="button" disabled>Loading recent games...</button>
         </div>
       </section>
 

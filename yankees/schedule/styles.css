@@ -1,78 +1,3 @@
-
-
-strong,
-b {
-  font-weight: 700;
-}
-
-.display-title {
-  font-size: 2rem;
-  font-weight: 800;
-  line-height: 1.1;
-}
-
-.month-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.month-summary,
-.game-detail,
-.empty-day,
-.btn-control {
-  font-size: 1rem;
-  font-weight: 400;
-}
-
-.matchup {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.kicker,
-.eyebrow,
-.status-pill,
-.site-nav summary,
-.site-nav-link,
-.desktop-site-nav .nav-link,
-.weekday-row span,
-.day-number,
-.game-status {
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.btn-control {
-  font-weight: 700;
-}
-
-@media (max-width: 575.98px) {
-  .day-number {
-    font-size: 0;
-  }
-
-  .day-number::before {
-    font-size: 0.875rem;
-    font-weight: 600;
-  }
-}
-
-body {
-  min-height: 100vh;
-  color: var(--ink);
-  background:
-    radial-gradient(circle at 78% 10%, rgba(196, 206, 211, 0.16), transparent 30%),
-    radial-gradient(circle at 12% 20%, rgba(27, 79, 143, 0.38), transparent 28%),
-    linear-gradient(135deg, var(--swatch-deep) 0%, var(--yankees-navy) 48%, var(--swatch-shadow) 100%);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-.site-shell {
-  max-width: 1440px;
-  padding: 18px;
-}
-
 .schedule-panel {
   min-height: calc(100vh - 36px);
   border: 1px solid var(--line);
@@ -97,70 +22,9 @@ body {
   padding: clamp(20px, 4vw, 48px);
 }
 
-.kicker,
-.eyebrow {
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.display-title,
-.month-title {
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
-.display-title {
-  font-size: clamp(2.2rem, 6vw, 5.6rem);
-  font-weight: 850;
-  line-height: 0.92;
-}
-
-.month-title {
-  font-size: clamp(1.8rem, 4vw, 3.6rem);
-  font-weight: 850;
-  line-height: 0.98;
-}
-
 .month-summary {
   max-width: 760px;
   color: #dfe4f4;
-  font-weight: 650;
-}
-
-.status-pill,
-.nav-home-link,
-.btn-control {
-  min-height: 42px;
-  border-radius: 6px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding-inline: 14px;
-  font-size: 0.85rem;
-  font-weight: 800;
-}
-
-.status-pill {
-  border: 1px solid var(--line);
-  color: var(--yankees-silver);
-  background: rgba(255, 255, 255, 0.06);
-  white-space: nowrap;
-}
-
-.btn-control {
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: var(--ink);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.btn-control:hover,
-.btn-control:focus {
-  border-color: var(--line-bright);
-  color: #fff;
-  background: rgba(196, 206, 211, 0.14);
 }
 
 .calendar-shell {
@@ -187,8 +51,8 @@ body {
   padding: 0 12px;
   border-right: 1px solid rgba(255, 255, 255, 0.08);
   color: var(--yankees-silver);
-  font-size: 0.78rem;
-  font-weight: 900;
+  font-size: var(--text-small);
+  font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -209,8 +73,8 @@ body {
 
 .day-number {
   color: var(--muted);
-  font-size: 0.82rem;
-  font-weight: 900;
+  font-size: var(--text-small);
+  font-weight: 700;
 }
 
 .day-cell.today .day-number {
@@ -256,34 +120,33 @@ body {
 
 .game-status {
   color: var(--muted);
-  font-size: 0.7rem;
-  font-weight: 900;
+  font-size: var(--text-small);
+  font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
 .matchup {
   color: var(--ink);
-  font-size: 0.94rem;
-  font-weight: 850;
+  font-size: var(--text-normal);
+  font-weight: 700;
 }
 
 .game-detail {
   color: #dfe4f4;
-  font-size: 0.82rem;
-  font-weight: 650;
+  font-size: var(--text-normal);
 }
 
 .empty-day {
   margin-top: auto;
   color: rgba(167, 174, 196, 0.42);
-  font-size: 0.8rem;
+  font-size: var(--text-normal);
   font-weight: 700;
 }
 
 .error {
   color: #ffbec4;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 @media (max-width: 991.98px) {
@@ -294,56 +157,8 @@ body {
 }
 
 @media (max-width: 575.98px) {
-  .site-shell {
-    padding: 10px;
-  }
-
-  .topbar,
   .schedule-body {
     padding-inline: 16px;
-  }
-
-  .brand-lockup {
-    align-items: flex-start !important;
-  }
-
-  .brand-logo {
-    height: 4rem;
-  }
-
-  .display-title {
-    font-size: clamp(2rem, 13vw, 3.2rem);
-  }
-
-  .month-title {
-    font-size: clamp(1.7rem, 10vw, 2.7rem);
-  }
-
-  .site-nav summary {
-    display: flex;
-    padding-inline: 16px;
-  }
-
-  .site-nav {
-    display: block;
-  }
-
-  .site-nav-links {
-    display: none;
-    padding: 0 16px 12px;
-  }
-
-  .site-nav[open] .site-nav-links {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  .site-nav-link {
-    width: 100%;
-  }
-
-  .desktop-site-nav {
-    display: none;
   }
 
   .calendar-shell {
@@ -380,7 +195,7 @@ body {
 
   .day-number::before {
     content: attr(data-mobile-label);
-    font-size: 0.9rem;
+    font-size: var(--text-small);
   }
 
   .header-actions,
@@ -388,63 +203,5 @@ body {
   .nav-home-link,
   .btn-control {
     width: 100%;
-  }
-}
-
-strong,
-b {
-  font-weight: 700;
-}
-
-.display-title {
-  font-size: 2rem;
-  font-weight: 800;
-  line-height: 1.1;
-}
-
-.month-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.month-summary,
-.game-detail,
-.empty-day,
-.btn-control {
-  font-size: 1rem;
-  font-weight: 400;
-}
-
-.matchup {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.kicker,
-.eyebrow,
-.status-pill,
-.site-nav summary,
-.site-nav-link,
-.desktop-site-nav .nav-link,
-.weekday-row span,
-.day-number,
-.game-status {
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.btn-control {
-  font-weight: 700;
-}
-
-@media (max-width: 575.98px) {
-  .day-number {
-    font-size: 0;
-  }
-
-  .day-number::before {
-    font-size: 0.875rem;
-    font-weight: 600;
   }
 }

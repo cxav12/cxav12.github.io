@@ -275,7 +275,7 @@ function setRosterTab(tab) {
 
 async function init() {
   bindEvents();
-  setStatus("Loading roster movement");
+  setStatus("Loading roster");
   await Promise.all([renderRoster(), renderTransactions()]);
   setStatus("Live MLB data", "good");
 }

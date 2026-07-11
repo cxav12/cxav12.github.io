@@ -33,6 +33,10 @@ body {
   line-height: 1.5;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 strong,
 b {
   font-weight: 700;
@@ -86,9 +90,8 @@ b {
   display: none;
   align-items: center;
   justify-content: space-between;
-  font-size: var(--text-small);
+  font-size: var(--text-normal);
   font-weight: 600;
-  text-transform: uppercase;
 }
 
 .site-nav summary::-webkit-details-marker {
@@ -139,7 +142,7 @@ b {
   display: inline-flex;
   align-items: center;
   padding: 0 12px;
-  font-size: var(--text-small);
+  font-size: var(--text-normal);
   font-weight: 600;
   text-decoration: none;
 }
@@ -173,7 +176,7 @@ b {
   display: inline-flex;
   align-items: center;
   padding: 0 12px;
-  font-size: var(--text-small);
+  font-size: var(--text-normal);
   font-weight: 600;
 }
 
@@ -190,7 +193,7 @@ b {
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: 0;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .page-heading,
@@ -204,7 +207,7 @@ b {
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: 0;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .standing-line,
@@ -246,15 +249,33 @@ b {
 .position-heading,
 .pagination-summary,
 .pagination-button,
+.transaction-badge,
+.recent-window-button,
 .recent-game-date,
 .recent-game-result,
 .recap-column h3,
 .recap-row span,
 .bar-stat-heading span,
 .metric-feature span,
-.metric-feature em {
+.metric-feature em,
+.preview-row small,
+.spotlight-mini small,
+.form-row small,
+.spotlight .bio-row span:first-child {
   font-size: var(--text-small);
   font-weight: 600;
+}
+
+.kicker,
+.eyebrow,
+.card-kicker,
+.panel-kicker,
+.label-small,
+.section-label,
+.player-meta {
+  color: var(--muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .status-pill {
@@ -268,6 +289,60 @@ b {
   justify-content: center;
   padding: 0 14px;
   white-space: nowrap;
+}
+
+.btn-control,
+.nav-home-link {
+  min-height: 42px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 14px;
+}
+
+.btn-control {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.btn-control.active,
+.btn-control:hover,
+.btn-control:focus {
+  border-color: var(--line-bright);
+  color: #fff;
+  background: rgba(196, 206, 211, 0.16);
+}
+
+.btn-yankees {
+  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--ink);
+  background: linear-gradient(135deg, var(--yankees-navy), var(--swatch-mid));
+}
+
+.btn-yankees:hover,
+.btn-yankees:focus {
+  border-color: rgba(255, 255, 255, 0.32);
+  color: #fff;
+  background: linear-gradient(135deg, var(--swatch-mid), var(--swatch-shadow));
+}
+
+.form-control {
+  border-color: var(--line);
+  color: var(--ink);
+  background-color: rgba(3, 6, 20, 0.82);
+}
+
+.form-control:focus {
+  border-color: var(--line-bright);
+  color: var(--ink);
+  background-color: rgba(3, 6, 20, 0.92);
+  box-shadow: 0 0 0 0.25rem rgba(196, 206, 211, 0.18);
+}
+
+.form-control::placeholder {
+  color: #7d8498;
 }
 
 .btn-control,
@@ -303,11 +378,39 @@ b {
 .feed p,
 .roster-link span,
 .insight-panel p,
-.btn-control,
-.btn-yankees,
+.spotlight .recent-form-bar,
+.preview-row strong,
+.spotlight-mini strong,
+.form-row strong,
+.form-row b,
+.preview-row > span:last-child,
+.mini-stat,
 .game-decisions p {
   font-size: var(--text-normal);
+}
+
+.hero-copy,
+.page-copy,
+.section-card p:not(.card-kicker),
+.month-summary,
+.game-detail,
+.empty-day,
+.player-bio,
+.bio-row,
+.table td,
+.form-control,
+.feed p,
+.roster-link span,
+.insight-panel p {
   font-weight: 400;
+}
+
+.btn-control,
+.btn-yankees,
+.btn-section,
+.nav-home-link {
+  font-size: var(--text-normal);
+  font-weight: 700;
 }
 
 .recent-game-matchup strong,
@@ -404,84 +507,6 @@ b {
   .nav-home-link {
     width: 100%;
   }
-}
-
-body {
-  font-size: var(--text-normal);
-}
-
-.site-nav summary,
-.site-nav-link,
-.desktop-site-nav .nav-link,
-.kicker,
-.eyebrow,
-.card-kicker,
-.panel-kicker,
-.label-small,
-.section-label,
-.player-meta,
-.status-pill,
-.preview-label,
-.preview-loading,
-.result-button small,
-.roster-link small,
-.feed small,
-.table th,
-.stat-card span,
-.metric-badge,
-.metric-row strong,
-.metric-value small,
-.game-status,
-.weekday-row span,
-.day-number,
-.position-heading,
-.roster-tab,
-.transaction-badge,
-.pagination-summary,
-.pagination-button,
-.recent-window-button,
-#recent-summary,
-#roster-count,
-#transaction-window,
-.spotlight .bio-row span:first-child {
-  font-size: var(--text-small);
-}
-
-.hero-copy,
-.page-copy,
-.section-card p:not(.card-kicker),
-.month-summary,
-.game-detail,
-.empty-day,
-.player-bio,
-.bio-row,
-.table td,
-.result-button span,
-.form-control,
-.feed p,
-.roster-link span,
-.insight-panel p,
-.btn-control,
-.btn-yankees,
-.spotlight .recent-form-bar,
-.preview-row strong,
-.spotlight-mini strong,
-.form-row strong,
-.form-row b,
-.preview-row > span:last-child,
-.mini-stat,
-.standing-line,
-.metric-value span {
-  font-size: var(--text-normal);
-}
-
-.preview-row small,
-.spotlight-mini small,
-.form-row small,
-.metric-badge,
-.metric-row strong,
-.metric-value small {
-  font-size: var(--text-small);
 }
 
 .schedule-panel .month-summary,

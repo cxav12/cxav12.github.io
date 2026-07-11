@@ -1,13 +1,3 @@
-body {
-  min-height: 100vh;
-  color: var(--ink);
-  background:
-    radial-gradient(circle at 78% 10%, rgba(196, 206, 211, 0.16), transparent 30%),
-    radial-gradient(circle at 12% 20%, rgba(27, 79, 143, 0.38), transparent 28%),
-    linear-gradient(135deg, var(--swatch-deep) 0%, var(--yankees-navy) 48%, var(--swatch-shadow) 100%);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
 .hero-panel {
   min-height: 0;
   border: 1px solid var(--line);
@@ -21,27 +11,99 @@ body {
 
 .recent-games-section,
 .selected-recap-section,
+.recap-selector-section,
 .recap-section {
   padding-top: 14px;
 }
 
-.hero-panel .hero-heading {
-  max-width: none;
-  font-size: clamp(1.8rem, 4vw, 3.6rem);
-  font-weight: 800;
-  line-height: 1;
+.recap-visible-title {
+  margin: 0;
 }
 
-.hero-panel .hero-copy {
-  max-width: 62rem;
-  color: #dfe4f4;
+.recap-selector-section {
+  display: grid;
+  gap: 10px;
 }
 
-.kicker,
-.eyebrow {
+.recap-selector-header {
   color: var(--muted);
-  letter-spacing: 0.14em;
+  font-size: var(--text-small);
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.recap-button-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.recap-selector-button {
+  min-height: 38px;
+  border: 1px solid rgba(196, 206, 212, 0.22);
+  border-radius: 6px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.055);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 0 12px;
+  font-size: var(--text-normal);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.recap-selector-button.win {
+  border-color: rgba(103, 232, 162, 0.38);
+  background: rgba(31, 122, 75, 0.2);
+}
+
+.recap-selector-button.loss {
+  border-color: rgba(255, 143, 143, 0.42);
+  background: rgba(149, 45, 53, 0.22);
+}
+
+.recap-selector-button:hover,
+.recap-selector-button:focus,
+.recap-selector-button.active {
+  border-color: rgba(247, 248, 255, 0.72);
+  background: rgba(196, 206, 212, 0.14);
+}
+
+.recap-selector-button.win:hover,
+.recap-selector-button.win:focus,
+.recap-selector-button.win.active {
+  border-color: rgba(103, 232, 162, 0.76);
+  background: rgba(31, 122, 75, 0.28);
+}
+
+.recap-selector-button.loss:hover,
+.recap-selector-button.loss:focus,
+.recap-selector-button.loss.active {
+  border-color: rgba(255, 143, 143, 0.78);
+  background: rgba(149, 45, 53, 0.3);
+}
+
+.recap-selector-button .selector-date,
+.recap-selector-button .selector-score {
+  color: #f7f8ff;
+}
+
+.recap-selector-button .selector-result {
+  min-width: 1.25em;
+  font-weight: 800;
+  text-align: center;
+}
+
+.recap-selector-button.win .selector-result {
+  color: #67e8a2;
+}
+
+.recap-selector-button.loss .selector-result {
+  color: #ff8f8f;
 }
 
 .recent-games-grid {
@@ -439,6 +501,10 @@ body {
 }
 
 @media (max-width: 1199.98px) {
+  .recap-button-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .recent-games-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -500,12 +566,20 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .hero-panel .hero-heading {
-    font-size: clamp(1.6rem, 8vw, 2.4rem);
-  }
 }
 
 @media (max-width: 575.98px) {
+  .recap-button-row {
+    grid-template-columns: 1fr;
+  }
+
+  .recap-selector-button {
+    width: 100%;
+    justify-content: center;
+    white-space: normal;
+    text-align: center;
+  }
+
   .recent-game-button {
     min-height: 178px;
     gap: 12px;

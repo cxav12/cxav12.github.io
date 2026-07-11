@@ -10,6 +10,7 @@ const els = {
   subtitle: document.querySelector("#recap-subtitle"),
   scoreboard: document.querySelector("#recap-scoreboard"),
   recent: document.querySelector("#recent-games-grid"),
+  recapButtons: document.querySelector("#recap-button-row"),
   grid: document.querySelector("#recap-grid"),
 };
 
@@ -63,6 +64,15 @@ function niceDate(value) {
     month: "short",
     day: "numeric",
     year: "numeric",
+  }).format(new Date(`${value}T12:00:00`));
+}
+
+function shortDate(value) {
+  if (!value) return "TBD";
+  return new Intl.DateTimeFormat("en", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "2-digit",
   }).format(new Date(`${value}T12:00:00`));
 }
 
@@ -138,6 +148,13 @@ function resultShort(game) {
   const opponent = teamEntry(game, opponentSide(game))?.score;
   if (!Number.isFinite(Number(yankees)) || !Number.isFinite(Number(opponent))) return "Final";
   return Number(yankees) > Number(opponent) ? "Win" : "Loss";
+}
+
+function resultLetter(game) {
+  const result = resultShort(game);
+  if (result === "Win") return "W";
+  if (result === "Loss") return "L";
+  return result.charAt(0) || "-";
 }
 
 function resultClass(game) {
@@ -385,6 +402,32 @@ function renderRecentGames(games, selectedGamePk, { includeLatest = false } = {}
   }).join("");
 }
 
+function renderRecapButtons(games, selectedGamePk) {
+  const recentGames = games.slice(0, 5);
+
+  if (!recentGames.length) {
+    els.recapButtons.innerHTML = `<button class="recap-selector-button" type="button" disabled>No previous games found.</button>`;
+    return;
+  }
+
+  els.recapButtons.innerHTML = recentGames.map((game) => {
+    const yankees = teamEntry(game, yankeesSide(game));
+    const opponentEntry = teamEntry(game, opponentSide(game));
+    const opponent = opponentEntry.team;
+    const result = resultShort(game);
+    const tone = result.toLowerCase();
+    const isSelected = Number(game.gamePk) === Number(selectedGamePk);
+
+    return `
+      <button class="recap-selector-button ${tone}${isSelected ? " active" : ""}" type="button" data-game-pk="${escapeHtml(game.gamePk)}">
+        <span class="selector-date">${escapeHtml(shortDate(game.officialDate))}</span>
+        <span class="selector-result">${escapeHtml(resultLetter(game))}</span>
+        <span class="selector-score">NYY ${escapeHtml(yankees.score ?? "-")} - ${escapeHtml(teamAbbreviation(opponent))} ${escapeHtml(opponentEntry.score ?? "-")}</span>
+      </button>
+    `;
+  }).join("");
+}
+
 function renderRecap(game, feed) {
   if (feed.gameData?.status) game.status = feed.gameData.status;
   const side = yankeesSide(game);
@@ -542,6 +585,7 @@ async function init() {
     state.liveGame = liveGame;
     state.recentGames = games;
     renderRecentGames(games, selectedGame?.gamePk, { includeLatest: Boolean(liveGame) });
+    renderRecapButtons(games, selectedGame?.gamePk);
     if (!selectedGame) throw new Error("No Yankees games found.");
     await loadGameRecap(selectedGame, { live: Boolean(liveGame) });
   } catch (error) {
@@ -573,11 +617,13 @@ async function init() {
   }
 }
 
-els.recent.addEventListener("click", async (event) => {
+async function handleRecapButtonClick(event) {
   const button = event.target.closest(".recent-game-button[data-game-pk]");
-  if (!button) return;
+  const selectorButton = event.target.closest(".recap-selector-button[data-game-pk]");
+  const selectedButton = button || selectorButton;
+  if (!selectedButton) return;
 
-  const gamePk = Number(button.dataset.gamePk);
+  const gamePk = Number(selectedButton.dataset.gamePk);
   const game = state.recentGames.find((item) => Number(item.gamePk) === gamePk);
   if (!game) return;
 
@@ -585,6 +631,7 @@ els.recent.addEventListener("click", async (event) => {
   els.status.style.color = "";
   stopLiveRefresh();
   renderRecentGames(state.recentGames, gamePk, { includeLatest: Boolean(state.liveGame) });
+  renderRecapButtons(state.recentGames, gamePk);
 
   try {
     await loadGameRecap(game);
@@ -592,6 +639,9 @@ els.recent.addEventListener("click", async (event) => {
     els.status.textContent = "Selected recap unavailable";
     els.status.style.color = "#ffbec4";
   }
-});
+}
+
+els.recent.addEventListener("click", handleRecapButtonClick);
+els.recapButtons.addEventListener("click", handleRecapButtonClick);
 
 init();

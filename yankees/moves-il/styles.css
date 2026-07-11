@@ -1,77 +1,3 @@
-
-
-strong,
-b {
-  font-weight: 700;
-}
-
-.display-title {
-  font-size: 2rem;
-  font-weight: 800;
-  line-height: 1.1;
-}
-
-.page-heading,
-.panel-heading {
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.page-copy,
-.feed p,
-.roster-link span {
-  font-size: 1rem;
-  font-weight: 400;
-}
-
-.summary-strip strong {
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-
-.kicker,
-.eyebrow,
-.panel-kicker,
-.status-pill,
-.site-nav summary,
-.site-nav-link,
-.desktop-site-nav .nav-link,
-.summary-strip span,
-#roster-count,
-#transaction-window,
-.roster-link small,
-.feed small,
-.pagination-summary,
-.pagination-button,
-.roster-tab,
-.position-heading,
-.empty,
-.error {
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.roster-link span,
-.feed p {
-  font-weight: 400;
-}
-
-body {
-  min-height: 100vh;
-  color: var(--ink);
-  background:
-    radial-gradient(circle at 78% 10%, rgba(196, 206, 211, 0.16), transparent 30%),
-    radial-gradient(circle at 12% 20%, rgba(27, 79, 143, 0.38), transparent 28%),
-    linear-gradient(135deg, var(--swatch-deep) 0%, var(--yankees-navy) 48%, var(--swatch-shadow) 100%);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-.site-shell {
-  max-width: 1440px;
-  padding: 18px;
-}
-
 .moves-panel {
   min-height: calc(100vh - 36px);
   border: 1px solid var(--line);
@@ -96,58 +22,9 @@ body {
   padding: clamp(20px, 4vw, 48px);
 }
 
-.kicker,
-.eyebrow,
-.panel-kicker {
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.display-title,
-.page-heading,
-.panel-heading {
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
-.display-title {
-  font-size: clamp(2rem, 5vw, 4.9rem);
-  font-weight: 850;
-  line-height: 0.92;
-}
-
-.page-heading {
-  font-size: clamp(1.8rem, 4vw, 3.6rem);
-  font-weight: 850;
-  line-height: 0.98;
-}
-
 .page-copy {
   max-width: 760px;
   color: #dfe4f4;
-  font-weight: 650;
-}
-
-.status-pill,
-.nav-home-link {
-  min-height: 42px;
-  border-radius: 6px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding-inline: 14px;
-  font-size: 0.85rem;
-  font-weight: 800;
-}
-
-.status-pill {
-  border: 1px solid var(--line);
-  color: var(--yankees-silver);
-  background: rgba(255, 255, 255, 0.06);
-  white-space: nowrap;
 }
 
 .summary-strip {
@@ -174,14 +51,14 @@ body {
 
 .summary-strip span {
   color: var(--quiet);
-  font-size: 0.72rem;
-  font-weight: 900;
+  font-size: var(--text-small);
+  font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .summary-strip strong {
-  font-size: clamp(1.35rem, 3vw, 2.2rem);
+  font-size: 1.25rem;
   line-height: 1;
 }
 
@@ -193,16 +70,11 @@ body {
   padding: 18px;
 }
 
-.panel-heading {
-  font-size: 1.2rem;
-  font-weight: 850;
-}
-
 #roster-count,
 #transaction-window {
   color: var(--muted);
-  font-size: 0.88rem;
-  font-weight: 800;
+  font-size: var(--text-small);
+  font-weight: 600;
   text-align: right;
 }
 
@@ -398,8 +270,8 @@ body {
   display: inline-flex;
   align-items: center;
   padding: 0 8px;
-  font-size: 0.75rem;
-  font-weight: 800;
+  font-size: var(--text-small);
+  font-weight: 700;
   line-height: 1;
   text-transform: uppercase;
 }
@@ -407,7 +279,6 @@ body {
 .feed p {
   margin: 4px 0 0;
   color: #e2e7f4;
-  font-weight: 700;
 }
 
 .transaction-pagination {
@@ -487,56 +358,8 @@ body {
 }
 
 @media (max-width: 575.98px) {
-  .site-shell {
-    padding: 10px;
-  }
-
-  .topbar,
   .moves-body {
     padding-inline: 16px;
-  }
-
-  .brand-lockup {
-    align-items: flex-start !important;
-  }
-
-  .brand-logo {
-    height: 4rem;
-  }
-
-  .display-title {
-    font-size: clamp(2rem, 12vw, 3rem);
-  }
-
-  .page-heading {
-    font-size: clamp(1.55rem, 9vw, 2.35rem);
-  }
-
-  .site-nav summary {
-    display: flex;
-    padding-inline: 16px;
-  }
-
-  .site-nav {
-    display: block;
-  }
-
-  .site-nav-links {
-    display: none;
-    padding: 0 16px 12px;
-  }
-
-  .site-nav[open] .site-nav-links {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  .site-nav-link {
-    width: 100%;
-  }
-
-  .desktop-site-nav {
-    display: none;
   }
 
   .header-actions,
@@ -576,61 +399,4 @@ body {
     flex: 1 1 0;
     min-width: 0;
   }
-}
-
-strong,
-b {
-  font-weight: 700;
-}
-
-.display-title {
-  font-size: 2rem;
-  font-weight: 800;
-  line-height: 1.1;
-}
-
-.page-heading,
-.panel-heading {
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.page-copy,
-.feed p,
-.roster-link span {
-  font-size: 1rem;
-  font-weight: 400;
-}
-
-.summary-strip strong {
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-
-.kicker,
-.eyebrow,
-.panel-kicker,
-.status-pill,
-.site-nav summary,
-.site-nav-link,
-.desktop-site-nav .nav-link,
-.summary-strip span,
-#roster-count,
-#transaction-window,
-.roster-link small,
-.feed small,
-.pagination-summary,
-.pagination-button,
-.roster-tab,
-.position-heading,
-.empty,
-.error {
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.roster-link span,
-.feed p {
-  font-weight: 400;
 }

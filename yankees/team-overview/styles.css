@@ -1,83 +1,3 @@
-
-
-strong,
-b {
-  font-weight: 700;
-}
-
-.display-title {
-  font-size: 2rem;
-  font-weight: 800;
-  line-height: 1.1;
-}
-
-.page-heading,
-.team-name,
-.insight-panel h3 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.standing-line {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.page-copy,
-.insight-panel p,
-.form-control,
-.btn-yankees,
-.btn-control {
-  font-size: 1rem;
-  font-weight: 400;
-}
-
-.record-line,
-.metric-value span {
-  font-size: 2rem;
-  font-weight: 800;
-}
-
-.kicker,
-.eyebrow,
-.label-small,
-.panel-kicker,
-.status-pill,
-.site-nav summary,
-.site-nav-link,
-.desktop-site-nav .nav-link,
-.metric-badge,
-.metric-row strong,
-.metric-value small {
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.btn-control,
-.btn-yankees {
-  font-weight: 700;
-}
-
-body {
-  min-height: 100vh;
-  color: var(--ink);
-  background:
-    radial-gradient(circle at 78% 10%, rgba(196, 206, 211, 0.16), transparent 30%),
-    radial-gradient(circle at 12% 20%, rgba(27, 79, 143, 0.38), transparent 28%),
-    linear-gradient(135deg, var(--swatch-deep) 0%, var(--yankees-navy) 48%, var(--swatch-shadow) 100%);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-[hidden] {
-  display: none !important;
-}
-
-.site-shell {
-  max-width: 1440px;
-  padding: 18px;
-}
-
 .overview-panel {
   min-height: calc(100vh - 36px);
   border: 1px solid var(--line);
@@ -102,107 +22,10 @@ body {
   padding: clamp(20px, 4vw, 48px);
 }
 
-.kicker,
-.eyebrow,
-.label-small,
-.panel-kicker {
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.display-title,
-.page-heading,
-.team-name,
-.insight-panel h3 {
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
-.display-title {
-  font-size: clamp(2.2rem, 6vw, 5.6rem);
-  font-weight: 850;
-  line-height: 0.92;
-}
-
-.page-heading {
-  font-size: clamp(1.8rem, 4vw, 3.6rem);
-  font-weight: 850;
-  line-height: 0.98;
-}
-
 .page-copy,
 .insight-panel p {
   max-width: 760px;
   color: #dfe4f4;
-  font-weight: 650;
-}
-
-.status-pill,
-.nav-home-link,
-.btn-control {
-  min-height: 42px;
-  border-radius: 6px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding-inline: 14px;
-  font-size: 0.85rem;
-  font-weight: 800;
-}
-
-.status-pill {
-  border: 1px solid var(--line);
-  color: var(--yankees-silver);
-  background: rgba(255, 255, 255, 0.06);
-  white-space: nowrap;
-}
-
-.btn-control {
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: var(--ink);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.btn-control.active,
-.btn-control:hover,
-.btn-control:focus {
-  border-color: var(--line-bright);
-  color: #fff;
-  background: rgba(196, 206, 211, 0.16);
-}
-
-.btn-yankees {
-  border-color: rgba(255, 255, 255, 0.16);
-  color: var(--ink);
-  background: linear-gradient(135deg, var(--yankees-navy), var(--swatch-mid));
-  font-weight: 800;
-}
-
-.btn-yankees:hover,
-.btn-yankees:focus {
-  border-color: rgba(255, 255, 255, 0.32);
-  color: #fff;
-  background: linear-gradient(135deg, var(--swatch-mid), var(--swatch-shadow));
-}
-
-.form-control {
-  border-color: var(--line);
-  color: var(--ink);
-  background-color: rgba(3, 6, 20, 0.82);
-}
-
-.form-control:focus {
-  border-color: var(--line-bright);
-  color: var(--ink);
-  background-color: rgba(3, 6, 20, 0.92);
-  box-shadow: 0 0 0 0.25rem rgba(196, 206, 211, 0.18);
-}
-
-.form-control::placeholder {
-  color: #7d8498;
 }
 
 .team-card,
@@ -221,21 +44,19 @@ body {
 
 .team-name {
   margin: 0;
-  font-size: clamp(1.4rem, 3vw, 2.35rem);
-  font-weight: 850;
 }
 
 .record-line {
   color: var(--ink);
   font-size: clamp(2.8rem, 8vw, 5rem);
-  font-weight: 850;
+  font-weight: 800;
   line-height: 0.95;
 }
 
 .standing-line {
   color: #dfe4f4;
   font-size: 1.25rem;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .metric-list {
@@ -272,14 +93,14 @@ body {
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  font-size: 0.72rem;
-  font-weight: 900;
+  font-size: var(--text-small);
+  font-weight: 700;
 }
 
 .metric-row strong {
   color: var(--muted);
-  font-size: 0.88rem;
-  font-weight: 900;
+  font-size: var(--text-small);
+  font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -292,15 +113,15 @@ body {
 .metric-value span {
   color: var(--yankees-silver);
   font-size: clamp(1.45rem, 3vw, 2rem);
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1;
 }
 
 .metric-value small {
   margin-left: 4px;
   color: var(--ink);
-  font-size: 0.8rem;
-  font-weight: 900;
+  font-size: var(--text-small);
+  font-weight: 700;
   text-transform: uppercase;
 }
 
@@ -313,60 +134,12 @@ body {
 
 .error {
   color: #ffbec4;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 @media (max-width: 575.98px) {
-  .site-shell {
-    padding: 10px;
-  }
-
-  .topbar,
   .overview-body {
     padding-inline: 16px;
-  }
-
-  .brand-lockup {
-    align-items: flex-start !important;
-  }
-
-  .brand-logo {
-    height: 4rem;
-  }
-
-  .display-title {
-    font-size: clamp(1.8rem, 11vw, 2.75rem);
-  }
-
-  .page-heading {
-    font-size: clamp(1.55rem, 9vw, 2.35rem);
-  }
-
-  .site-nav summary {
-    display: flex;
-    padding-inline: 16px;
-  }
-
-  .site-nav {
-    display: block;
-  }
-
-  .site-nav-links {
-    display: none;
-    padding: 0 16px 12px;
-  }
-
-  .site-nav[open] .site-nav-links {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  .site-nav-link {
-    width: 100%;
-  }
-
-  .desktop-site-nav {
-    display: none;
   }
 
   .metric-row {
@@ -385,63 +158,4 @@ body {
   .btn-control {
     width: 100%;
   }
-}
-
-strong,
-b {
-  font-weight: 700;
-}
-
-.display-title {
-  font-size: 2rem;
-  font-weight: 800;
-  line-height: 1.1;
-}
-
-.page-heading,
-.team-name,
-.insight-panel h3 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.standing-line {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.page-copy,
-.insight-panel p,
-.form-control,
-.btn-yankees,
-.btn-control {
-  font-size: 1rem;
-  font-weight: 400;
-}
-
-.record-line,
-.metric-value span {
-  font-size: 2rem;
-  font-weight: 800;
-}
-
-.kicker,
-.eyebrow,
-.label-small,
-.panel-kicker,
-.status-pill,
-.site-nav summary,
-.site-nav-link,
-.desktop-site-nav .nav-link,
-.metric-badge,
-.metric-row strong,
-.metric-value small {
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.btn-control,
-.btn-yankees {
-  font-weight: 700;
 }
