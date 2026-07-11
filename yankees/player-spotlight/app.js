@@ -3,12 +3,53 @@ const DEFAULT_PLAYER = 592450;
 const RECENT_TABLE_GAMES = 10;
 const MLB_API = "https://statsapi.mlb.com/api/v1";
 const HEADSHOT = (id) => `https://img.mlbstatic.com/mlb-photos/image/upload/w_426,q_auto:best/v1/people/${id}/headshot/67/current`;
+const DETAIL_PRIMARY_ITEMS = [
+  ["AVG", "avg"],
+  ["HR", "homeRuns"],
+  ["RBI", "rbi"],
+  ["OBP", "obp"],
+  ["SLG", "slg"],
+  ["OPS", "ops"],
+];
+const DETAIL_SECONDARY_ITEMS = [
+  ["AB", "atBats"],
+  ["H", "hits"],
+  ["2B", "doubles"],
+  ["3B", "triples"],
+  ["BB", "baseOnBalls"],
+  ["K", "strikeOuts"],
+  ["K%", "kRate"],
+  ["PA", "plateAppearances"],
+];
+const PACE_ITEMS = [
+  ["HR", "homeRuns"],
+  ["RBI", "rbi"],
+  ["R", "runs"],
+  ["H", "hits"],
+  ["2B", "doubles"],
+  ["BB", "baseOnBalls"],
+  ["K", "strikeOuts"],
+  ["SB", "stolenBases"],
+];
 
 const state = {
   selectedPlayerId: DEFAULT_PLAYER,
   currentGroup: "hitting",
   recentWindow: 5,
   gameLogSplits: [],
+  detailSplit: "season",
+  detailTab: "pace",
+  detailStats: {
+    season: {},
+    risp: {},
+    "vs-lhp": {},
+    "vs-rhp": {},
+    home: {},
+    away: {},
+    career: {},
+    transactions: [],
+  },
+  selectedPerson: null,
 };
 
 const els = {
@@ -27,6 +68,16 @@ const els = {
   searchInput: document.querySelector("#player-search"),
   searchButton: document.querySelector("#search-button"),
   searchResults: document.querySelector("#search-results"),
+  detailHeadshot: document.querySelector("#detail-headshot"),
+  detailFirstName: document.querySelector("#detail-first-name"),
+  detailLastName: document.querySelector("#player-detail-title"),
+  detailMeta: document.querySelector("#detail-meta"),
+  detailNumber: document.querySelector("#detail-number"),
+  detailSplitControls: document.querySelector("#detail-split-controls"),
+  detailTabControls: document.querySelector("#detail-tab-controls"),
+  detailPrimaryStats: document.querySelector("#detail-primary-stats"),
+  detailSecondaryStats: document.querySelector("#detail-secondary-stats"),
+  detailTabPanel: document.querySelector("#detail-tab-panel"),
 };
 
 const api = {
@@ -44,20 +95,32 @@ const api = {
       hydrate: "currentTeam,team,education,stats(group=[hitting,pitching],type=[yearByYear])",
     });
   },
-  async stats(id, group, type = "season") {
-    return this.get(`/people/${id}/stats`, { stats: type, group, season: SEASON });
+  async stats(id, group, type = "season", params = {}) {
+    return this.get(`/people/${id}/stats`, { stats: type, group, season: SEASON, ...params });
   },
   async gameLog(id, group) {
     return this.stats(id, group, "gameLog");
+  },
+  async transactions(id) {
+    return this.get("/transactions", {
+      playerId: id,
+      startDate: `${SEASON}-01-01`,
+      endDate: isoDate(new Date()),
+    });
   },
   async searchPlayer(query) {
     return this.get("/people/search", { names: query, sportId: 1 });
   },
 };
 
+function isoDate(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
 function niceDate(value) {
   if (!value) return "Unknown";
-  return new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" }).format(new Date(`${value}T12:00:00`));
+  const datePart = String(value).includes("T") ? String(value).slice(0, 10) : value;
+  return new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" }).format(new Date(`${datePart}T12:00:00`));
 }
 
 function normalizeText(value) {
@@ -98,6 +161,229 @@ function renderStats(target, stats, items) {
     node.querySelector("span").textContent = label;
     target.append(node);
   });
+}
+
+function firstStatSplit(data) {
+  return data?.stats?.[0]?.splits?.[0]?.stat || {};
+}
+
+function homeAwayStat(data, key) {
+  const splits = data?.stats?.[0]?.splits || [];
+  const match = splits.find((split) => {
+    if (key === "home" && split.isHome === true) return true;
+    if (key === "away" && split.isHome === false) return true;
+    const label = normalizeText(split.homeAway || split.split?.name || split.split?.value || split.split);
+    return label === key;
+  });
+  return match?.stat || {};
+}
+
+async function splitStat(id, sitCodes) {
+  for (const code of sitCodes) {
+    const data = await api.stats(id, "hitting", "statSplits", { sitCodes: code }).catch(() => null);
+    const stat = firstStatSplit(data);
+    if (Object.keys(stat).length) return stat;
+  }
+  return {};
+}
+
+function kRate(stats) {
+  const strikeouts = Number(stats?.strikeOuts || 0);
+  const plateAppearances = Number(stats?.plateAppearances || 0);
+  return plateAppearances ? `${((strikeouts / plateAppearances) * 100).toFixed(1)}%` : "-";
+}
+
+function detailStatValue(stats, key) {
+  if (key === "kRate") return kRate(stats);
+  return statValue(stats, key);
+}
+
+function playerNameParts(fullName) {
+  const parts = String(fullName || "Player Detail").trim().split(/\s+/);
+  if (parts.length === 1) return { first: "", last: parts[0] };
+  return { first: parts[0], last: parts.slice(1).join(" ") };
+}
+
+function renderDetailHeader(person) {
+  const { first, last } = playerNameParts(person.fullName);
+  els.detailHeadshot.src = HEADSHOT(person.id);
+  els.detailHeadshot.alt = `${person.fullName} headshot`;
+  els.detailHeadshot.onerror = () => {
+    els.detailHeadshot.removeAttribute("src");
+    els.detailHeadshot.alt = "";
+  };
+  els.detailFirstName.textContent = first;
+  els.detailLastName.textContent = last;
+  els.detailNumber.textContent = person.primaryNumber || "--";
+  els.detailMeta.textContent = [
+    playerPosition(person),
+    `${person.batSide?.code || "-"} / ${person.pitchHand?.code || "-"}`,
+    person.height || "-",
+    person.weight ? `${person.weight} lbs` : "-",
+    `Age ${person.currentAge || "-"}`,
+  ].join(" · ");
+}
+
+function setActiveButtons(container, dataName, activeValue) {
+  container?.querySelectorAll(`[data-${dataName}]`).forEach((button) => {
+    const active = button.dataset[dataName.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())] === activeValue;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+}
+
+function detailStatCard(label, value, featured = false) {
+  const card = document.createElement("article");
+  card.className = `detail-stat-card${featured ? " featured" : ""}`;
+  card.innerHTML = `<span>${label}</span><strong>${value}</strong>`;
+  return card;
+}
+
+function renderDetailStats() {
+  const stats = state.detailStats[state.detailSplit] || {};
+  els.detailPrimaryStats.replaceChildren();
+  els.detailSecondaryStats.replaceChildren();
+  DETAIL_PRIMARY_ITEMS.forEach(([label, key]) => {
+    els.detailPrimaryStats.append(detailStatCard(label, detailStatValue(stats, key), true));
+  });
+  DETAIL_SECONDARY_ITEMS.forEach(([label, key]) => {
+    els.detailSecondaryStats.append(detailStatCard(label, detailStatValue(stats, key)));
+  });
+}
+
+function paceValue(stats, key) {
+  const gamesPlayed = Number(stats?.gamesPlayed || 0);
+  const value = Number(stats?.[key] || 0);
+  return gamesPlayed ? Math.round((value / gamesPlayed) * 152) : "-";
+}
+
+function renderPaceTab() {
+  const stats = state.detailStats.season || {};
+  const gamesPlayed = statValue(stats, "gamesPlayed");
+  const paceCards = PACE_ITEMS.map(([label, key]) => detailStatCard(label, paceValue(stats, key)));
+  els.detailTabPanel.replaceChildren();
+  const intro = document.createElement("p");
+  intro.className = "detail-tab-note";
+  intro.textContent = `${gamesPlayed} games played. Counting stats are paced across a 152-game season.`;
+  const grid = document.createElement("div");
+  grid.className = "detail-tab-grid";
+  grid.append(...paceCards);
+  els.detailTabPanel.append(intro, grid);
+}
+
+function renderRecentActionTab() {
+  const games = state.gameLogSplits.slice(-5).reverse();
+  els.detailTabPanel.replaceChildren();
+  if (!games.length) {
+    els.detailTabPanel.innerHTML = `<p class="empty">No recent game rows are available for this player yet.</p>`;
+    return;
+  }
+
+  const table = document.createElement("table");
+  table.className = "detail-table";
+  const headers = state.currentGroup === "pitching"
+    ? ["Date", "Opp", "IP", "ER", "K", "BB"]
+    : ["Date", "Opp", "H-AB", "HR", "RBI", "R"];
+  table.innerHTML = `<thead><tr>${headers.map((item) => `<th>${item}</th>`).join("")}</tr></thead>`;
+  const body = document.createElement("tbody");
+  games.forEach((split) => {
+    const stat = split.stat || {};
+    const values = state.currentGroup === "pitching"
+      ? [niceDate(split.date), split.opponent?.abbreviation || split.opponent?.name || "-", stat.inningsPitched, stat.earnedRuns, stat.strikeOuts, stat.baseOnBalls]
+      : [niceDate(split.date), split.opponent?.abbreviation || split.opponent?.name || "-", `${stat.hits || 0}-${stat.atBats || 0}`, stat.homeRuns, stat.rbi, stat.runs];
+    const row = document.createElement("tr");
+    row.innerHTML = values.map((value, index) => `<td data-label="${headers[index]}">${value ?? "-"}</td>`).join("");
+    body.append(row);
+  });
+  table.append(body);
+  els.detailTabPanel.append(table);
+}
+
+function relevantTransactions(transactions) {
+  const keywords = ["recall", "selected", "option", "injured", "il", "activated", "reinstated", "call"];
+  const filtered = transactions.filter((transaction) => {
+    const text = normalizeText(`${transaction.typeDesc || ""} ${transaction.description || ""}`);
+    return keywords.some((keyword) => text.includes(keyword));
+  });
+  return (filtered.length ? filtered : transactions)
+    .slice()
+    .sort((a, b) => new Date(b.effectiveDate || b.date || 0) - new Date(a.effectiveDate || a.date || 0));
+}
+
+function renderSeasonLogTab() {
+  const transactions = relevantTransactions(state.detailStats.transactions || []).slice(0, 8);
+  els.detailTabPanel.replaceChildren();
+  if (!transactions.length) {
+    els.detailTabPanel.innerHTML = `<p class="empty">No call-up, option, or IL notes are available for this season.</p>`;
+    return;
+  }
+
+  const list = document.createElement("div");
+  list.className = "detail-log-list";
+  transactions.forEach((transaction) => {
+    const row = document.createElement("article");
+    row.className = "detail-log-row";
+    row.innerHTML = `
+      <time>${niceDate(transaction.effectiveDate || transaction.date)}</time>
+      <strong>${transaction.typeDesc || "Transaction"}</strong>
+      <span>${transaction.description || "No transaction description available."}</span>
+    `;
+    list.append(row);
+  });
+  els.detailTabPanel.append(list);
+}
+
+function renderCareerTab() {
+  const stats = state.detailStats.career || {};
+  els.detailTabPanel.replaceChildren();
+  const grid = document.createElement("div");
+  grid.className = "detail-tab-grid";
+  [...DETAIL_PRIMARY_ITEMS, ...DETAIL_SECONDARY_ITEMS].forEach(([label, key], index) => {
+    grid.append(detailStatCard(label, detailStatValue(stats, key), index < DETAIL_PRIMARY_ITEMS.length));
+  });
+  els.detailTabPanel.append(grid);
+}
+
+function renderDetailTab() {
+  if (state.detailTab === "recent") renderRecentActionTab();
+  else if (state.detailTab === "season-log") renderSeasonLogTab();
+  else if (state.detailTab === "career") renderCareerTab();
+  else renderPaceTab();
+}
+
+function renderDetailLoading() {
+  els.detailPrimaryStats.innerHTML = `<p class="empty">Loading player detail stats...</p>`;
+  els.detailSecondaryStats.replaceChildren();
+  els.detailTabPanel.innerHTML = `<p class="empty">Loading player detail tabs...</p>`;
+}
+
+function renderDetail() {
+  setActiveButtons(els.detailSplitControls, "detail-split", state.detailSplit);
+  setActiveButtons(els.detailTabControls, "detail-tab", state.detailTab);
+  renderDetailStats();
+  renderDetailTab();
+}
+
+async function loadDetailData(id, seasonStats) {
+  const [careerData, homeAwayData, risp, vsLhp, vsRhp, transactionsData] = await Promise.all([
+    api.stats(id, "hitting", "career").catch(() => ({ stats: [] })),
+    api.stats(id, "hitting", "homeAndAway").catch(() => ({ stats: [] })),
+    splitStat(id, ["risp", "risp2out"]).catch(() => ({})),
+    splitStat(id, ["vl", "vsl", "vsLHP"]).catch(() => ({})),
+    splitStat(id, ["vr", "vsr", "vsRHP"]).catch(() => ({})),
+    api.transactions(id).catch(() => ({ transactions: [] })),
+  ]);
+
+  state.detailStats = {
+    season: seasonStats || {},
+    risp,
+    "vs-lhp": vsLhp,
+    "vs-rhp": vsRhp,
+    home: homeAwayStat(homeAwayData, "home"),
+    away: homeAwayStat(homeAwayData, "away"),
+    career: firstStatSplit(careerData),
+    transactions: transactionsData.transactions || [],
+  };
 }
 
 function playerPosition(person) {
@@ -178,15 +464,25 @@ async function loadPlayer(id) {
     const hittingStats = hitting.stats?.[0]?.splits?.[0]?.stat || {};
     const pitchingStats = pitching.stats?.[0]?.splits?.[0]?.stat || {};
     state.currentGroup = chooseGroup(person, hittingStats, pitchingStats);
+    state.selectedPerson = person;
+    state.detailSplit = "season";
+    state.detailTab = "pace";
     const activeStats = state.currentGroup === "pitching" ? pitchingStats : hittingStats;
 
     renderPlayerHeader(person);
+    renderDetailHeader(person);
     renderStatBlocks(activeStats, state.currentGroup);
-    await renderGameLog(id, state.currentGroup);
+    renderDetailLoading();
+    await Promise.all([
+      renderGameLog(id, state.currentGroup),
+      loadDetailData(id, hittingStats),
+    ]);
+    renderDetail();
     setStatus("Live MLB data", "good");
   } catch (error) {
     setStatus("Data connection issue", "error");
     els.primaryStats.innerHTML = `<p class="error">Could not load this player from MLB data. ${error.message}</p>`;
+    els.detailTabPanel.innerHTML = `<p class="error">Could not load the player detail preview.</p>`;
   }
 }
 
@@ -372,6 +668,18 @@ function bindEvents() {
   els.recentButtons.forEach((button) => {
     button.setAttribute("aria-pressed", String(button.classList.contains("active")));
     button.addEventListener("click", () => setRecentWindow(Number(button.dataset.games)));
+  });
+  els.detailSplitControls?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-detail-split]");
+    if (!button) return;
+    state.detailSplit = button.dataset.detailSplit;
+    renderDetail();
+  });
+  els.detailTabControls?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-detail-tab]");
+    if (!button) return;
+    state.detailTab = button.dataset.detailTab;
+    renderDetail();
   });
 }
 

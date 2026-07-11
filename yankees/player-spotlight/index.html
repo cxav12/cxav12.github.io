@@ -99,6 +99,47 @@
             </section>
           </section>
         </section>
+
+        <section class="player-detail-preview" aria-labelledby="player-detail-title">
+          <div class="detail-card">
+            <header class="detail-header">
+              <div class="detail-player-lockup">
+                <img id="detail-headshot" class="detail-headshot" alt="" />
+                <div class="min-w-0">
+                  <p class="detail-first-name mb-1" id="detail-first-name">Player</p>
+                  <h2 id="player-detail-title" class="detail-last-name mb-1">Detail</h2>
+                  <p class="detail-meta mb-0" id="detail-meta">Loading player profile</p>
+                </div>
+              </div>
+              <div class="detail-number" id="detail-number" aria-label="Player number">--</div>
+            </header>
+
+            <div class="detail-divider" aria-hidden="true"></div>
+
+            <nav class="detail-split-controls" id="detail-split-controls" aria-label="Stat split">
+              <button class="detail-toggle active" type="button" data-detail-split="season">Season</button>
+              <button class="detail-toggle" type="button" data-detail-split="risp">RISP</button>
+              <button class="detail-toggle" type="button" data-detail-split="vs-lhp">VS LHP</button>
+              <button class="detail-toggle" type="button" data-detail-split="vs-rhp">VS RHP</button>
+              <button class="detail-toggle" type="button" data-detail-split="home">Home</button>
+              <button class="detail-toggle" type="button" data-detail-split="away">Away</button>
+            </nav>
+
+            <section class="detail-stat-grid detail-primary-stats" id="detail-primary-stats" aria-label="Selected split primary stats"></section>
+            <section class="detail-stat-grid detail-secondary-stats" id="detail-secondary-stats" aria-label="Selected split secondary stats"></section>
+
+            <div class="detail-divider detail-divider-bottom" aria-hidden="true"></div>
+
+            <nav class="detail-tab-controls" id="detail-tab-controls" aria-label="Player detail tabs">
+              <button class="detail-tab active" type="button" data-detail-tab="pace">152-Game Pace</button>
+              <button class="detail-tab" type="button" data-detail-tab="recent">Recent Action</button>
+              <button class="detail-tab" type="button" data-detail-tab="season-log">Season Log</button>
+              <button class="detail-tab" type="button" data-detail-tab="career">Career Totals</button>
+            </nav>
+
+            <section class="detail-tab-panel" id="detail-tab-panel" aria-live="polite"></section>
+          </div>
+        </section>
       </section>
     </main>
 
