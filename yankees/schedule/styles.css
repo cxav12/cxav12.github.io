@@ -29,14 +29,23 @@
 
 .month-info {
   min-width: 0;
+  flex: 1 1 auto;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 14px;
 }
 
 .month-summary {
+  min-width: 0;
   max-width: 760px;
   color: #dfe4f4;
+  white-space: nowrap;
+}
+
+.month-controls {
+  flex: 0 0 auto;
+  align-items: center;
+  white-space: nowrap;
 }
 
 .calendar-shell {
@@ -162,10 +171,19 @@
 }
 
 @media (max-width: 991.98px) {
-  .schedule-toolbar,
+  .schedule-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .month-info {
     align-items: flex-start;
     flex-direction: column;
+    gap: 4px;
+  }
+
+  .month-summary {
+    white-space: normal;
   }
 
   .weekday-row,

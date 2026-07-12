@@ -493,6 +493,8 @@
 }
 
 .spotlight-body {
+  --bs-gutter-x: 0;
+  --bs-gutter-y: 0;
   display: grid !important;
   grid-template-columns: 1fr;
   gap: clamp(16px, 3vw, 32px);
@@ -500,7 +502,7 @@
   border-radius: 8px;
   background: var(--card-bg-strong);
   box-shadow: none;
-  margin-inline: 0;
+  margin: 0;
   padding: 18px;
 }
 
