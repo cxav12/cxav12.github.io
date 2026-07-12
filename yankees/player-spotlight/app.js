@@ -69,10 +69,11 @@ const els = {
   searchButton: document.querySelector("#search-button"),
   searchResults: document.querySelector("#search-results"),
   detailHeadshot: document.querySelector("#detail-headshot"),
-  detailFirstName: document.querySelector("#detail-first-name"),
+  detailFirstName: document.querySelector("#detail-first-name") || { textContent: "" },
   detailLastName: document.querySelector("#player-detail-title"),
-  detailMeta: document.querySelector("#detail-meta"),
+  detailMeta: document.querySelector("#detail-meta") || { textContent: "" },
   detailNumber: document.querySelector("#detail-number"),
+  detailBio: document.querySelector("#detail-bio"),
   detailSplitControls: document.querySelector("#detail-split-controls"),
   detailTabControls: document.querySelector("#detail-tab-controls"),
   detailPrimaryStats: document.querySelector("#detail-primary-stats"),
@@ -199,9 +200,7 @@ function detailStatValue(stats, key) {
 }
 
 function playerNameParts(fullName) {
-  const parts = String(fullName || "Player Detail").trim().split(/\s+/);
-  if (parts.length === 1) return { first: "", last: parts[0] };
-  return { first: parts[0], last: parts.slice(1).join(" ") };
+  return { first: "", last: String(fullName || "Player Detail").trim() };
 }
 
 function renderDetailHeader(person) {
@@ -235,7 +234,7 @@ function setActiveButtons(container, dataName, activeValue) {
 function detailStatCard(label, value, featured = false) {
   const card = document.createElement("article");
   card.className = `detail-stat-card${featured ? " featured" : ""}`;
-  card.innerHTML = `<span>${label}</span><strong>${value}</strong>`;
+  card.innerHTML = `<span>${label}</span><strong class="stat-number">${value}</strong>`;
   return card;
 }
 
@@ -420,6 +419,26 @@ function draftLabel(person) {
   return `${base}${teamText}${yearText}`;
 }
 
+function detailBioRows(person) {
+  return [
+    ["Age", ageWithDays(person)],
+    ["Size", `${person.height || "-"} / ${person.weight ? `${person.weight} lbs` : "-"}`],
+    ["B/T", `${person.batSide?.code || "-"} / ${person.pitchHand?.code || "-"}`],
+    ["Born", person.birthCity && person.birthStateProvince ? `${person.birthCity}, ${person.birthStateProvince}` : person.birthCountry || "Birthplace unavailable"],
+    ["Draft", draftLabel(person)],
+  ];
+}
+
+function renderDetailBio(person) {
+  els.detailBio.replaceChildren();
+  detailBioRows(person).forEach(([label, value]) => {
+    const row = document.createElement("div");
+    row.className = "detail-bio-row";
+    row.innerHTML = `<span>${label}</span><span>${value}</span>`;
+    els.detailBio.append(row);
+  });
+}
+
 function bioRows(person) {
   return [
     ["No.", `${person.primaryNumber ? `#${person.primaryNumber}` : "No number"} ${playerPosition(person)}`],
@@ -471,6 +490,7 @@ async function loadPlayer(id) {
 
     renderPlayerHeader(person);
     renderDetailHeader(person);
+    renderDetailBio(person);
     renderStatBlocks(activeStats, state.currentGroup);
     renderDetailLoading();
     await Promise.all([

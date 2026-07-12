@@ -357,7 +357,7 @@ function renderCard(target, teamId) {
   header.innerHTML = `
     <h3 class="team-name">${overview.team.name}</h3>
     <div class="team-record-row mt-3">
-      <div class="record-line">${overview.record}</div>
+      <div class="record-line stat-number">${overview.record}</div>
       <div class="standing-line">${overview.standingLine}</div>
     </div>
   `;

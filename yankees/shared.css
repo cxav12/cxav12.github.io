@@ -20,6 +20,7 @@
   --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
   --text-normal: 0.8125rem;
   --text-small: 0.6875rem;
+  --stat-number-size: 1rem;
 }
 
 body {
@@ -219,7 +220,6 @@ b {
 .standing-line,
 .matchup,
 .summary-strip strong,
-.compact .stat-card strong,
 .game-result-badge,
 .game-score-strip span,
 .game-score-strip i {
@@ -420,24 +420,27 @@ b {
 }
 
 .recent-game-matchup strong,
-.recent-game-matchup i,
-.recap-row strong,
-.bar-stat-heading strong {
+.recent-game-matchup i {
   font-size: var(--text-normal);
   font-weight: 700;
 }
 
-.record-line,
-.metric-value span,
-.player-name,
-.stat-card strong,
-.metric-feature strong {
-  font-size: 2rem;
+.recap-row strong,
+.bar-stat-heading strong {
+  font-weight: 700;
+}
+
+.stat-number {
+  font-size: var(--stat-number-size);
   font-weight: 800;
+  line-height: 1;
+}
+
+.stat-number small {
+  font-size: var(--text-small);
 }
 
 .game-score-strip strong {
-  font-size: 1.25rem;
   font-weight: 700;
 }
 

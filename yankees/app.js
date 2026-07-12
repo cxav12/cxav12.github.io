@@ -333,7 +333,7 @@ function statRow(label, value) {
   return `
     <div class="recap-row">
       <span>${escapeHtml(label)}</span>
-      <strong>${escapeHtml(value)}</strong>
+      <strong class="stat-number">${escapeHtml(value)}</strong>
     </div>
   `;
 }
@@ -344,7 +344,7 @@ function barRow(label, count, total, tone) {
     <div class="bar-stat">
       <div class="bar-stat-heading">
         <span>${escapeHtml(label)}</span>
-        <strong>${escapeHtml(count)}</strong>
+        <strong class="stat-number">${escapeHtml(count)}</strong>
       </div>
       <div class="bar-track" aria-hidden="true">
         <span class="bar-fill ${tone}" style="width: ${percentage}%">${percentage ? `${percentage}%` : ""}</span>
@@ -357,7 +357,7 @@ function metricFeature(label, value, unit, detail) {
   return `
     <div class="metric-feature">
       <span>${escapeHtml(label)}</span>
-      <strong>${escapeHtml(value)}${unit ? ` <small>${escapeHtml(unit)}</small>` : ""}</strong>
+      <strong class="stat-number">${escapeHtml(value)}${unit ? ` <small>${escapeHtml(unit)}</small>` : ""}</strong>
       <em>${escapeHtml(detail)}</em>
     </div>
   `;
@@ -464,9 +464,9 @@ function renderRecap(game, feed) {
     <div class="game-score-strip">
       <img class="team-logo" src="${escapeHtml(teamLogoUrl(yankees.team))}" alt="New York Yankees logo" />
       <span>NYY</span>
-      <strong>${escapeHtml(yankeesScore)}</strong>
+      <strong class="stat-number">${escapeHtml(yankeesScore)}</strong>
       <i aria-hidden="true">-</i>
-      <strong>${escapeHtml(opponentScore)}</strong>
+      <strong class="stat-number">${escapeHtml(opponentScore)}</strong>
       <span>${escapeHtml(opponentAbbr)}</span>
       <img class="team-logo" src="${escapeHtml(teamLogoUrl(opponent))}" alt="${escapeHtml(opponentAbbr)} logo" />
       ${liveLabel ? `<small class="live-inning-detail">${escapeHtml(liveLabel)}</small>` : ""}
@@ -503,7 +503,7 @@ function renderRecap(game, feed) {
       barRow("Line Drives", batted.line, batted.total, "green"),
       barRow("Fly Balls", batted.fly, batted.total, "gold"),
       barRow("Popups", batted.popup, batted.total, "red"),
-      `<div class="recap-row total-row"><span>Total</span><strong>${escapeHtml(batted.total || "-")}</strong></div>`,
+      `<div class="recap-row total-row"><span>Total</span><strong class="stat-number">${escapeHtml(batted.total || "-")}</strong></div>`,
     ].join("")),
     renderRecapColumn("NYY Pitching", [
       statRow("Strikeouts", statValue(pitching, "strikeOuts")),
@@ -519,7 +519,7 @@ function renderRecap(game, feed) {
         <div class="bar-stat compact-bar">
           <div class="bar-stat-heading">
             <span>Strike %</span>
-            <strong>${strikePercentage ? `${strikePercentage}%` : "-"}</strong>
+            <strong class="stat-number">${strikePercentage ? `${strikePercentage}%` : "-"}</strong>
           </div>
           <div class="bar-track" aria-hidden="true">
             <span class="bar-fill green" style="width: ${strikePercentage}%"></span>

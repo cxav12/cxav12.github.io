@@ -107,18 +107,15 @@
       <section class="player-detail-preview" aria-labelledby="player-detail-title">
         <div class="detail-card">
           <header class="detail-header">
+            <div class="detail-title-row">
+              <h2 id="player-detail-title" class="detail-player-name mb-0">Player Detail</h2>
+              <div class="detail-number" id="detail-number" aria-label="Player number">--</div>
+            </div>
             <div class="detail-player-lockup">
               <img id="detail-headshot" class="detail-headshot" alt="" />
-              <div class="min-w-0">
-                <p class="detail-first-name mb-1" id="detail-first-name">Player</p>
-                <h2 id="player-detail-title" class="detail-last-name mb-1">Detail</h2>
-                <p class="detail-meta mb-0" id="detail-meta">Loading player profile</p>
-              </div>
+              <div class="detail-bio" id="detail-bio"></div>
             </div>
-            <div class="detail-number" id="detail-number" aria-label="Player number">--</div>
           </header>
-
-          <div class="detail-divider" aria-hidden="true"></div>
 
           <nav class="detail-split-controls" id="detail-split-controls" aria-label="Stat split">
             <button class="detail-toggle active" type="button" data-detail-split="season">Season</button>
@@ -131,8 +128,6 @@
 
           <section class="detail-stat-grid detail-primary-stats" id="detail-primary-stats" aria-label="Selected split primary stats"></section>
           <section class="detail-stat-grid detail-secondary-stats" id="detail-secondary-stats" aria-label="Selected split secondary stats"></section>
-
-          <div class="detail-divider detail-divider-bottom" aria-hidden="true"></div>
 
           <nav class="detail-tab-controls" id="detail-tab-controls" aria-label="Player detail tabs">
             <button class="detail-tab active" type="button" data-detail-tab="pace">152-Game Pace</button>
@@ -148,7 +143,7 @@
 
     <template id="stat-template">
       <article class="col stat-card">
-        <strong></strong>
+        <strong class="stat-number"></strong>
         <span></span>
       </article>
     </template>

@@ -60,7 +60,6 @@
 
 .record-line {
   color: var(--ink);
-  font-size: clamp(2.8rem, 8vw, 5rem);
   font-weight: 800;
   line-height: 0.95;
 }
@@ -126,7 +125,6 @@
 
 .metric-value span {
   color: var(--yankees-silver);
-  font-size: clamp(1.45rem, 3vw, 2rem);
   font-weight: 800;
   line-height: 1;
 }
@@ -255,10 +253,12 @@
 
 .standings-table .is-yankees td {
   color: #fff;
-  background:
-    linear-gradient(90deg, rgba(241, 180, 52, 0.16), rgba(241, 180, 52, 0.04)),
-    var(--card-bg-strong);
+  background: rgba(196, 206, 212, 0.08);
   font-weight: 700;
+}
+
+.standings-table .is-yankees td:first-child {
+  box-shadow: inset 3px 0 0 #f1c400;
 }
 
 .error {
