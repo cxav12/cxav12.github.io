@@ -223,6 +223,7 @@ function playerStatusLabel(person) {
 }
 
 function renderStats(target, stats, items) {
+  if (!target) return;
   target.replaceChildren();
   const template = document.querySelector("#stat-template");
   items.forEach(([label, key]) => {
@@ -591,6 +592,7 @@ function bioRows(person) {
 }
 
 function renderBio(person) {
+  if (!els.bio) return;
   els.bio.replaceChildren();
   bioRows(person).forEach(([label, value]) => {
     const row = document.createElement("div");
@@ -645,21 +647,25 @@ async function loadPlayer(id) {
     setStatus("Live MLB data", "good");
   } catch (error) {
     setStatus("Data connection issue", "error");
-    els.primaryStats.innerHTML = `<p class="error">Could not load this player from MLB data. ${error.message}</p>`;
-    els.detailTabPanel.innerHTML = `<p class="error">Could not load the player detail preview.</p>`;
+    if (els.primaryStats) els.primaryStats.innerHTML = `<p class="error">Could not load this player from MLB data. ${error.message}</p>`;
+    if (els.detailTabPanel) els.detailTabPanel.innerHTML = `<p class="error">Could not load the player detail preview.</p>`;
   }
 }
 
 function renderPlayerHeader(person) {
-  els.headshot.src = HEADSHOT(person.id);
-  els.headshot.alt = `${person.fullName} headshot`;
-  els.headshot.onerror = () => {
-    els.headshot.removeAttribute("src");
-    els.headshot.alt = "";
-  };
-  els.name.textContent = person.fullName;
-  els.name.href = `https://baseballsavant.mlb.com/savant-player/${person.id}`;
-  els.seasonLabel.textContent = `${SEASON} Season - ${state.currentGroup}`;
+  if (els.headshot) {
+    els.headshot.src = HEADSHOT(person.id);
+    els.headshot.alt = `${person.fullName} headshot`;
+    els.headshot.onerror = () => {
+      els.headshot.removeAttribute("src");
+      els.headshot.alt = "";
+    };
+  }
+  if (els.name) {
+    els.name.textContent = person.fullName;
+    els.name.href = `https://baseballsavant.mlb.com/savant-player/${person.id}`;
+  }
+  if (els.seasonLabel) els.seasonLabel.textContent = `${SEASON} Season - ${state.currentGroup}`;
   renderBio(person);
 }
 
@@ -704,9 +710,11 @@ async function renderGameLog(id, group) {
   state.gameLogSplits = data.stats?.[0]?.splits?.slice(-30) || [];
   const splits = state.gameLogSplits.slice(-RECENT_TABLE_GAMES).reverse();
   const headers = group === "pitching" ? ["Date", "Opponent", "IP", "ER", "SO", "BB", "Result"] : ["Date", "Opponent", "H-AB", "HR", "RBI", "R", "BB"];
+  renderRecentBar();
+  if (!els.gameHead || !els.gameBody) return;
+
   els.gameHead.innerHTML = `<tr>${headers.map((item) => `<th>${item}</th>`).join("")}</tr>`;
   els.gameBody.replaceChildren();
-  renderRecentBar();
 
   if (!splits.length) {
     els.gameBody.innerHTML = `<tr><td colspan="${headers.length}" class="empty">No game log rows are available for this player yet.</td></tr>`;

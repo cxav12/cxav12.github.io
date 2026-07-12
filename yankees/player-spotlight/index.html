@@ -62,49 +62,6 @@
         </div>
         <div class="row g-2 search-results" id="search-results" hidden></div>
       </section>
-      <section class="row g-4 g-xl-5 spotlight-body">
-        <aside class="col-12 col-lg-4 col-xl-3" aria-label="Selected player">
-          <div class="portrait-wrap">
-            <img id="player-headshot" class="img-fluid" alt="" />
-          </div>
-          <div class="player-bio d-grid gap-3 mt-3" id="player-bio"></div>
-        </aside>
-
-        <section class="col-12 col-lg-8 col-xl-9 d-grid gap-3 player-main">
-          <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
-            <div class="min-w-0">
-              <h2 class="player-name mb-0"><a id="player-name" href="https://baseballsavant.mlb.com/" target="_blank" rel="noreferrer">Yankees</a></h2>
-            </div>
-          </div>
-
-          <section aria-label="Season stats">
-            <p class="section-label mb-2" id="season-label">Season</p>
-            <div class="row g-0 stat-grid primary" id="primary-stats"></div>
-            <div class="row g-0 stat-grid compact mt-2" id="secondary-stats"></div>
-          </section>
-
-          <section aria-label="Recent games">
-            <div class="recent-form-bar mt-2" id="recent-form-bar">
-              <strong>Last</strong>
-              <div class="recent-window-controls" role="group" aria-label="Recent game window">
-                <button class="recent-window-button active" type="button" data-games="5">5</button>
-                <button class="recent-window-button" type="button" data-games="10">10</button>
-                <button class="recent-window-button" type="button" data-games="15">15</button>
-                <button class="recent-window-button" type="button" data-games="30">30</button>
-              </div>
-              <strong>Games:</strong>
-              <span id="recent-line-stats">Loading recent form...</span>
-            </div>
-            <div class="table-responsive table-shell mt-2">
-              <table class="table table-dark table-hover align-middle mb-0">
-                <thead id="game-log-head"></thead>
-                <tbody id="game-log-body"></tbody>
-              </table>
-            </div>
-          </section>
-        </section>
-      </section>
-
       <section class="player-detail-preview" aria-labelledby="player-detail-title">
         <div class="detail-profile-card">
           <header class="detail-header">
