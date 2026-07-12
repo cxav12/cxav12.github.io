@@ -1,8 +1,12 @@
 const SEASON = new Date().getFullYear();
+const TEAM_ID = 147;
 const DEFAULT_PLAYER = 592450;
 const RECENT_TABLE_GAMES = 10;
 const MLB_API = "https://statsapi.mlb.com/api/v1";
 const HEADSHOT = (id) => `https://img.mlbstatic.com/mlb-photos/image/upload/w_426,q_auto:best/v1/people/${id}/headshot/67/current`;
+const DRAFT_FALLBACKS = {
+  592450: { year: 2013, team: "New York Yankees", round: "1", pick: "32" },
+};
 const DETAIL_PRIMARY_ITEMS = [
   ["AVG", "avg"],
   ["HR", "homeRuns"],
@@ -50,6 +54,7 @@ const state = {
     transactions: [],
   },
   selectedPerson: null,
+  nextGame: null,
 };
 
 const els = {
@@ -64,6 +69,10 @@ const els = {
   gameBody: document.querySelector("#game-log-body"),
   recentBar: document.querySelector("#recent-form-bar"),
   recentStats: document.querySelector("#recent-line-stats"),
+  quickRecentStats: document.querySelector("#quick-recent-line-stats"),
+  quickStatsBody: document.querySelector("#quick-stats-body"),
+  quickPlayerStatus: document.querySelector("#quick-player-status"),
+  quickNextGame: document.querySelector("#quick-next-game"),
   recentButtons: document.querySelectorAll(".recent-window-button"),
   searchInput: document.querySelector("#player-search"),
   searchButton: document.querySelector("#search-button"),
@@ -112,6 +121,18 @@ const api = {
   async searchPlayer(query) {
     return this.get("/people/search", { names: query, sportId: 1 });
   },
+  async nextYankeesGame() {
+    const today = new Date();
+    const end = new Date(today);
+    end.setDate(today.getDate() + 30);
+    return this.get("/schedule", {
+      sportId: 1,
+      teamId: TEAM_ID,
+      startDate: isoDate(today),
+      endDate: isoDate(end),
+      hydrate: "team",
+    });
+  },
 };
 
 function isoDate(date) {
@@ -153,6 +174,54 @@ function statValue(stats, key, fallback = "-") {
   return value === undefined || value === null || value === "" ? fallback : value;
 }
 
+function setText(target, value) {
+  if (target) target.textContent = value;
+}
+
+function teamAbbreviation(team) {
+  return team?.abbreviation || team?.teamName || team?.name || "TBD";
+}
+
+function isYankeesHome(game) {
+  return Number(game?.teams?.home?.team?.id) === TEAM_ID;
+}
+
+function nextGameFromSchedule(schedule) {
+  const games = (schedule?.dates || []).flatMap((dateEntry) => dateEntry.games || []);
+  return games.find((game) => game.status?.abstractGameState !== "Final") || games[0] || null;
+}
+
+function compactDate(value) {
+  if (!value) return "--/--";
+  const date = new Date(value);
+  return `${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+function formatNextGame(game) {
+  if (!game) return "Unavailable";
+  const opponent = isYankeesHome(game) ? game.teams?.away?.team : game.teams?.home?.team;
+  const prefix = isYankeesHome(game) ? "vs" : "@";
+  return `${compactDate(game.gameDate)} ${prefix} ${teamAbbreviation(opponent)}`;
+}
+
+function playerStatusLabel(person) {
+  const status = person.rosterStatus || person.status?.code || person.status?.description;
+  const labels = {
+    A: "Active",
+    D7: "Injured 7-Day",
+    D10: "Injured 10-Day",
+    D15: "Injured 15-Day",
+    D60: "Injured 60-Day",
+    MIN: "Minors",
+    RM: "Restricted",
+    RL: "Restricted",
+  };
+  if (labels[status]) return labels[status];
+  if (person.status?.description) return person.status.description;
+  if (status) return status;
+  return person.active === false ? "Inactive" : "Active";
+}
+
 function renderStats(target, stats, items) {
   target.replaceChildren();
   const template = document.querySelector("#stat-template");
@@ -162,6 +231,58 @@ function renderStats(target, stats, items) {
     node.querySelector("span").textContent = label;
     target.append(node);
   });
+}
+
+function quickStatRows(group, seasonStats, careerStats) {
+  if (group === "pitching") {
+    return {
+      headers: ["Year", "IP", "W", "ERA", "G", "GS", "SO", "BB", "WHIP", "AVG"],
+      rows: [
+        [`${SEASON} Regular Season`, statValue(seasonStats, "inningsPitched"), statValue(seasonStats, "wins"), statValue(seasonStats, "era"), statValue(seasonStats, "gamesPlayed"), statValue(seasonStats, "gamesStarted"), statValue(seasonStats, "strikeOuts"), statValue(seasonStats, "baseOnBalls"), statValue(seasonStats, "whip"), statValue(seasonStats, "avg")],
+        ["Career Regular Season", statValue(careerStats, "inningsPitched"), statValue(careerStats, "wins"), statValue(careerStats, "era"), statValue(careerStats, "gamesPlayed"), statValue(careerStats, "gamesStarted"), statValue(careerStats, "strikeOuts"), statValue(careerStats, "baseOnBalls"), statValue(careerStats, "whip"), statValue(careerStats, "avg")],
+      ],
+    };
+  }
+
+  return {
+    headers: ["Year", "AB", "R", "H", "HR", "RBI", "SB", "AVG", "OBP", "OPS"],
+    rows: [
+      [`${SEASON} Regular Season`, statValue(seasonStats, "atBats"), statValue(seasonStats, "runs"), statValue(seasonStats, "hits"), statValue(seasonStats, "homeRuns"), statValue(seasonStats, "rbi"), statValue(seasonStats, "stolenBases"), statValue(seasonStats, "avg"), statValue(seasonStats, "obp"), statValue(seasonStats, "ops")],
+      ["Career Regular Season", statValue(careerStats, "atBats"), statValue(careerStats, "runs"), statValue(careerStats, "hits"), statValue(careerStats, "homeRuns"), statValue(careerStats, "rbi"), statValue(careerStats, "stolenBases"), statValue(careerStats, "avg"), statValue(careerStats, "obp"), statValue(careerStats, "ops")],
+    ],
+  };
+}
+
+function renderQuickStats(seasonStats = {}, careerStats = {}, group = state.currentGroup) {
+  if (!els.quickStatsBody) return;
+  const table = els.quickStatsBody.closest("table");
+  const { headers, rows } = quickStatRows(group, seasonStats, careerStats);
+  const head = table?.querySelector("thead tr");
+  if (head) {
+    head.replaceChildren();
+    headers.forEach((label) => {
+      const th = document.createElement("th");
+      th.textContent = label;
+      head.append(th);
+    });
+  }
+
+  els.quickStatsBody.replaceChildren();
+  rows.forEach((values) => {
+    const row = document.createElement("tr");
+    values.forEach((value, index) => {
+      const cell = document.createElement("td");
+      cell.textContent = value ?? "-";
+      if (index === 0) cell.className = "quick-row-label";
+      row.append(cell);
+    });
+    els.quickStatsBody.append(row);
+  });
+}
+
+function renderQuickFooter(person) {
+  setText(els.quickPlayerStatus, playerStatusLabel(person));
+  setText(els.quickNextGame, formatNextGame(state.nextGame));
 }
 
 function firstStatSplit(data) {
@@ -363,10 +484,10 @@ function renderDetail() {
   renderDetailTab();
 }
 
-async function loadDetailData(id, seasonStats) {
+async function loadDetailData(id, seasonStats, group = "hitting") {
   const [careerData, homeAwayData, risp, vsLhp, vsRhp, transactionsData] = await Promise.all([
-    api.stats(id, "hitting", "career").catch(() => ({ stats: [] })),
-    api.stats(id, "hitting", "homeAndAway").catch(() => ({ stats: [] })),
+    api.stats(id, group, "career").catch(() => ({ stats: [] })),
+    api.stats(id, group, "homeAndAway").catch(() => ({ stats: [] })),
     splitStat(id, ["risp", "risp2out"]).catch(() => ({})),
     splitStat(id, ["vl", "vsl", "vsLHP"]).catch(() => ({})),
     splitStat(id, ["vr", "vsr", "vsRHP"]).catch(() => ({})),
@@ -383,6 +504,11 @@ async function loadDetailData(id, seasonStats) {
     career: firstStatSplit(careerData),
     transactions: transactionsData.transactions || [],
   };
+}
+
+async function loadNextYankeesGame() {
+  const schedule = await api.nextYankeesGame().catch(() => null);
+  state.nextGame = nextGameFromSchedule(schedule);
 }
 
 function playerPosition(person) {
@@ -403,28 +529,41 @@ function ageWithDays(person) {
   return `${years} years, ${days} days old`;
 }
 
-function draftLabel(person) {
-  const year = person.draftYear || person.draft?.year;
-  const round = person.draftRound || person.draftRoundNumber || person.draft?.round;
-  const pick = person.draftPick || person.pickNumber || person.draftNumber || person.draft?.pickNumber;
-  const team = person.draftTeam?.name || person.draftedBy?.name || person.draft?.team?.name;
-  if (!year && !round && !pick && !team) return "Details unavailable";
+function compactBirthDate(value) {
+  if (!value) return "";
+  const [year, month, day] = String(value).split("-");
+  if (!year || !month || !day) return "";
+  return `${Number(month)}/${Number(day)}/${year}`;
+}
 
-  const parts = [];
-  if (round) parts.push(`Round ${round}`);
-  if (pick) parts.push(`Pick ${pick}`);
-  const base = parts.length ? parts.join(", ") : "Drafted";
-  const teamText = team ? ` by ${team}` : "";
-  const yearText = year ? ` (${year})` : "";
-  return `${base}${teamText}${yearText}`;
+function birthplaceLabel(person) {
+  if (person.birthCity && person.birthStateProvince) return `${person.birthCity}, ${person.birthStateProvince}`;
+  if (person.birthCity && person.birthCountry) return `${person.birthCity}, ${person.birthCountry}`;
+  return person.birthCountry || "Birthplace unavailable";
+}
+
+function bornLabel(person) {
+  const date = compactBirthDate(person.birthDate);
+  const place = birthplaceLabel(person);
+  return date ? `${date} in ${place}` : place;
+}
+
+function draftLabel(person) {
+  const fallback = DRAFT_FALLBACKS[person.id] || {};
+  const year = person.draftYear || person.draft?.year || fallback.year;
+  const round = person.draftRound || person.draftRoundNumber || person.draft?.round || fallback.round;
+  const pick = person.draftPick || person.pickNumber || person.draftNumber || person.draft?.pickNumber || fallback.pick;
+  const team = person.draftTeam?.name || person.draftedBy?.name || person.draft?.team?.name || fallback.team;
+  if (!year && !round && !pick && !team) return "Details unavailable";
+  return `${year || "Year unavailable"}, ${team || "Team unavailable"}, Round: ${round || "-"}, Overall Pick: ${pick || "-"}`;
 }
 
 function detailBioRows(person) {
   return [
-    ["Age", ageWithDays(person)],
     ["Size", `${person.height || "-"} / ${person.weight ? `${person.weight} lbs` : "-"}`],
+    ["Age", ageWithDays(person)],
+    ["Born", bornLabel(person)],
     ["B/T", `${person.batSide?.code || "-"} / ${person.pitchHand?.code || "-"}`],
-    ["Born", person.birthCity && person.birthStateProvince ? `${person.birthCity}, ${person.birthStateProvince}` : person.birthCountry || "Birthplace unavailable"],
     ["Draft", draftLabel(person)],
   ];
 }
@@ -492,11 +631,16 @@ async function loadPlayer(id) {
     renderDetailHeader(person);
     renderDetailBio(person);
     renderStatBlocks(activeStats, state.currentGroup);
+    renderQuickStats(activeStats, {}, state.currentGroup);
+    renderQuickFooter(person);
     renderDetailLoading();
     await Promise.all([
       renderGameLog(id, state.currentGroup),
-      loadDetailData(id, hittingStats),
+      loadDetailData(id, activeStats, state.currentGroup),
+      loadNextYankeesGame(),
     ]);
+    renderQuickStats(activeStats, state.detailStats.career, state.currentGroup);
+    renderQuickFooter(person);
     renderDetail();
     setStatus("Live MLB data", "good");
   } catch (error) {
@@ -581,10 +725,17 @@ async function renderGameLog(id, group) {
   });
 }
 
+function updateRecentSummary(html, asText = false) {
+  [els.recentStats, els.quickRecentStats].filter(Boolean).forEach((target) => {
+    if (asText) target.textContent = html;
+    else target.innerHTML = html;
+  });
+}
+
 function renderRecentBar() {
   const games = state.gameLogSplits.slice(-state.recentWindow);
   if (!games.length) {
-    els.recentStats.textContent = "No recent games found";
+    updateRecentSummary("No recent games found", true);
     return;
   }
 
@@ -598,7 +749,7 @@ function renderRecentBar() {
       return acc;
     }, { outs: 0, er: 0, so: 0, bb: 0 });
     const era = totals.outs ? ((totals.er * 27) / totals.outs).toFixed(2) : "-";
-    els.recentStats.innerHTML = `${era} ERA <span>&middot;</span> ${outsToInnings(totals.outs)} IP <span>&middot;</span> ${totals.so} K <span>&middot;</span> ${totals.bb} BB <span>&middot;</span> ${totals.er} ER`;
+    updateRecentSummary(`${era} ERA <span>&middot;</span> ${outsToInnings(totals.outs)} IP <span>&middot;</span> ${totals.so} K <span>&middot;</span> ${totals.bb} BB <span>&middot;</span> ${totals.er} ER`);
     return;
   }
 
@@ -611,7 +762,7 @@ function renderRecentBar() {
     acc.runs += Number(stat.runs || 0);
     return acc;
   }, { ab: 0, hits: 0, hr: 0, rbi: 0, runs: 0 });
-  els.recentStats.innerHTML = `${formatAverage(totals.hits, totals.ab)} AVG <span>&middot;</span> ${totals.hr} HR <span>&middot;</span> ${totals.rbi} RBI <span>&middot;</span> ${totals.runs} R <span>&middot;</span> ${totals.hits}-${totals.ab} H-AB`;
+  updateRecentSummary(`${formatAverage(totals.hits, totals.ab)} AVG <span>&middot;</span> ${totals.hr} HR <span>&middot;</span> ${totals.rbi} RBI <span>&middot;</span> ${totals.runs} R <span>&middot;</span> ${totals.hits}-${totals.ab} H-AB`);
 }
 
 function setRecentWindow(games) {

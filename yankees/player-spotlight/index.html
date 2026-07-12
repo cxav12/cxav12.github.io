@@ -50,6 +50,18 @@
       <section class="player-title-band" aria-labelledby="page-title">
         <h2 class="page-heading site-page-title" id="page-title">Player Spotlight</h2>
       </section>
+      <section class="player-search-panel" aria-label="Player search">
+        <div class="row g-2 align-items-end">
+          <label class="col-12 col-md" for="player-search">
+            <span class="visually-hidden">Search any player</span>
+            <input id="player-search" class="form-control form-control-lg" type="search" placeholder="Search for player" autocomplete="off" />
+          </label>
+          <div class="col-12 col-md-auto">
+            <button id="search-button" class="btn btn-yankees btn-lg w-100" type="button">Search</button>
+          </div>
+        </div>
+        <div class="row g-2 search-results" id="search-results" hidden></div>
+      </section>
       <section class="row g-4 g-xl-5 spotlight-body">
         <aside class="col-12 col-lg-4 col-xl-3" aria-label="Selected player">
           <div class="portrait-wrap">
@@ -59,17 +71,6 @@
         </aside>
 
         <section class="col-12 col-lg-8 col-xl-9 d-grid gap-3 player-main">
-          <div class="row g-2 align-items-end">
-            <label class="col-12 col-md" for="player-search">
-              <span class="form-label label-small">Search any player</span>
-              <input id="player-search" class="form-control form-control-lg" type="search" placeholder="Aaron Judge, Gerrit Cole..." autocomplete="off" />
-            </label>
-            <div class="col-12 col-md-auto">
-              <button id="search-button" class="btn btn-yankees btn-lg w-100" type="button">Search</button>
-            </div>
-          </div>
-          <div class="row g-2 search-results" id="search-results" hidden></div>
-
           <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
             <div class="min-w-0">
               <h2 class="player-name mb-0"><a id="player-name" href="https://baseballsavant.mlb.com/" target="_blank" rel="noreferrer">Yankees</a></h2>
@@ -105,18 +106,64 @@
       </section>
 
       <section class="player-detail-preview" aria-labelledby="player-detail-title">
-        <div class="detail-card">
+        <div class="detail-profile-card">
           <header class="detail-header">
             <div class="detail-title-row">
-              <h2 id="player-detail-title" class="detail-player-name mb-0">Player Detail</h2>
-              <div class="detail-number" id="detail-number" aria-label="Player number">--</div>
+              <div class="detail-name-lockup">
+                <h2 id="player-detail-title" class="detail-player-name mb-0">Player Detail</h2>
+                <div class="detail-number" id="detail-number" aria-label="Player number">--</div>
+              </div>
             </div>
-            <div class="detail-player-lockup">
-              <img id="detail-headshot" class="detail-headshot" alt="" />
-              <div class="detail-bio" id="detail-bio"></div>
+            <div class="detail-profile-layout">
+              <div class="detail-player-lockup">
+                <img id="detail-headshot" class="detail-headshot" alt="" />
+                <div class="detail-bio" id="detail-bio"></div>
+              </div>
+              <aside class="detail-quick-stats" aria-label="Player quick stats">
+                <div class="detail-quick-recent">
+                  <strong>Last</strong>
+                  <div class="recent-window-controls" role="group" aria-label="Quick recent game window">
+                    <button class="recent-window-button active" type="button" data-games="5">5</button>
+                    <button class="recent-window-button" type="button" data-games="10">10</button>
+                    <button class="recent-window-button" type="button" data-games="15">15</button>
+                    <button class="recent-window-button" type="button" data-games="30">30</button>
+                  </div>
+                  <strong>Games:</strong>
+                  <span id="quick-recent-line-stats">Loading recent form...</span>
+                </div>
+                <div class="detail-quick-table-shell">
+                  <table class="detail-quick-table">
+                    <thead>
+                      <tr>
+                        <th>Year</th>
+                        <th>AB</th>
+                        <th>R</th>
+                        <th>H</th>
+                        <th>HR</th>
+                        <th>RBI</th>
+                        <th>SB</th>
+                        <th>AVG</th>
+                        <th>OBP</th>
+                        <th>OPS</th>
+                      </tr>
+                    </thead>
+                    <tbody id="quick-stats-body">
+                      <tr>
+                        <td colspan="10">Loading quick stats</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="detail-quick-footer">
+                  <span><strong>Status:</strong> <span id="quick-player-status">Loading</span></span>
+                  <span><strong>Next NYY Game:</strong> <span id="quick-next-game">Loading</span></span>
+                </div>
+              </aside>
             </div>
           </header>
+        </div>
 
+        <div class="detail-card">
           <nav class="detail-split-controls" id="detail-split-controls" aria-label="Stat split">
             <button class="detail-toggle active" type="button" data-detail-split="season">Season</button>
             <button class="detail-toggle" type="button" data-detail-split="risp">RISP</button>
