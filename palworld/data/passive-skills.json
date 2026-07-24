@@ -1,0 +1,16 @@
+{
+  "metadata": {
+    "gameVersion": "1.0.1",
+    "datasetVersion": 1,
+    "lastUpdated": "2026-07-24",
+    "lastChecked": "2026-07-24",
+    "updateStatus": "current",
+    "updateMessage": "",
+    "source": {
+      "name": "Paldeck",
+      "url": "https://paldeck.cc/",
+      "retrieval": "Pending approved import process"
+    }
+  },
+  "passiveSkills": []
+}
