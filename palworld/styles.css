@@ -4,6 +4,7 @@
   --nav-bg: #272727;
   --nav-border: #0b0b0b;
   --accent: #f1ea00;
+  --accent-bar-width: 0.625rem;
   --text: #f5f5f5;
   --muted: #a9adb2;
 }
@@ -36,8 +37,8 @@ body {
 
 .nav-accent {
   align-self: stretch;
-  width: 1.25rem;
-  flex: 0 0 1.25rem;
+  width: var(--accent-bar-width);
+  flex: 0 0 var(--accent-bar-width);
   background: var(--accent);
 }
 
@@ -95,15 +96,15 @@ body {
 }
 
 .data-status[data-state="current"] {
-  border-left: 0.3rem solid #4dba78;
+  border-left: var(--accent-bar-width) solid #4dba78;
 }
 
 .data-status[data-state="update"] {
-  border-left: 0.3rem solid var(--accent);
+  border-left: var(--accent-bar-width) solid var(--accent);
 }
 
 .data-status[data-state="error"] {
-  border-left: 0.3rem solid #dc5b63;
+  border-left: var(--accent-bar-width) solid #dc5b63;
 }
 
 .data-status p,
@@ -125,11 +126,6 @@ body {
 
   .palworld-nav {
     min-height: 4rem;
-  }
-
-  .nav-accent {
-    width: 0.85rem;
-    flex-basis: 0.85rem;
   }
 
   .palworld-nav .nav-link {
